@@ -7,19 +7,15 @@ let package = Package(
     name: "SwiftyNetworking",
     platforms: [
         .iOS(.v15),
-        .macOS(.v10_15)
+        .macOS(.v12)
     ],
     products: [
-        .library(
-            name: "Networking",
-            targets: ["Networking"]),
+        .library(name: "Networking", targets: ["Networking"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.4.0")
+        .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.13.1")
     ],
     targets: [
-        .target(
-            name: "Networking",
-            dependencies: []),
+        .target(name: "Networking", dependencies: ["XMLCoder"])
     ]
 )

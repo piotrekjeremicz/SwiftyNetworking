@@ -19,21 +19,6 @@ public final class Api {
         self.session = session
     }
     
-    func send<RequestType: Request>(request: RequestType, result: @escaping (RequestType.Response?, ResponseError<RequestType.ResponseError>?) -> Void) {
-        runSession(for: request)
-            .sink { completion in
-                switch completion {
-                case .failure(let error):
-                    result(nil, error)
-                case .finished:
-                    break
-                }
-            } receiveValue: { data in
-                result(data, nil)
-            }
-            .store(in: &cancelables)
-    }
-    
     func send<RequestType: Request>(request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
         runSession(for: request)
     }
@@ -61,6 +46,21 @@ public final class Api {
                 }
             }
         }
+    }
+    
+    func send<RequestType: Request>(request: RequestType, result: @escaping (RequestType.Response?, ResponseError<RequestType.ResponseError>?) -> Void) {
+        runSession(for: request)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    result(nil, error)
+                case .finished:
+                    break
+                }
+            } receiveValue: { data in
+                result(data, nil)
+            }
+            .store(in: &cancelables)
     }
 }
 

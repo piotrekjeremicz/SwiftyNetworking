@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  AnyCodable.swift
+//  SwiftyNetworking
 //
-//  Created by Piotrek on 19/12/2021.
+//  Created by Piotrek Jeremicz on 19/12/2021.
 //
 
 import XMLCoder

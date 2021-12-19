@@ -1,5 +1,5 @@
 //
-//  Api.swift
+//  Error.swift
 //  SwiftyNetworking
 //
 //  Created by Piotrek Jeremicz on 19/12/2021.

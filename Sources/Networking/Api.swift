@@ -10,6 +10,8 @@ import Foundation
 
 public final class Api {
     
+    static let manager = Api()
+    
     private let session: URLSession
     private var cancelables = Set<AnyCancellable>()
     

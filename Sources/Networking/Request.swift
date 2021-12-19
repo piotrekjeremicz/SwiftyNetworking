@@ -35,7 +35,7 @@ public protocol Request {
     func urlRequest() -> URLRequest
 }
 
-extension Request {
+public extension Request {
     var body: Body? { nil }
     var headers: [String: String]? { nil }
     var queryItems: [URLQueryItem]? { nil }

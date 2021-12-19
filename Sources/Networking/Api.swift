@@ -19,7 +19,7 @@ public final class Api {
         self.session = session
     }
     
-    public func send<RequestType: Request>(request: RequestType, result: @escaping (RequestType.Response?, ResponseError<RequestType.ResponseError>?) -> Void) {
+    func send<RequestType: Request>(request: RequestType, result: @escaping (RequestType.Response?, ResponseError<RequestType.ResponseError>?) -> Void) {
         runSession(for: request)
             .sink { completion in
                 switch completion {
@@ -34,11 +34,11 @@ public final class Api {
             .store(in: &cancelables)
     }
     
-    public func send<RequestType: Request>(request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
+    func send<RequestType: Request>(request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
         runSession(for: request)
     }
     
-    public func send<RequestType: Request>(request: RequestType) async -> (RequestType.Response?, ResponseError<RequestType.ResponseError>?) {
+    func send<RequestType: Request>(request: RequestType) async -> (RequestType.Response?, ResponseError<RequestType.ResponseError>?) {
         await withCheckedContinuation { continuation in
             send(request: request) { response, error in
                 continuation.resume(returning: (response, error))
@@ -46,7 +46,7 @@ public final class Api {
         }
     }
     
-    public func send<RequestType: Request>(request: RequestType) async throws -> RequestType.Response {
+    func send<RequestType: Request>(request: RequestType) async throws -> RequestType.Response {
         try await withCheckedThrowingContinuation { continuation in
             send(request: request) { response, error in
                 if let error = error {

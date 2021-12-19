@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AnyCodable
 
 public enum RquestMethod: String {
     case get
@@ -17,7 +18,6 @@ public enum RquestMethod: String {
 
 public protocol Request {
     
-    associatedtype Body: Codable
     associatedtype Response: Codable
     associatedtype ResponseError: Codable
         
@@ -25,7 +25,7 @@ public protocol Request {
     var service: Service { get }
     var method: RquestMethod { get }
     
-    var body: Body? { get }
+    var body: AnyCodable? { get }
     var headers: [String: String]? { get }
     var queryItems: [URLQueryItem]? { get }
     
@@ -36,23 +36,20 @@ public protocol Request {
 }
 
 public extension Request {
-    var body: Body? { nil }
+    typealias ResponseError = Empty
+    
+    var body: AnyCodable? { nil }
     var headers: [String: String]? { nil }
     var queryItems: [URLQueryItem]? { nil }
 
     var bodyEncoder: JSONEncoder { JSONEncoder() }
     var responseDecoder: JSONDecoder { JSONDecoder() }
     
-    func urlRequest() -> URLRequest? {
-        guard var urlComponents = URLComponents(url: service.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)
-        else { return nil }
-        
+    func urlRequest() -> URLRequest {
+        var urlComponents = URLComponents(url: service.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
         if let queryItems = queryItems { urlComponents.queryItems = queryItems }
         
-        guard let url = urlComponents.url
-        else { return nil}
-        
-        var urlRequest = URLRequest(url: url)
+        var urlRequest = URLRequest(url: urlComponents.url!)
         urlRequest.httpMethod = method.rawValue
         headers?.forEach { urlRequest.addValue($0, forHTTPHeaderField: $1) }
         
@@ -65,4 +62,3 @@ public extension Request {
         return urlRequest
     }
 }
-

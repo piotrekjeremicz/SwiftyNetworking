@@ -13,9 +13,11 @@ let package = Package(
         .library(name: "Networking", targets: ["Networking"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.13.1")
+        .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.9.0"),
+        .package(url: "https://github.com/Flight-School/AnyCodable", from: "0.6.2"),
+        
     ],
     targets: [
-        .target(name: "Networking", dependencies: ["XMLCoder"])
+        .target(name: "Networking", dependencies: ["XMLCoder", "AnyCodable"])
     ]
 )

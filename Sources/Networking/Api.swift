@@ -53,7 +53,7 @@ public final class Api {
                     continuation.resume(throwing: error)
                 } else {
                     guard let response = response else {
-                        continuation.resume(throwing: ResponseError<RequestType.ResponseError>.noResponse)
+                        continuation.resume(throwing: ResponseError<Any>.noResponse)
                         return
                     }
 
@@ -70,11 +70,11 @@ private extension Api {
             .dataTaskPublisher(for: request.urlRequest())
             .tryMap { result in
                 guard let httpResponse = result.response as? HTTPURLResponse
-                else { throw ResponseError<RequestType.ResponseError>.unsupportedResponseType(result.response) }
+                else { throw ResponseError<Any>.unsupportedResponseType(result.response) }
                 
                 guard (200..<300).contains(httpResponse.statusCode) else {
                     let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)
-                    throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)
+                    throw ResponseError<Any>.badResponse(httpResponse, errorDescription)
                 }
                 
                 return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)

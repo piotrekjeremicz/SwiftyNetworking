@@ -8,5 +8,6 @@
 import Foundation
 
 public protocol Service {
-    var baseURL: URL { get set }
+    var baseURL: URL { get }
 }
+

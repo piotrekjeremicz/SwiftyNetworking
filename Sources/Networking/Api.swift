@@ -45,6 +45,23 @@ public final class Api {
             }
         }
     }
+    
+    public func send<RequestType: Request>(request: RequestType) async throws -> RequestType.Response {
+        try await withCheckedThrowingContinuation { continuation in
+            send(request: request) { response, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    guard let response = response else {
+                        continuation.resume(throwing: ResponseError<RequestType.ResponseError>.noResponse)
+                        return
+                    }
+
+                    continuation.resume(returning: response)
+                }
+            }
+        }
+    }
 }
 
 private extension Api {

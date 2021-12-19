@@ -8,6 +8,7 @@
 import Foundation
 
 public enum ResponseError<ErrorDescription>: Error {
+    case noResponse
     case url(URLError)
     case decoding(DecodingError)
     case badResponse(HTTPURLResponse, ErrorDescription?)

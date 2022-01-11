@@ -10,4 +10,3 @@ import Foundation
 public protocol Service {
     var baseURL: URL { get }
 }
-

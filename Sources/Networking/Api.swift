@@ -25,6 +25,7 @@ public final class Api {
         runSession(for: request)
     }
     
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     func send<RequestType: Request>(request: RequestType) async -> (RequestType.Response?, ResponseError<RequestType.ResponseError>?) {
         await withCheckedContinuation { continuation in
             send(request: request) { response, error in
@@ -33,6 +34,7 @@ public final class Api {
         }
     }
     
+    @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
     func send<RequestType: Request>(request: RequestType) async throws -> RequestType.Response {
         try await withCheckedThrowingContinuation { continuation in
             send(request: request) { response, error in
@@ -75,8 +77,12 @@ private extension Api {
                 else { throw ResponseError<Any>.unsupportedResponseType(result.response) }
                 
                 guard (200..<300).contains(httpResponse.statusCode) else {
-                    let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)
-                    throw ResponseError<Any>.badResponse(httpResponse, errorDescription)
+                    if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data) {
+                        throw ResponseError<Any>.badResponse(httpResponse, errorDescription)
+                    } else {
+                        throw ResponseError<Any>.badResponse(httpResponse, .none)
+                    }
+                    
                 }
                 
                 return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)

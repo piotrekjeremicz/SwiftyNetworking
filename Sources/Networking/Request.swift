@@ -51,7 +51,7 @@ public extension Request {
         
         var urlRequest = URLRequest(url: urlComponents.url!)
         urlRequest.httpMethod = method.rawValue
-        headers?.forEach { urlRequest.addValue($0, forHTTPHeaderField: $1) }
+        headers?.forEach { urlRequest.addValue($1, forHTTPHeaderField: $0) }
         
         if let body = body {
             let data = try? bodyEncoder.encode(body)

@@ -17,10 +17,9 @@ public enum RquestMethod: String {
 }
 
 public protocol Request {
-    
     associatedtype Response: Codable
     associatedtype ResponseError: Codable
-        
+    
     var path: String { get }
     var service: Service { get }
     var method: RquestMethod { get }
@@ -29,7 +28,7 @@ public protocol Request {
     var headers: [String: String]? { get }
     var queryItems: [URLQueryItem]? { get }
     
-    var bodyEncoder: JSONEncoder { get }
+    var bodyEncoder: AnyDataEncoder { get }
     var responseDecoder: AnyDataDecoder { get }
     
     func urlRequest() -> URLRequest
@@ -42,8 +41,8 @@ public extension Request {
     var headers: [String: String]? { nil }
     var queryItems: [URLQueryItem]? { nil }
 
-    var bodyEncoder: JSONEncoder { JSONEncoder() }
-    var responseDecoder: JSONDecoder { JSONDecoder() }
+    var bodyEncoder: AnyDataEncoder { JSONEncoder() }
+    var responseDecoder: AnyDataDecoder { JSONDecoder() }
     
     func urlRequest() -> URLRequest {
         var urlComponents = URLComponents(url: service.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)!

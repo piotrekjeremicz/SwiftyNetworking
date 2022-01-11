@@ -13,7 +13,7 @@ public enum ResponseError<ErrorDescription>: Error {
     case decoding(DecodingError)
     case badResponse(HTTPURLResponse, ErrorDescription?)
     case unsupportedResponseType(URLResponse)
-    case unknown
+    case unknown(Swift.Error)
     
     init(_ error: Swift.Error) {
         switch error {
@@ -22,8 +22,7 @@ public enum ResponseError<ErrorDescription>: Error {
         case is DecodingError:
             self = .decoding(error as! DecodingError)
         default:
-            self = error as? ResponseError ?? .unknown
+            self = error as? ResponseError ?? .unknown(error)
         }
     }
 }
-

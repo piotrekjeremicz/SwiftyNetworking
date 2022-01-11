@@ -35,7 +35,7 @@ public final class Api {
     }
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
-    func send<RequestType: Request>(request: RequestType) async throws -> RequestType.Response {
+    func trySend<RequestType: Request>(request: RequestType) async throws -> RequestType.Response {
         try await withCheckedThrowingContinuation { continuation in
             send(request: request) { response, error in
                 if let error = error {
@@ -82,7 +82,6 @@ private extension Api {
                     } else {
                         throw ResponseError<Any>.badResponse(httpResponse, .none)
                     }
-                    
                 }
                 
                 return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)

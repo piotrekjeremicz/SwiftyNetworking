@@ -80,9 +80,9 @@ private extension Api {
                     
                     guard (200..<300).contains(httpResponse.statusCode) else {
                         if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data) {
-                            throw ResponseError<Any>.badResponse(httpResponse, errorDescription)
+                            throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)
                         } else {
-                            throw ResponseError<Any>.badResponse(httpResponse, .none)
+                            throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, .none)
                         }
                     }
                     

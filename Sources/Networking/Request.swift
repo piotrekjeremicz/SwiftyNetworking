@@ -34,9 +34,7 @@ public protocol Request {
     func urlRequest() throws -> URLRequest
 }
 
-public extension Request {
-    typealias ResponseError = Empty
-    
+public extension Request {    
     var body: AnyCodable? { nil }
     var headers: [String: String]? { nil }
     var queryItems: [URLQueryItem]? { nil }

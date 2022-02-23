@@ -31,7 +31,7 @@ public protocol Request {
     var bodyEncoder: AnyDataEncoder { get }
     var responseDecoder: AnyDataDecoder { get }
     
-    func urlRequest() -> URLRequest
+    func urlRequest() throws -> URLRequest
 }
 
 public extension Request {
@@ -40,15 +40,22 @@ public extension Request {
     var body: AnyCodable? { nil }
     var headers: [String: String]? { nil }
     var queryItems: [URLQueryItem]? { nil }
-
+    
     var bodyEncoder: AnyDataEncoder { JSONEncoder() }
     var responseDecoder: AnyDataDecoder { JSONDecoder() }
     
-    func urlRequest() -> URLRequest {
-        var urlComponents = URLComponents(url: service.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
+    func urlRequest() throws -> URLRequest {
+        guard
+            var urlComponents = URLComponents(url: service.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)
+        else { throw RequestError.resolvingUrlComponentsFailed }
+        
         if let queryItems = queryItems { urlComponents.queryItems = queryItems }
         
-        var urlRequest = URLRequest(url: urlComponents.url!)
+        guard
+            let url = urlComponents.url
+        else { throw RequestError.resolvingUrlComponentsFailed }
+        
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
         headers?.forEach { urlRequest.addValue($1, forHTTPHeaderField: $0) }
         

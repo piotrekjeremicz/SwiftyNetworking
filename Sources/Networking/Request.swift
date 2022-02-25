@@ -47,10 +47,9 @@ public extension Request {
             var urlComponents = URLComponents(url: service.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)
         else { throw RequestError.resolvingUrlComponentsFailed }
         
-        if let queryItems = queryItems { urlComponents.queryItems = queryItems }
+        urlComponents.queryItems = queryItems
         
-        guard
-            let url = urlComponents.url
+        guard let url = urlComponents.url
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         var urlRequest = URLRequest(url: url)

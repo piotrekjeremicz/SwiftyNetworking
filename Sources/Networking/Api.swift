@@ -89,7 +89,7 @@ private extension Api {
                     return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)
                 }
                 .mapError(ResponseError.init)
-                .receive(on: DispatchQueue.main)
+                .receive(on: RunLoop.main)
                 .eraseToAnyPublisher()
         } catch {
             return Fail(error: ResponseError(error))

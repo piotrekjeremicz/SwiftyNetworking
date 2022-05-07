@@ -11,13 +11,17 @@ import Foundation
 public final class Api {
     public static let manager = Api()
     
+    public let debugLogging: Bool
+    
     private let session: URLSession
     private var cancelables = Set<AnyCancellable>()
     
     public init(
-        session: URLSession = URLSession(configuration: .default)
+        session: URLSession = URLSession(configuration: .default),
+        debugLogging: Bool = false
     ) {
         self.session = session
+        self.debugLogging = debugLogging
     }
     
     public func send<RequestType: Request>(request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
@@ -74,7 +78,7 @@ private extension Api {
             
             return session
                 .dataTaskPublisher(for: urlRequest)
-                .tryMap { result in
+                .tryMap { [weak self] result in
                     guard let httpResponse = result.response as? HTTPURLResponse
                     else { throw ResponseError<Any>.unsupportedResponseType(result.response) }
                     
@@ -85,6 +89,17 @@ private extension Api {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, .none)
                         }
                     }
+                    
+#if DEBUG
+                    if let self = self, self.debugLogging {
+                        let body = String(describing: String(data: result.data, encoding: .utf8))
+                        let trimmedBody = body.count > 600 ? body.prefix(300) + "\n[...]\n" + body.suffix(300) : body
+                        
+                        print("\n-> Response: \(request.path)")
+                        print("-> Status: \(httpResponse.statusCode)")
+                        print("-> Body: \(trimmedBody)")
+                    }
+#endif
                     
                     return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)
                 }

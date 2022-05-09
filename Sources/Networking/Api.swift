@@ -91,13 +91,14 @@ private extension Api {
                     else { throw ResponseError<Any>.unsupportedResponseType(result.response) }
                     
                     guard (200..<300).contains(httpResponse.statusCode) else {
-                        if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data) {
+                        if RequestType.ResponseError.self != Empty.self {
+                            throw ResponseError<RequestType.ResponseError>.noResponse
+                        } else if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)
                         } else {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, .none)
                         }
                     }
-                    
 #if DEBUG
                     if let self = self, self.debugLogging {
                         let body = String(describing: String(data: result.data, encoding: .utf8))
@@ -108,8 +109,11 @@ private extension Api {
                         print("-> Body: \(trimmedBody)")
                     }
 #endif
-                    
-                    return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)
+                    if RequestType.Response.self == Empty.self {
+                        return Empty() as! RequestType.Response 
+                    } else {
+                        return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)
+                    }
                 }
                 .mapError({ error in
 #if DEBUG

@@ -76,6 +76,14 @@ private extension Api {
         do {
             let urlRequest = try request.urlRequest()
             
+#if DEBUG
+            if debugLogging {
+                print("\n-> \(request.method.rawValue.uppercased()) \(urlRequest.url!)")
+                print("-> Header: \(String(describing: urlRequest.allHTTPHeaderFields))")
+                print("-> Body: \(String(describing: String(data: urlRequest.httpBody ?? Data(), encoding: .utf8)))\n")
+            }
+#endif
+            
             return session
                 .dataTaskPublisher(for: urlRequest)
                 .tryMap { [weak self] result in
@@ -103,6 +111,15 @@ private extension Api {
                     
                     return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)
                 }
+                .mapError({ error in
+#if DEBUG
+                    if self.debugLogging {
+                        print("\n-> Response: \(request.path)")
+                        print("-> Error: \(error)")
+                    }
+#endif
+                    return error
+                })
                 .mapError(ResponseError.init)
                 .receive(on: RunLoop.main)
                 .eraseToAnyPublisher()

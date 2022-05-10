@@ -87,18 +87,10 @@ private extension Api {
             return session
                 .dataTaskPublisher(for: urlRequest)
                 .tryMap { [weak self] result in
+                    
                     guard let httpResponse = result.response as? HTTPURLResponse
                     else { throw ResponseError<Any>.unsupportedResponseType(result.response) }
                     
-                    guard (200..<300).contains(httpResponse.statusCode) else {
-                        if RequestType.ResponseError.self != Empty.self {
-                            throw ResponseError<RequestType.ResponseError>.noResponse
-                        } else if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
-                            throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)
-                        } else {
-                            throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, .none)
-                        }
-                    }
 #if DEBUG
                     if let self = self, self.debugLogging {
                         let body = String(describing: String(data: result.data, encoding: .utf8))
@@ -109,6 +101,17 @@ private extension Api {
                         print("-> Body: \(trimmedBody)")
                     }
 #endif
+                    
+                    guard (200..<300).contains(httpResponse.statusCode) else {
+                        if RequestType.ResponseError.self != Empty.self {
+                            throw ResponseError<RequestType.ResponseError>.noResponse
+                        } else if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
+                            throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)
+                        } else {
+                            throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, .none)
+                        }
+                    }
+
                     if RequestType.Response.self == Empty.self {
                         return Empty() as! RequestType.Response 
                     } else {
@@ -118,7 +121,6 @@ private extension Api {
                 .mapError({ error in
 #if DEBUG
                     if self.debugLogging {
-                        print("\n-> Response: \(request.path)")
                         print("-> Error: \(error)")
                     }
 #endif

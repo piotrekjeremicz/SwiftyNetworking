@@ -103,7 +103,7 @@ private extension Api {
 #endif
                     
                     guard (200..<300).contains(httpResponse.statusCode) else {
-                        if RequestType.ResponseError.self != Empty.self {
+                        if RequestType.ResponseError.self == Empty.self {
                             throw ResponseError<RequestType.ResponseError>.noResponse
                         } else if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)

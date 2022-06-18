@@ -33,7 +33,7 @@ extension Request {
     }
     
     func urlRequest() throws -> URLRequest {
-        guard let content = content
+        guard let content = request.content
         else { throw RequestError.requestContentIsNotSet }
         
         guard var urlComponents = URLComponents(url: content.service.baseURL.appendingPathComponent(content.path), resolvingAgainstBaseURL: false)
@@ -55,6 +55,20 @@ extension Request {
         }
         
         return urlRequest
+    }
+    
+    @inlinable func error(type: Codable.Type) -> some Request {
+        var request = self
+        request.content?.errorType = type
+        
+        return request
+    }
+    
+    @inlinable func response(type: Codable.Type) -> some Request {
+        var request = self
+        request.content?.responseType = type
+        
+        return request
     }
     
     @inlinable func body(_ data: any Encodable) -> some Request {

@@ -9,6 +9,9 @@ import Combine
 import Foundation
 
 struct Content {
+    var responseType: Codable.Type = Empty.self
+    var errorType: Codable.Type = Empty.self
+    
     var path: String
     var service: Service
     var method: Method
@@ -20,3 +23,4 @@ struct Content {
     var bodyEncoder: any TopLevelEncoder
     var responseDecoder: any TopLevelDecoder
 }
+

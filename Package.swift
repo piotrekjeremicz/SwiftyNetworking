@@ -1,25 +1,24 @@
-// swift-tools-version:5.5
+// swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "SwiftyNetworking",
-    platforms: [
-        .iOS(.v15),
-        .macOS(.v12),
-        .tvOS(.v15),
-        .watchOS(.v8)
-    ],
     products: [
-        .library(name: "Networking", targets: ["Networking"]),
+        .library(
+            name: "Networking",
+            targets: ["Networking"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.9.0"),
-        .package(url: "https://github.com/Flight-School/AnyCodable", from: "0.6.2"),
         
     ],
     targets: [
-        .target(name: "Networking", dependencies: ["XMLCoder", "AnyCodable"])
+        .target(
+            name: "Networking",
+            dependencies: []),
+        .testTarget(
+            name: "NetworkingTests",
+            dependencies: ["Networking"]),
     ]
 )

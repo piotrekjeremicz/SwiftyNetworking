@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-enum Method: String {
+public enum Method: String {
     case get
     case put
     case post
@@ -16,8 +16,11 @@ enum Method: String {
     case delete
 }
 
-protocol Request {
+public protocol Request {
     associatedtype Body: Request
+
+    associatedtype Response: Codable
+    associatedtype ResponseError: Codable
     
     var request: Body { get }
     var content: Content? { get set }
@@ -25,7 +28,7 @@ protocol Request {
     func urlRequest() throws -> URLRequest
 }
 
-extension Request {
+public extension Request {
     var request: some Request { EmptyRequest() }
     var content: Content? {
         get { nil }
@@ -56,21 +59,7 @@ extension Request {
         
         return urlRequest
     }
-    
-    @inlinable func error(type: Codable.Type) -> some Request {
-        var request = self
-        request.content?.errorType = type
-        
-        return request
-    }
-    
-    @inlinable func response(type: Codable.Type) -> some Request {
-        var request = self
-        request.content?.responseType = type
-        
-        return request
-    }
-    
+
     @inlinable func body(_ data: any Encodable) -> some Request {
         var request = self
         request.content?.body = data

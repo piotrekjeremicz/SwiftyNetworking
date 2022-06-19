@@ -8,19 +8,19 @@
 import Combine
 import Foundation
 
-struct Content {
-    var responseType: Codable.Type = Empty.self
-    var errorType: Codable.Type = Empty.self
+public struct Content {
+    public var responseType: Decodable.Type = Empty.self
+    public var errorType: Decodable.Type = Empty.self
     
-    var path: String
-    var service: Service
-    var method: Method
+    public var path: String
+    public var service: Service
+    public var method: Method
     
-    var body: (any Encodable)?
-    var headers: [String: String]?
-    var queryItems: [URLQueryItem]?
+    public var body: (any Encodable)?
+    public var headers: [String: String]?
+    public var queryItems: [URLQueryItem]?
     
-    var bodyEncoder: any TopLevelEncoder
-    var responseDecoder: any TopLevelDecoder
+    public var bodyEncoder: any TopLevelEncoder
+    public var responseDecoder: any TopLevelDecoder
 }
 

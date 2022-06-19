@@ -8,14 +8,20 @@
 import Combine
 import Foundation
 
-struct EmptyRequest: Request {
-    var content: Content? = nil
+public struct EmptyRequest: Request {
+    public typealias Response = Empty
+    public typealias ResponseError = Empty
+    
+    public var content: Content? = nil
 }
 
-struct Get: Request {
-    var content: Content?
+public struct Get: Request {
+    public typealias Response = Empty
+    public typealias ResponseError = Empty
     
-    init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public var content: Content?
+    
+    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -26,10 +32,13 @@ struct Get: Request {
     }
 }
 
-struct Post: Request {
-    var content: Content?
+public struct Post: Request {
+    public typealias Response = Empty
+    public typealias ResponseError = Empty
     
-    init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public var content: Content?
+    
+    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -40,10 +49,13 @@ struct Post: Request {
     }
 }
 
-struct Put: Request {
-    var content: Content?
+public struct Put: Request {
+    public typealias Response = Empty
+    public typealias ResponseError = Empty
     
-    init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public var content: Content?
+    
+    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -54,10 +66,13 @@ struct Put: Request {
     }
 }
 
-struct Path: Request {
-    var content: Content?
+public struct Path: Request {
+    public typealias Response = Empty
+    public typealias ResponseError = Empty
     
-    init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public var content: Content?
+    
+    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -68,10 +83,13 @@ struct Path: Request {
     }
 }
 
-struct Delete: Request {
-    var content: Content?
+public struct Delete: Request {
+    public typealias Response = Empty
+    public typealias ResponseError = Empty
     
-    init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public var content: Content?
+    
+    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,

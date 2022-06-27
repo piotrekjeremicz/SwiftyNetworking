@@ -21,7 +21,7 @@ public struct Get: Request {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -38,7 +38,7 @@ public struct Post: Request {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -55,7 +55,7 @@ public struct Put: Request {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -72,7 +72,7 @@ public struct Path: Request {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,
@@ -89,7 +89,7 @@ public struct Delete: Request {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any TopLevelEncoder = JSONEncoder(), responseDecoder: any TopLevelDecoder = JSONDecoder()) {
+    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
         content = Content(
             path: path,
             service: service,

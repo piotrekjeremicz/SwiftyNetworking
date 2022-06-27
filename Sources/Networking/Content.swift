@@ -20,7 +20,6 @@ public struct Content {
     public var headers: [String: String]?
     public var queryItems: [URLQueryItem]?
     
-    public var bodyEncoder: any TopLevelEncoder
-    public var responseDecoder: any TopLevelDecoder
+    public var bodyEncoder: any DataEncoder
+    public var responseDecoder: any DataDecoder
 }
-

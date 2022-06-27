@@ -74,6 +74,9 @@ public final class Session {
 private extension Session {
     func run<RequestType: Request>(for request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
         do {
+            guard let content = request.content
+            else { throw RequestError.requestContentIsNotSet }
+            
             let urlRequest = try request.urlRequest()
             
 #if DEBUG
@@ -81,7 +84,7 @@ private extension Session {
                 let body = String(describing: String(data: urlRequest.httpBody ?? Data(), encoding: .utf8))
                 let trimmedBody = body.count > 600 ? body.prefix(300) + "\n[...]\n" + body.suffix(300) : body
                 
-                print("\n-> \(request.content?.method.rawValue.uppercased()) \(urlRequest.url!)")
+                print("\n-> \(content.method.rawValue.uppercased()) \(urlRequest.url!)")
                 print("-> Header: \(String(describing: urlRequest.allHTTPHeaderFields))")
                 print("-> Body: \(trimmedBody)\n")
             }
@@ -90,6 +93,8 @@ private extension Session {
             return session
                 .dataTaskPublisher(for: urlRequest)
                 .tryMap { [weak self] result in
+                    guard let content = request.content
+                    else { throw RequestError.requestContentIsNotSet }
                     
                     guard let httpResponse = result.response as? HTTPURLResponse
                     else { throw ResponseError<Any>.unsupportedResponseType(result.response) }
@@ -99,7 +104,7 @@ private extension Session {
                         let body = String(describing: String(data: result.data, encoding: .utf8))
                         let trimmedBody = body.count > 600 ? String(body.prefix(300) + "\n[...]\n" + body.suffix(300)) : body
                         
-                        print("\n-> Response: \(request.path)")
+                        print("\n-> Response: \(content.path)")
                         print("-> Status: \(httpResponse.statusCode)")
                         print("-> Body: \(trimmedBody)")
                     }
@@ -108,7 +113,7 @@ private extension Session {
                     guard (200..<300).contains(httpResponse.statusCode) else {
                         if RequestType.ResponseError.self == Empty.self {
                             throw ResponseError<RequestType.ResponseError>.noResponse
-                        } else if let errorDescription = try? request.content?.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
+                        } else if let errorDescription = try? content.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)
                         } else {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, .none)
@@ -118,7 +123,7 @@ private extension Session {
                     if RequestType.Response.self == Empty.self {
                         return Empty() as! RequestType.Response
                     } else {
-                        return try request.content?.responseDecoder.decode(RequestType.Response.self, from: result.data)
+                        return try content.responseDecoder.decode(RequestType.Response.self, from: result.data)
                     }
                 }
                 .mapError({ error in

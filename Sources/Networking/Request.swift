@@ -52,7 +52,7 @@ public extension Request {
         content.headers?.forEach { urlRequest.addValue($1, forHTTPHeaderField: $0) }
         
         if let body = content.body {
-            let data = try? content.bodyEncoder.encode(body) as? Data
+            let data = try? content.bodyEncoder.encode(body)
             urlRequest.httpBody = data
             urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         }

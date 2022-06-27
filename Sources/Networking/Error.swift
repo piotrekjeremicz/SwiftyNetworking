@@ -1,8 +1,8 @@
 //
 //  Error.swift
-//  SwiftyNetworking
+//  
 //
-//  Created by Piotrek Jeremicz on 19/12/2021.
+//  Created by Piotrek on 18/06/2022.
 //
 
 import Foundation
@@ -31,5 +31,6 @@ public enum ResponseError<ErrorDescription>: Error {
 }
 
 public enum RequestError: Error {
+    case requestContentIsNotSet
     case resolvingUrlComponentsFailed
 }

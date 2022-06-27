@@ -1,8 +1,8 @@
 //
 //  Service.swift
-//  SwiftyNetworking
+//  
 //
-//  Created by Piotrek Jeremicz on 19/12/2021.
+//  Created by Piotrek on 18/06/2022.
 //
 
 import Foundation

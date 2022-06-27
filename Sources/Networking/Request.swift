@@ -1,14 +1,14 @@
 //
 //  Request.swift
-//  SwiftyNetworking
+//  
 //
-//  Created by Piotrek Jeremicz on 19/12/2021.
+//  Created by Piotrek on 18/06/2022.
 //
 
 import Foundation
-import AnyCodable
+import Combine
 
-public enum RquestMethod: String {
+public enum Method: String {
     case get
     case put
     case post
@@ -17,51 +17,69 @@ public enum RquestMethod: String {
 }
 
 public protocol Request {
+    associatedtype Body: Request
+
     associatedtype Response: Codable
     associatedtype ResponseError: Codable
     
-    var path: String { get }
-    var service: Service { get }
-    var method: RquestMethod { get }
-    
-    var body: AnyCodable? { get }
-    var headers: [String: String]? { get }
-    var queryItems: [URLQueryItem]? { get }
-    
-    var bodyEncoder: AnyDataEncoder { get }
-    var responseDecoder: AnyDataDecoder { get }
+    var request: Body { get }
+    var content: Content? { get set }
     
     func urlRequest() throws -> URLRequest
 }
 
-public extension Request {    
-    var body: AnyCodable? { nil }
-    var headers: [String: String]? { nil }
-    var queryItems: [URLQueryItem]? { nil }
-    
-    var bodyEncoder: AnyDataEncoder { JSONEncoder() }
-    var responseDecoder: AnyDataDecoder { JSONDecoder() }
+public extension Request {
+    var request: some Request { EmptyRequest() }
+    var content: Content? {
+        get { nil }
+        set {     }
+    }
     
     func urlRequest() throws -> URLRequest {
-        guard
-            var urlComponents = URLComponents(url: service.baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)
+        guard let content = request.content
+        else { throw RequestError.requestContentIsNotSet }
+        
+        guard var urlComponents = URLComponents(url: content.service.baseURL.appendingPathComponent(content.path), resolvingAgainstBaseURL: false)
         else { throw RequestError.resolvingUrlComponentsFailed }
         
-        urlComponents.queryItems = queryItems
+        urlComponents.queryItems = content.queryItems
         
         guard let url = urlComponents.url
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = method.rawValue
-        headers?.forEach { urlRequest.addValue($1, forHTTPHeaderField: $0) }
+        urlRequest.httpMethod = content.method.rawValue
+        content.headers?.forEach { urlRequest.addValue($1, forHTTPHeaderField: $0) }
         
-        if let body = body {
-            let data = try? bodyEncoder.encode(body)
+        if let body = content.body {
+            let data = try? content.bodyEncoder.encode(body)
             urlRequest.httpBody = data
             urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         }
         
         return urlRequest
     }
+
+    @inlinable func body(_ data: any Encodable) -> some Request {
+        var request = self
+        request.content?.body = data
+        
+        return request
+    }
+    
+    @inlinable func headers(_ array: [String: String]) -> some Request {
+        var request = self
+        request.content?.headers = array
+        
+        return request
+    }
+    
+    @inlinable func queryItems(_ items: [URLQueryItem]) -> some Request {
+        var request = self
+        request.content?.queryItems = items
+        
+        return request
+    }
 }
+
+

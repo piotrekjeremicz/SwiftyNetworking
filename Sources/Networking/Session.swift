@@ -1,15 +1,15 @@
 //
-//  Api.swift
-//  SwiftyNetworking
+//  Session.swift
+//  
 //
-//  Created by Piotrek Jeremicz on 19/12/2021.
+//  Created by Piotrek on 19/06/2022.
 //
 
 import Combine
 import Foundation
 
-public final class Api {
-    public static let manager = Api()
+public final class Session {
+    public static let manager = Session()
     
     public let debugLogging: Bool
     
@@ -25,7 +25,7 @@ public final class Api {
     }
     
     public func send<RequestType: Request>(request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
-        runSession(for: request)
+        run(for: request)
     }
     
     @available(macOS 12.0, iOS 15.0, watchOS 8.0, tvOS 15.0, *)
@@ -56,7 +56,7 @@ public final class Api {
     }
     
     public func send<RequestType: Request>(request: RequestType, result: @escaping (RequestType.Response?, ResponseError<RequestType.ResponseError>?) -> Void) {
-        runSession(for: request)
+        run(for: request)
             .sink { completion in
                 switch completion {
                 case .failure(let error):
@@ -71,22 +71,30 @@ public final class Api {
     }
 }
 
-private extension Api {
-    func runSession<RequestType: Request>(for request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
+private extension Session {
+    func run<RequestType: Request>(for request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
         do {
+            guard let content = request.content
+            else { throw RequestError.requestContentIsNotSet }
+            
             let urlRequest = try request.urlRequest()
             
 #if DEBUG
             if debugLogging {
-                print("\n-> \(request.method.rawValue.uppercased()) \(urlRequest.url!)")
+                let body = String(describing: String(data: urlRequest.httpBody ?? Data(), encoding: .utf8))
+                let trimmedBody = body.count > 600 ? body.prefix(300) + "\n[...]\n" + body.suffix(300) : body
+                
+                print("\n-> \(content.method.rawValue.uppercased()) \(urlRequest.url!)")
                 print("-> Header: \(String(describing: urlRequest.allHTTPHeaderFields))")
-                print("-> Body: \(String(describing: String(data: urlRequest.httpBody ?? Data(), encoding: .utf8)))\n")
+                print("-> Body: \(trimmedBody)\n")
             }
 #endif
             
             return session
                 .dataTaskPublisher(for: urlRequest)
                 .tryMap { [weak self] result in
+                    guard let content = request.content
+                    else { throw RequestError.requestContentIsNotSet }
                     
                     guard let httpResponse = result.response as? HTTPURLResponse
                     else { throw ResponseError<Any>.unsupportedResponseType(result.response) }
@@ -94,9 +102,9 @@ private extension Api {
 #if DEBUG
                     if let self = self, self.debugLogging {
                         let body = String(describing: String(data: result.data, encoding: .utf8))
-                        let trimmedBody = body.count > 600 ? body.prefix(300) + "\n[...]\n" + body.suffix(300) : body
+                        let trimmedBody = body.count > 600 ? String(body.prefix(300) + "\n[...]\n" + body.suffix(300)) : body
                         
-                        print("\n-> Response: \(request.path)")
+                        print("\n-> Response: \(content.path)")
                         print("-> Status: \(httpResponse.statusCode)")
                         print("-> Body: \(trimmedBody)")
                     }
@@ -105,7 +113,7 @@ private extension Api {
                     guard (200..<300).contains(httpResponse.statusCode) else {
                         if RequestType.ResponseError.self == Empty.self {
                             throw ResponseError<RequestType.ResponseError>.noResponse
-                        } else if let errorDescription = try? request.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
+                        } else if let errorDescription = try? content.responseDecoder.decode(RequestType.ResponseError.self, from: result.data)  {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, errorDescription)
                         } else {
                             throw ResponseError<RequestType.ResponseError>.badResponse(httpResponse, .none)
@@ -113,9 +121,9 @@ private extension Api {
                     }
 
                     if RequestType.Response.self == Empty.self {
-                        return Empty() as! RequestType.Response 
+                        return Empty() as! RequestType.Response
                     } else {
-                        return try request.responseDecoder.decode(RequestType.Response.self, from: result.data)
+                        return try content.responseDecoder.decode(RequestType.Response.self, from: result.data)
                     }
                 }
                 .mapError({ error in

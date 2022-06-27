@@ -8,14 +8,16 @@
 import Combine
 import Foundation
 
-public struct EmptyRequest: Request {
+protocol GenericRequest: Request { }
+
+public struct EmptyRequest: GenericRequest {
     public typealias Response = Empty
     public typealias ResponseError = Empty
     
     public var content: Content? = nil
 }
 
-public struct Get: Request {
+public struct Get: GenericRequest {
     public typealias Response = Empty
     public typealias ResponseError = Empty
     
@@ -32,7 +34,7 @@ public struct Get: Request {
     }
 }
 
-public struct Post: Request {
+public struct Post: GenericRequest {
     public typealias Response = Empty
     public typealias ResponseError = Empty
     
@@ -49,7 +51,7 @@ public struct Post: Request {
     }
 }
 
-public struct Put: Request {
+public struct Put: GenericRequest {
     public typealias Response = Empty
     public typealias ResponseError = Empty
     
@@ -66,7 +68,7 @@ public struct Put: Request {
     }
 }
 
-public struct Path: Request {
+public struct Path: GenericRequest {
     public typealias Response = Empty
     public typealias ResponseError = Empty
     
@@ -83,7 +85,7 @@ public struct Path: Request {
     }
 }
 
-public struct Delete: Request {
+public struct Delete: GenericRequest {
     public typealias Response = Empty
     public typealias ResponseError = Empty
     

@@ -19,8 +19,8 @@ public enum Method: String {
 public protocol Request {
     associatedtype Body: Request
 
-    associatedtype Response: Codable
-    associatedtype ResponseError: Codable
+    associatedtype Response: Decodable
+    associatedtype ResponseError: Decodable
     
     var request: Body { get }
     var content: Content? { get set }

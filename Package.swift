@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -17,7 +17,8 @@ let package = Package(
             targets: ["Networking"]),
     ],
     dependencies: [
-        
+        .package(url: "https://github.com/Quick/Quick.git", from: "5.0.0"),
+        .package(url: "https://github.com/Quick/Nimble.git", from: "10.0.0"),
     ],
     targets: [
         .target(
@@ -25,6 +26,6 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "NetworkingTests",
-            dependencies: ["Networking"]),
+            dependencies: ["Networking", "Quick", "Nimble"]),
     ]
 )

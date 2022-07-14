@@ -68,7 +68,7 @@ public struct Put: GenericRequest {
     }
 }
 
-public struct Path: GenericRequest {
+public struct Patch: GenericRequest {
     public typealias Response = Empty
     public typealias ResponseError = Empty
     

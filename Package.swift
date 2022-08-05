@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "SwiftyNetworking",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v14),
         .macOS(.v12),
-        .tvOS(.v15),
-        .watchOS(.v8)
+        .tvOS(.v14),
+        .watchOS(.v7)
     ],
     products: [
         .library(

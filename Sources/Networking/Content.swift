@@ -17,8 +17,8 @@ public struct Content {
     public var method: Method
     
     public var body: (any Encodable)?
-    public var headers: [String: String]?
-    public var queryItems: [URLQueryItem]?
+    public var headers: [any KeyValueProvider]?
+    public var queryItems: [any KeyValueProvider]?
     
     public var bodyEncoder: any DataEncoder
     public var responseDecoder: any DataDecoder

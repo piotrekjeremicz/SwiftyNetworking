@@ -42,14 +42,16 @@ public extension Request {
         guard var urlComponents = URLComponents(url: content.service.baseURL.appendingPathComponent(content.path), resolvingAgainstBaseURL: false)
         else { throw RequestError.resolvingUrlComponentsFailed }
         
-        urlComponents.queryItems = content.queryItems
+        urlComponents.queryItems = content.queryItems?.map({
+            URLQueryItem(name: $0.key, value: $0.value)
+        })
         
         guard let url = urlComponents.url
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = content.method.rawValue
-        content.headers?.forEach { urlRequest.addValue($1, forHTTPHeaderField: $0) }
+        content.headers?.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
         
         if let body = content.body {
             let data = try? content.bodyEncoder.encode(body)
@@ -67,16 +69,23 @@ public extension Request {
         return request
     }
     
-    @inlinable func headers(_ array: [String: String]) -> some Request {
+    @inlinable func headers(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> some Request {
         var request = self
-        request.content?.headers = array
+        request.content?.headers = items()
         
         return request
     }
     
-    @inlinable func queryItems(_ items: [URLQueryItem]) -> some Request {
+    @inlinable func queryItems(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> some Request {
         var request = self
-        request.content?.queryItems = items
+        request.content?.queryItems = items()
+        
+        return request
+    }
+    
+    @inlinable func mocked(@CaseBuilder _ mock: @escaping (Mock.Request) -> [Mock.Case]) -> some Request {
+        var request = self
+        request.mock = Mock(flow: mock)
         
         return request
     }

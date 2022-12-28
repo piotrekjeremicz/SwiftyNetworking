@@ -21,28 +21,22 @@ struct ExampleErrorModel: Decodable {
     let status: Int
     let message: String
 }
-                           
-//struct ExampleRequest: Request {
-//
-//    typealias Response = ExampleResponseModel
-//    typealias ResponseError = ExampleErrorModel
-//
-//    var request: some Request {
-//        Get("/example", from: ExampleService())
-//            .headers([
-//                "Authorization": "Example"
-//            ])
-//            .queryItems([
-//                URLQueryItem(name: "hello", value: "world")
-//            ])
-//            .body(String("SwiftyNetworking!"))
-//    }
-//}
 
+struct ExampleRequest: Request {
+    typealias Response = ExampleResponseModel
+    typealias ResponseError = ExampleErrorModel
 
-
-
-
+    var body: some Request {
+        Get("path", "to", "endpoint", from: ExampleService())
+            .headers {
+                Authorization("Example")
+            }
+            .queryItems {
+                Key("hello", value: "world")
+            }
+            .body(String("SwiftyNetworking!"))
+    }
+}
 
 struct TestService: Service {
     var baseURL: URL { URL(string: "https://example.com")! }
@@ -60,7 +54,7 @@ struct GetArticlesRequest: Request {
     typealias Response = TestResponse
     typealias ResponseError = TestError
     
-    var request: some Request {
+    var body: some Request {
         Get("/articles", from: TestService())
             .headers {
                 Authorization("Sample")
@@ -87,7 +81,7 @@ struct GetArticlesSummaryRequest: Request {
     typealias Response = TestResponse
     typealias ResponseError = TestError
     
-    var request: some Request {
+    var body: some Request {
         GetArticlesRequest()
     }
 }

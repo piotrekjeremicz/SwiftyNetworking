@@ -7,9 +7,14 @@
 
 import Foundation
 
-public protocol KeyValueProvider {
+public protocol KeyValueProvider: Equatable {
     var key: String { get }
     var value: String { get }
+    var dictionary: [String: String] { get }
+}
+
+extension KeyValueProvider {
+    public var dictionary: [String: String] { [key: value] }
 }
 
 public struct Key: KeyValueProvider {

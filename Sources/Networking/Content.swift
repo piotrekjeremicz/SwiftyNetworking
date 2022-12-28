@@ -30,8 +30,8 @@ public struct Content {
         service: Service,
         method: Method,
         body: (Encodable)? = nil,
-        headers: [KeyValueProvider]? = nil,
-        queryItems: [KeyValueProvider]? = nil,
+        headers: [any KeyValueProvider]? = nil,
+        queryItems: [any KeyValueProvider]? = nil,
         bodyEncoder: DataEncoder,
         responseDecoder: DataDecoder
     ) {

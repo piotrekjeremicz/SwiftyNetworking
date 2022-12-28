@@ -8,6 +8,10 @@
 import Foundation
 import Networking
 
+struct MockSimpleService: Service {
+    var baseURL: URL { .init(string: "https://example.com")! }
+}
+
 struct MockService: Service {
     var baseURL: URL { .init(string: "https://example.com")! }
     

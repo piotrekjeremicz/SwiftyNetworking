@@ -23,7 +23,7 @@ public protocol Request {
     associatedtype ResponseError: Decodable
     
     var mock: Mock? { get set }
-    var request: Body { get }
+    var body: Body { get }
     var content: Content? { get set }
 
     func urlRequest() throws -> URLRequest
@@ -34,17 +34,14 @@ public extension Request {
         get { nil }
         set {     }
     }
-    var request: some Request { EmptyRequest() }
+    var body: some Request { EmptyRequest() }
     var content: Content? {
-        get {
-            if request is any GenericRequest { return request.content }
-            else { return nil }
-        }
+        get { nil }
         set {     }
     }
     
     func urlRequest() throws -> URLRequest {
-        guard let content = request.content
+        guard let content = body.content
         else { throw RequestError.requestContentIsNotSet }
         
         guard var urlComponents = URLComponents(url: content.service.baseURL.appendingPathComponent(content.path), resolvingAgainstBaseURL: false)

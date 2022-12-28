@@ -32,12 +32,12 @@ struct ExampleRequest: Request {
     
     var request: some Request {
         Get(“/example”, from: ExampleService())
-            .headers([
-                “Authorization”: “Example”
-            ])
-            .queryItems([
-                URLQueryItem(name: “hello”, value: “world”)
-            ])
+            .headers {
+                Authorization("Example")
+            }
+            .queryItems {
+                Key("hello", value: "world")
+            }
             .body(String(“SwiftyNetworking!”))
     }
 }

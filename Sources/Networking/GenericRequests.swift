@@ -10,7 +10,7 @@ import Foundation
 
 protocol GenericRequest: Request { }
 
-public struct EmptyRequest: GenericRequest {
+public struct EmptyRequest: GenericRequest {    
     public typealias Response = Empty
     public typealias ResponseError = Empty
     
@@ -24,6 +24,9 @@ public struct Get: GenericRequest {
     public var content: Content?
     
     public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
+        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
+        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+
         content = Content(
             path: path,
             service: service,
@@ -41,6 +44,9 @@ public struct Post: GenericRequest {
     public var content: Content?
     
     public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
+        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
+        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+
         content = Content(
             path: path,
             service: service,
@@ -58,6 +64,9 @@ public struct Put: GenericRequest {
     public var content: Content?
     
     public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
+        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
+        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+
         content = Content(
             path: path,
             service: service,
@@ -75,6 +84,9 @@ public struct Patch: GenericRequest {
     public var content: Content?
     
     public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
+        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
+        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+
         content = Content(
             path: path,
             service: service,
@@ -92,6 +104,9 @@ public struct Delete: GenericRequest {
     public var content: Content?
     
     public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
+        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
+        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+
         content = Content(
             path: path,
             service: service,

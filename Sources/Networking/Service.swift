@@ -9,4 +9,11 @@ import Foundation
 
 public protocol Service {
     var baseURL: URL { get }
+    var responseDecoder: (any DataDecoder)? { get }
+    var bodyEncoder: (any DataEncoder)? { get }
+}
+
+public extension Service {
+    var responseDecoder: (any DataDecoder)? { nil }
+    var bodyEncoder: (any DataEncoder)? { nil }
 }

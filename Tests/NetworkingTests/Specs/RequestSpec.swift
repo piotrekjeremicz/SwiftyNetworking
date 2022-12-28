@@ -28,7 +28,7 @@ final class RequestSpec: QuickSpec {
                     let content = request.content
                     expect(content).to(beNil())
                     
-                    let newContent = Content(path: "newContent", service: service, method: .delete, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+                    let newContent = Content(path: ["newContent"], service: service, method: .delete, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                     request.content = newContent
                     
                     expect(request.content).to(beNil())

@@ -22,4 +22,28 @@ public struct Content {
     
     public var bodyEncoder: any DataEncoder
     public var responseDecoder: any DataDecoder
+
+    public init(
+        responseType: Decodable.Type = Empty.self,
+        errorType: Decodable.Type = Empty.self,
+        path: [String],
+        service: Service,
+        method: Method,
+        body: (Encodable)? = nil,
+        headers: [KeyValueProvider]? = nil,
+        queryItems: [KeyValueProvider]? = nil,
+        bodyEncoder: DataEncoder,
+        responseDecoder: DataDecoder
+    ) {
+        self.responseType = responseType
+        self.errorType = errorType
+        self.path = path.joined(separator: "/")
+        self.service = service
+        self.method = method
+        self.body = body
+        self.headers = headers
+        self.queryItems = queryItems
+        self.bodyEncoder = bodyEncoder
+        self.responseDecoder = responseDecoder
+    }
 }

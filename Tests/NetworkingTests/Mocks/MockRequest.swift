@@ -17,12 +17,12 @@ struct MockRequest: Request {
     
     var request: some Request {
         Get("getArticles", from: service)
-            .headers([
-                "Authorization": "secret_token"
-            ])
-            .queryItems([
-                URLQueryItem(name: "index", value: "1")
-            ])
+            .headers {
+                Authorization("secret_token")
+            }
+            .queryItems {
+                Key("index", value: "1")
+            }
             .body(
                 MockBody(filter: "all")
             )

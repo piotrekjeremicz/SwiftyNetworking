@@ -22,16 +22,24 @@ public protocol Request {
     associatedtype Response: Decodable
     associatedtype ResponseError: Decodable
     
+    var mock: Mock? { get set }
     var request: Body { get }
     var content: Content? { get set }
-    
+
     func urlRequest() throws -> URLRequest
 }
 
 public extension Request {
+    var mock: Mock? {
+        get { nil }
+        set {     }
+    }
     var request: some Request { EmptyRequest() }
     var content: Content? {
-        get { nil }
+        get {
+            if request is any GenericRequest { return request.content }
+            else { return nil }
+        }
         set {     }
     }
     

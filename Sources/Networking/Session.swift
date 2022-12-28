@@ -109,7 +109,7 @@ private extension Session {
                         print("-> Body: \(trimmedBody)")
                     }
 #endif
-                    
+
                     guard (200..<300).contains(httpResponse.statusCode) else {
                         if RequestType.ResponseError.self == Empty.self {
                             throw ResponseError<RequestType.ResponseError>.noResponse

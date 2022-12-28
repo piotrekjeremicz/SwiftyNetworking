@@ -15,7 +15,7 @@ struct MockRequest: Request {
     typealias Response = Empty
     typealias ResponseError = Empty
     
-    var request: some Request {
+    var body: some Request {
         Get("getArticles", from: service)
             .headers {
                 Authorization("secret_token")

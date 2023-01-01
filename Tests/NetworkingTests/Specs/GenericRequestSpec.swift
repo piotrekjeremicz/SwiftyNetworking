@@ -12,12 +12,12 @@ import Foundation
 
 final class GenericRequestSpec: QuickSpec {
     override func spec() {
-        let path = "path"
+        let path = ["path", "to", "endpoint"]
         let service = MockService()
         
         describe("using generic requests") {
             context("as GET") {
-                let getRequest = Get(path, from: service)
+                let getRequest = Get("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .get, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -28,10 +28,32 @@ final class GenericRequestSpec: QuickSpec {
                     expect(requestContent?.service.baseURL).to(equal(content.service.baseURL))
                     expect(requestContent?.method).to(equal(content.method))
                 }
+
+                it("has default coder inherited from service") {
+                    let bodyEncoder = getRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+
+                    let responseDecoder = getRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+                }
+
+                it("can handle custom coder") {
+                    let customRequest = Get("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+
+                    let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder?.userInfo).to(beEmpty())
+
+                    let responseDecoder = customRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder?.userInfo).to(beEmpty())
+                }
             }
             
             context("as POST") {
-                let postRequest = Post(path, from: service)
+                let postRequest = Post("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .post, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -42,10 +64,32 @@ final class GenericRequestSpec: QuickSpec {
                     expect(requestContent?.service.baseURL).to(equal(content.service.baseURL))
                     expect(requestContent?.method).to(equal(content.method))
                 }
+
+                it("has default coder inherited from service") {
+                    let bodyEncoder = postRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+
+                    let responseDecoder = postRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+                }
+
+                it("can handle custom coder") {
+                    let customRequest = Post("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+
+                    let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder?.userInfo).to(beEmpty())
+
+                    let responseDecoder = customRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder?.userInfo).to(beEmpty())
+                }
             }
             
             context("as PUT") {
-                let putRequest = Put(path, from: service)
+                let putRequest = Put("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .put, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -56,10 +100,32 @@ final class GenericRequestSpec: QuickSpec {
                     expect(requestContent?.service.baseURL).to(equal(content.service.baseURL))
                     expect(requestContent?.method).to(equal(content.method))
                 }
+
+                it("has default coder inherited from service") {
+                    let bodyEncoder = putRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+
+                    let responseDecoder = putRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+                }
+
+                it("can handle custom coder") {
+                    let customRequest = Put("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+
+                    let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder?.userInfo).to(beEmpty())
+
+                    let responseDecoder = customRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder?.userInfo).to(beEmpty())
+                }
             }
             
             context("as PATCH") {
-                let pathRequest = Patch(path, from: service)
+                let pathRequest = Patch("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .patch, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -70,19 +136,63 @@ final class GenericRequestSpec: QuickSpec {
                     expect(requestContent?.service.baseURL).to(equal(content.service.baseURL))
                     expect(requestContent?.method).to(equal(content.method))
                 }
+
+                it("has default coder inherited from service") {
+                    let bodyEncoder = pathRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+
+                    let responseDecoder = pathRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+                }
+
+                it("can handle custom coder") {
+                    let customRequest = Patch("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+
+                    let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder?.userInfo).to(beEmpty())
+
+                    let responseDecoder = customRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder?.userInfo).to(beEmpty())
+                }
             }
             
             context("as DELETE") {
-                let pathRequest = Delete(path, from: service)
+                let deleteRequest = Delete("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .delete, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
-                    expect(pathRequest.content).neverTo(beNil())
+                    expect(deleteRequest.content).neverTo(beNil())
                     
-                    let requestContent = pathRequest.content
+                    let requestContent = deleteRequest.content
                     expect(requestContent?.path).to(equal(content.path))
                     expect(requestContent?.service.baseURL).to(equal(content.service.baseURL))
                     expect(requestContent?.method).to(equal(content.method))
+                }
+
+                it("has default coder inherited from service") {
+                    let bodyEncoder = deleteRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+
+                    let responseDecoder = deleteRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder!.userInfo.keys.first?.rawValue).to(equal("test"))
+                }
+
+                it("can handle custom coder") {
+                    let customRequest = Delete("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+
+                    let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
+                    expect(bodyEncoder).neverTo(beNil())
+                    expect(bodyEncoder?.userInfo).to(beEmpty())
+
+                    let responseDecoder = customRequest.content?.responseDecoder as? JSONDecoder
+                    expect(responseDecoder).neverTo(beNil())
+                    expect(responseDecoder?.userInfo).to(beEmpty())
                 }
             }
         }

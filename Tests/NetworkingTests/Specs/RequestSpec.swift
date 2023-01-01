@@ -19,8 +19,8 @@ final class RequestSpec: QuickSpec {
                 var request = MockRequest(service: service)
                 
                 it("should have proper generic request") {
-                    let genericRequest = request.request
-                    expect(genericRequest.request).to(beAKindOf(EmptyRequest.self))
+                    let genericRequest = request.body
+                    expect(genericRequest.body).to(beAKindOf(EmptyRequest.self))
                     expect(genericRequest.content).toNever(beNil())
                 }
                 
@@ -28,7 +28,7 @@ final class RequestSpec: QuickSpec {
                     let content = request.content
                     expect(content).to(beNil())
                     
-                    let newContent = Content(path: "newContent", service: service, method: .delete, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+                    let newContent = Content(path: ["newContent"], service: service, method: .delete, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                     request.content = newContent
                     
                     expect(request.content).to(beNil())

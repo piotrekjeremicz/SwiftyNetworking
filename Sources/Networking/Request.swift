@@ -23,7 +23,7 @@ public protocol Request {
     associatedtype ResponseError: Decodable
     
     var mock: Mock? { get set }
-    var request: Body { get }
+    var body: Body { get }
     var content: Content? { get set }
 
     func urlRequest() throws -> URLRequest
@@ -34,32 +34,34 @@ public extension Request {
         get { nil }
         set {     }
     }
-    var request: some Request { EmptyRequest() }
+    var body: some Request { EmptyRequest() }
     var content: Content? {
-        get {
-            if request is any GenericRequest { return request.content }
-            else { return nil }
-        }
+        get { nil }
         set {     }
     }
     
     func urlRequest() throws -> URLRequest {
-        guard let content = request.content
+		let c: Content?
+		if let generic = body as? any GenericRequest, let genericContent = generic.content {
+			c = genericContent
+		} else {
+			c = content
+		}
+		
+        guard let content = c
         else { throw RequestError.requestContentIsNotSet }
         
         guard var urlComponents = URLComponents(url: content.service.baseURL.appendingPathComponent(content.path), resolvingAgainstBaseURL: false)
         else { throw RequestError.resolvingUrlComponentsFailed }
         
-        urlComponents.queryItems = content.queryItems?.map({
-            URLQueryItem(name: $0.key, value: $0.value)
-        })
+		urlComponents.queryItems = content.queryItems?.map { URLQueryItem(name: $0.key, value: $0.value.description) }
         
         guard let url = urlComponents.url
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = content.method.rawValue
-        content.headers?.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
+		content.headers?.forEach { urlRequest.addValue($0.value.description, forHTTPHeaderField: $0.key) }
         
         if let body = content.body {
             let data = try? content.bodyEncoder.encode(body)
@@ -68,13 +70,6 @@ public extension Request {
         }
         
         return urlRequest
-    }
-
-    @inlinable func body(_ data: any Encodable) -> some Request {
-        var request = self
-        request.content?.body = data
-        
-        return request
     }
     
     @inlinable func headers(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> some Request {
@@ -90,7 +85,28 @@ public extension Request {
         
         return request
     }
+	
+	@inlinable func body(_ data: any Encodable) -> some Request {
+		var request = self
+		request.content?.body = data
+		
+		return request
+	}
+	
+	@inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> some Request {
+		var request = self
+		request.content?.body = json().compactMap({ $0 as? Encodable }) as? any Encodable
+		
+		return request
+	}
     
+	@inlinable func body(json: Json) -> some Request {
+		var request = self
+		request.content?.body = json.root.compactMap({ $0 as? Encodable }) as? any Encodable
+		
+		return request
+	}
+	
     @inlinable func mocked(@CaseBuilder _ mock: @escaping (Mock.Request) -> [Mock.Case]) -> some Request {
         var request = self
         request.mock = Mock(flow: mock)

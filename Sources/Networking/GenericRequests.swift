@@ -23,9 +23,9 @@ public struct Get: GenericRequest {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
-        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
-        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+    public init(_ path: String..., from service: Service, bodyEncoder: (any DataEncoder)? = nil, responseDecoder: (any DataDecoder)? = nil) {
+        let bodyEncoder = bodyEncoder == nil ? service.bodyEncoder : bodyEncoder!
+        let responseDecoder = responseDecoder == nil ? service.responseDecoder : responseDecoder!
 
         content = Content(
             path: path,
@@ -43,9 +43,9 @@ public struct Post: GenericRequest {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
-        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
-        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+    public init(_ path: String..., from service: Service, bodyEncoder: (any DataEncoder)? = nil, responseDecoder: (any DataDecoder)? = nil) {
+        let bodyEncoder = bodyEncoder == nil ? service.bodyEncoder : bodyEncoder!
+        let responseDecoder = responseDecoder == nil ? service.responseDecoder : responseDecoder!
 
         content = Content(
             path: path,
@@ -63,9 +63,9 @@ public struct Put: GenericRequest {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
-        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
-        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+    public init(_ path: String..., from service: Service, bodyEncoder: (any DataEncoder)? = nil, responseDecoder: (any DataDecoder)? = nil) {
+        let bodyEncoder = bodyEncoder == nil ? service.bodyEncoder : bodyEncoder!
+        let responseDecoder = responseDecoder == nil ? service.responseDecoder : responseDecoder!
 
         content = Content(
             path: path,
@@ -83,9 +83,9 @@ public struct Patch: GenericRequest {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
-        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
-        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+    public init(_ path: String..., from service: Service, bodyEncoder: (any DataEncoder)? = nil, responseDecoder: (any DataDecoder)? = nil) {
+        let bodyEncoder = bodyEncoder == nil ? service.bodyEncoder : bodyEncoder!
+        let responseDecoder = responseDecoder == nil ? service.responseDecoder : responseDecoder!
 
         content = Content(
             path: path,
@@ -103,9 +103,9 @@ public struct Delete: GenericRequest {
     
     public var content: Content?
     
-    public init(_ path: String, from service: Service, bodyEncoder: any DataEncoder = JSONEncoder(), responseDecoder: any DataDecoder = JSONDecoder()) {
-        let bodyEncoder = service.bodyEncoder == nil ? bodyEncoder : service.bodyEncoder!
-        let responseDecoder = service.responseDecoder == nil ? responseDecoder : service.responseDecoder!
+    public init(_ path: String..., from service: Service, bodyEncoder: (any DataEncoder)? = nil, responseDecoder: (any DataDecoder)? = nil) {
+        let bodyEncoder = bodyEncoder == nil ? service.bodyEncoder : bodyEncoder!
+        let responseDecoder = responseDecoder == nil ? service.responseDecoder : responseDecoder!
 
         content = Content(
             path: path,

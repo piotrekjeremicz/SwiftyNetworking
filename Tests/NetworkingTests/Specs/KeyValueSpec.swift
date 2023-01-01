@@ -18,19 +18,20 @@ final class KeyValueSpec: QuickSpec {
                 let keyValue = Key("hello", value: "world")
 
                 expect(keyValue.key).to(equal("hello"))
-                expect(keyValue.value).to(equal("world"))
-                expect(keyValue.dictionary).to(equal(["hello": "world"]))
+				expect(keyValue.value.description).to(equal("world"))
             }
 
             context("as key template") {
                 it("is authorization") {
                     let authorization = Authorization("sample")
-                    expect(authorization.dictionary).to(equal(["Authorization": "sample"]))
+					expect(authorization.key).to(equal("Authorization"))
+					expect(authorization.value.description).to(equal("sample"))
                 }
 
                 it("is x-api-key") {
                     let authorization = X_Api_Key("key")
-                    expect(authorization.dictionary).to(equal(["X-Api-Key": "key"]))
+					expect(authorization.key).to(equal("X-Api-Key"))
+					expect(authorization.value.description).to(equal("key"))
                 }
             }
         }

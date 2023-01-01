@@ -7,29 +7,64 @@
 
 import Foundation
 
-public protocol KeyValueProvider: Equatable {
+enum KeyValueCodingKey: String, CodingKey {
+	case key, value
+}
+
+public protocol ValueBasicType: Encodable, CustomStringConvertible, Equatable { }
+
+extension Swift.Int: ValueBasicType { }
+extension Swift.Bool: ValueBasicType { }
+extension Swift.Double: ValueBasicType { }
+extension Swift.String: ValueBasicType { }
+extension Swift.Array: ValueBasicType where Element: ValueBasicType { }
+
+extension ValueBasicType {
+	public static func == (lhs: any ValueBasicType, rhs: any ValueBasicType) -> Bool {
+		lhs.description == rhs.description
+	}
+}
+
+public protocol KeyValueProvider: ValueBasicType {
     var key: String { get }
-    var value: String { get }
-    var dictionary: [String: String] { get }
+    var value: any ValueBasicType { get }
+    var dictionary: [String: any ValueBasicType] { get }
 }
 
 extension KeyValueProvider {
-    public var dictionary: [String: String] { [key: value] }
+	public var description: String { "\(key): \(value.description)"}
+    public var dictionary: [String: any ValueBasicType] { [key: value] }
+	
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: KeyValueCodingKey.self)
+		try container.encode(key, forKey: .key)
+		try container.encode(value, forKey: .value)
+	}
+	
+	public static func == (lhs: Self, rhs: Self) -> Bool {
+		lhs.key == rhs.key && lhs.value.description == rhs.value.description
+	}
 }
+
 
 public struct Key: KeyValueProvider {
     public let key: String
-    public let value: String
+    public let value: any ValueBasicType
 
-    public init(_ key: String, value: String) {
+    public init(_ key: String, value: any ValueBasicType) {
         self.key = key
         self.value = value
     }
+	
+	public init(_ key: String, @JsonBuilder json: () -> [any JsonKey]) {
+		self.key = key
+		self.value = json() as? (any ValueBasicType) ?? Array<Key>() 
+	}
 }
 
 public struct X_Api_Key: KeyValueProvider {
     public let key: String
-    public let value: String
+    public let value: any ValueBasicType
 
     public init(_ value: String) {
         self.key = "X-Api-Key"
@@ -39,7 +74,7 @@ public struct X_Api_Key: KeyValueProvider {
 
 public struct Authorization: KeyValueProvider {
     public let key: String
-    public let value: String
+    public let value: any ValueBasicType
     
     public init(_ value: String) {
         self.key = "Authorization"

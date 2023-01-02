@@ -41,14 +41,14 @@ struct ExampleRequest: Request {
                 Key("hello", value: "world")
             }
             .body {
-				Key("array") {
-					Key("int", value: 42)
-					Key("double", value: 3.14)
-					Key("bool", value: true)
-					Key("string", value: "foo")
-					Key("array", value: ["foo", "bar", "buzz"])
-				}
-			}
+		Key("array") {
+			Key("int", value: 42)
+			Key("double", value: 3.14)
+			Key("bool", value: true)
+			Key("string", value: "foo")
+			Key("array", value: ["foo", "bar", "buzz"])
+		}
+	}
     }
 }
 ```

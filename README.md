@@ -6,16 +6,16 @@ Swifty Networking is a simple package that supports the networking layer and pro
 1. Create service that provides relevant API
 ```swift
 struct ExampleService: Service {
-    var baseURL: URL { URL(string: “https://www.example.com”)! }
+    var baseURL: URL { URL(string: "https://www.example.com")! }
 }
 ```
 
 2. Prepare models for **data** and **error** responses
 ```swift
 struct ExampleResponseModel: Decodable {
-    let name: String
-    let age: Int
-    let isUser: Bool
+    let foo: String
+    let bar: Int
+    let buzz: Bool
 }
 
 struct ExampleErrorModel: Decodable {
@@ -30,15 +30,25 @@ struct ExampleRequest: Request {
     typealias Response = ExampleResponseModel
     typealias ResponseError = ExampleErrorModel
     
+    let bar: String
+    
     var request: some Request {
-        Get(“/example”, from: ExampleService())
+        Get("foo", bar, "buzz", from: ExampleService())
             .headers {
-                Authorization("Example")
+                Authorization("sample_token")
             }
             .queryItems {
                 Key("hello", value: "world")
             }
-            .body(String(“SwiftyNetworking!”))
+            .body {
+				Key("array") {
+					Key("int", value: 42)
+					Key("double", value: 3.14)
+					Key("bool", value: true)
+					Key("string", value: "foo")
+					Key("array", value: ["foo", "bar", "buzz"])
+				}
+			}
     }
 }
 ```
@@ -46,14 +56,7 @@ struct ExampleRequest: Request {
 4. Create `session` and send request
 ```swift
 let session = Session()
-
-Task {
-    do {
-        let result = try await session.trySend(request: ExampleRequest())
-    } catch {
-        print(error)
-    }
-}
+let (result, error) = try? await session.trySend(request: ExampleRequest(bar: "buzz"))
 ```
 
 And that’s it!
@@ -83,9 +86,9 @@ struct ExampleRequest: Request {
     
     var request: some Request {
         Queue {
-            Get(“/example/1”, from: ExampleService())
-            Get(“/example/2”, from: ExampleService())
-            Get(“/example/3”, from: ExampleService())
+            Get("/example/1", from: ExampleService())
+            Get("/example/2", from: ExampleService())
+            Get("/example/3", from: ExampleService())
         }
     }
 }

@@ -74,7 +74,17 @@ public final class Session {
 private extension Session {
     func run<RequestType: Request>(for request: RequestType) -> AnyPublisher<RequestType.Response, ResponseError<RequestType.ResponseError>> {
         do {
-            guard let content = request.content
+			let content: Content?
+			
+			if request.body is any GenericRequest {
+				content = request.body.content
+			} else if let c = request.content {
+				content = c
+			} else {
+				content = nil
+			}
+			
+            guard let content = content
             else { throw RequestError.requestContentIsNotSet }
             
             let urlRequest = try request.urlRequest()

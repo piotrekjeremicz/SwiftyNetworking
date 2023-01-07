@@ -16,10 +16,10 @@ public enum Method: String {
     case delete
 }
 
-public protocol Request {
+public protocol Request: CustomStringConvertible {
     associatedtype Body: Request
 
-    associatedtype Response: Decodable
+    associatedtype ResponseBody: Decodable
     associatedtype ResponseError: Decodable
     
     var mock: Mock? { get set }
@@ -34,21 +34,26 @@ public extension Request {
         get { nil }
         set {     }
     }
+	
     var body: some Request { EmptyRequest() }
+	
     var content: Content? {
-        get { nil }
+		get {
+			let anyContent: Content?
+			if let generic = body as? any GenericRequest, let genericContent = generic.content {
+				anyContent = genericContent
+			} else {
+				anyContent = nil
+			}
+			
+			return anyContent
+		}
+		
         set {     }
     }
     
     func urlRequest() throws -> URLRequest {
-		let c: Content?
-		if let generic = body as? any GenericRequest, let genericContent = generic.content {
-			c = genericContent
-		} else {
-			c = content
-		}
-		
-        guard let content = c
+        guard let content = content
         else { throw RequestError.requestContentIsNotSet }
         
         guard var urlComponents = URLComponents(url: content.service.baseURL.appendingPathComponent(content.path), resolvingAgainstBaseURL: false)
@@ -115,4 +120,17 @@ public extension Request {
     }
 }
 
-
+extension Request {
+	public var description: String {
+		var array = [String]()
+		array.append("• Request: " + String(describing: type(of: self)))
+		
+		if let content {
+			array.append(content.description)
+		} else {
+			array.append("No content")
+		}
+		
+		return array.joined(separator: "\n") + "\n"
+	}
+}

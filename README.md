@@ -27,12 +27,12 @@ struct ExampleErrorModel: Decodable {
 3. Describe request by using `Request` abstraction
 ```swift
 struct ExampleRequest: Request {
-    typealias Response = ExampleResponseModel
+    typealias ResponseBody = ExampleResponseModel
     typealias ResponseError = ExampleErrorModel
     
     let bar: String
     
-    var request: some Request {
+    var body: some Request {
         Get("foo", bar, "buzz", from: ExampleService())
             .headers {
                 Authorization("sample_token")
@@ -40,7 +40,7 @@ struct ExampleRequest: Request {
             .queryItems {
                 Key("hello", value: "world")
             }
-            .body {
+			.body {
 				Key("array") {
 					Key("int", value: 42)
 					Key("double", value: 3.14)
@@ -56,7 +56,7 @@ struct ExampleRequest: Request {
 4. Create `session` and send request
 ```swift
 let session = Session()
-let (result, error) = try? await session.trySend(request: ExampleRequest(bar: "buzz"))
+let (result, error) = await session.send(request: ExampleRequest(bar: "buzz"))
 ```
 
 And that’s it!

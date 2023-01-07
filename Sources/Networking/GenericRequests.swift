@@ -11,14 +11,14 @@ import Foundation
 protocol GenericRequest: Request { }
 
 public struct EmptyRequest: GenericRequest {    
-    public typealias Response = Empty
+    public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
     public var content: Content? = nil
 }
 
 public struct Get: GenericRequest {
-    public typealias Response = Empty
+    public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
     public var content: Content?
@@ -38,7 +38,7 @@ public struct Get: GenericRequest {
 }
 
 public struct Post: GenericRequest {
-    public typealias Response = Empty
+    public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
     public var content: Content?
@@ -58,7 +58,7 @@ public struct Post: GenericRequest {
 }
 
 public struct Put: GenericRequest {
-    public typealias Response = Empty
+    public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
     public var content: Content?
@@ -78,7 +78,7 @@ public struct Put: GenericRequest {
 }
 
 public struct Patch: GenericRequest {
-    public typealias Response = Empty
+    public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
     public var content: Content?
@@ -98,7 +98,7 @@ public struct Patch: GenericRequest {
 }
 
 public struct Delete: GenericRequest {
-    public typealias Response = Empty
+    public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
     public var content: Content?

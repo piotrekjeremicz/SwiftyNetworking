@@ -19,8 +19,8 @@ public enum Method: String {
 public protocol Request: CustomStringConvertible {
     associatedtype Body: Request
 
-    associatedtype ResponseBody: Decodable
-    associatedtype ResponseError: Decodable
+    associatedtype ResponseBody: Codable
+    associatedtype ResponseError: Codable
     
     var mock: Mock? { get set }
     var body: Body { get }

@@ -9,8 +9,8 @@ import Combine
 import Foundation
 
 public struct Content {
-	public var responseType: Decodable.Type = Empty.self
-	public var errorType: Decodable.Type = Empty.self
+	public var responseType: Codable.Type
+	public var errorType: Codable.Type
 	
 	public var path: String
 	public var service: Service
@@ -23,9 +23,11 @@ public struct Content {
 	public var bodyEncoder: any DataEncoder
 	public var responseDecoder: any DataDecoder
 	
+	public var afterEach: [() -> Void] = []
+	
 	public init(
-		responseType: Decodable.Type = Empty.self,
-		errorType: Decodable.Type = Empty.self,
+		responseType: Codable.Type = Empty.self,
+		errorType: Codable.Type = Empty.self,
 		path: [String],
 		service: Service,
 		method: Method,

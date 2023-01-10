@@ -12,13 +12,13 @@ struct ExampleService: Service {
 
 2. Prepare models for **data** and **error** responses
 ```swift
-struct ExampleResponseModel: Decodable {
+struct ExampleResponseModel: Codable {
     let foo: String
     let bar: Int
     let buzz: Bool
 }
 
-struct ExampleErrorModel: Decodable {
+struct ExampleErrorModel: Codable {
     let status: Int
     let message: String
 }

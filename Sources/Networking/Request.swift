@@ -22,6 +22,8 @@ public protocol Request: CustomStringConvertible {
     associatedtype ResponseBody: Codable
     associatedtype ResponseError: Codable
     
+    var id: UUID { get }
+    
     var mock: Mock? { get set }
     var body: Body { get }
     var content: Content? { get set }
@@ -30,6 +32,8 @@ public protocol Request: CustomStringConvertible {
 }
 
 public extension Request {
+    var id: UUID { UUID() }
+    
     var mock: Mock? {
         get { nil }
         set {     }
@@ -66,7 +70,8 @@ public extension Request {
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = content.method.rawValue
-		content.headers?.forEach { urlRequest.addValue($0.value.description, forHTTPHeaderField: $0.key) }
+        urlRequest.addValue(id.uuidString, forHTTPHeaderField: "X-Request-ID")
+        content.headers?.forEach { urlRequest.addValue($0.value.description, forHTTPHeaderField: $0.key) }
         
         if let body = content.body {
             let data = try? content.bodyEncoder.encode(body)

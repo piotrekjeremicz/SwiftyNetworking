@@ -11,19 +11,19 @@ struct ExampleService: Service {
     var baseURL: URL { URL(string: "https://www.example.com")! }
 }
 
-struct ExampleResponseModel: Decodable {
+struct ExampleResponseModel: Codable {
     let name: String
     let age: Int
     let isUser: Bool
 }
 
-struct ExampleErrorModel: Decodable {
+struct ExampleErrorModel: Codable {
     let status: Int
     let message: String
 }
 
 struct ExampleRequest: Request {
-    typealias Response = ExampleResponseModel
+    typealias ResponseBody = ExampleResponseModel
     typealias ResponseError = ExampleErrorModel
 
     var body: some Request {
@@ -51,7 +51,7 @@ struct TestError: Codable {
 }
 
 struct GetArticlesRequest: Request {
-    typealias Response = TestResponse
+    typealias ResponseBody = TestResponse
     typealias ResponseError = TestError
     
     var body: some Request {
@@ -78,7 +78,7 @@ struct GetArticlesRequest: Request {
 }
 
 struct GetArticlesSummaryRequest: Request {
-    typealias Response = TestResponse
+    typealias ResponseBody = TestResponse
     typealias ResponseError = TestError
     
     var body: some Request {

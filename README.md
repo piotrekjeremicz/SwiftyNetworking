@@ -3,14 +3,14 @@
 Swifty Networking is a simple package that supports the networking layer and provide, similar to SwiftUI, request building pattern.
 
 ## How to use it?
-1. Create service that provides relevant API
+1. Create service that provides relevant API.
 ```swift
 struct ExampleService: Service {
     var baseURL: URL { URL(string: "https://www.example.com")! }
 }
 ```
 
-2. Prepare models for **data** and **error** responses
+2. Prepare models for **data** and **error** responses.
 ```swift
 struct ExampleResponseModel: Codable {
     let foo: String
@@ -24,7 +24,7 @@ struct ExampleErrorModel: Codable {
 }
 ```
 
-3. Describe request by using `Request` abstraction
+3. Describe request by using `Request` abstraction.
 ```swift
 struct ExampleRequest: Request {
     typealias ResponseBody = ExampleResponseModel
@@ -53,16 +53,45 @@ struct ExampleRequest: Request {
 }
 ```
 
-4. Create `session` and send request
+4. Create `session` and send request. Of course, you can cancel it as you want. 😉
 ```swift
 let session = Session()
 let (result, error) = await session.send(request: ExampleRequest(bar: "buzz"))
+
+if sometingIsWrong {
+    session.cancel(requests: .only(request.id))
+}
 ```
 
 And that’s it!
 
 ## What’s next?
 There are a few more things I want to add and support::
+### Authorization
+```swift
+// Dummy code
+struct LoginRequest: Request {
+    [...]
+    var body: some Request {
+        Get("login", from: ExampleService())
+            .authorize { response
+                save(response.token)
+            }
+        }
+    }
+}
+
+struct FooRequest: Request {
+    [...]
+    var body: some Request {
+        Get("foo", from: ExampleService())
+            .authorized()
+        }
+    }
+}
+
+```
+
 ### Mocking data
 ```swift
 // Dummy code

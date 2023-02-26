@@ -28,4 +28,10 @@ struct MockService: Service {
 
         return jsonEncoder
     }
+
+    func authorize<R>(_ request: R) -> R where R : Request {
+        request.headers {
+            Authorization("secret_token")
+        }
+    }
 }

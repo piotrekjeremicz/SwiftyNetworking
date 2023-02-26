@@ -81,49 +81,67 @@ public extension Request {
         
         return urlRequest
     }
-    
+}
+
+extension Request {
     @inlinable func headers(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> Self {
         var request = self
-        request.content?.headers = items()
-        
+
+        if var headers = request.content?.headers {
+            headers.append(contentsOf: items())
+            request.content?.headers = headers
+        } else {
+            request.content?.headers = items()
+        }
+
         return request
     }
-    
+
     @inlinable func queryItems(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> Self {
         var request = self
         request.content?.queryItems = items()
-        
+
         return request
     }
-	
-	@inlinable func body(_ data: any Encodable) -> Self {
-		var request = self
-		request.content?.body = data
-		
-		return request
-	}
-	
-	@inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> Self {
-		var request = self
-		request.content?.body = json().compactMap({ $0 as? Encodable }) as? any Encodable
-		
-		return request
-	}
-    
-	@inlinable func body(json: Json) -> Self {
-		var request = self
-		request.content?.body = json.root.compactMap({ $0 as? Encodable }) as? any Encodable
-		
-		return request
-	}
-	
+
+    @inlinable func body(_ data: any Encodable) -> Self {
+        var request = self
+        request.content?.body = data
+
+        return request
+    }
+
+    @inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> Self {
+        var request = self
+        request.content?.body = json().compactMap({ $0 as? Encodable }) as? any Encodable
+
+        return request
+    }
+
+    @inlinable func body(json: Json) -> Self {
+        var request = self
+        request.content?.body = json.root.compactMap({ $0 as? Encodable }) as? any Encodable
+
+        return request
+    }
+
     @inlinable func mocked(@CaseBuilder _ mock: @escaping (Mock.Request) -> [Mock.Case]) -> Self {
         var request = self
         request.mock = Mock(flow: mock)
-        
+
         return request
     }
+
+    @inlinable func authorized() -> Self {
+        guard let content else { return self }
+        return content.service.authorize(self)
+    }
+
+    @inlinable func authorized(_ authorize: (Self) -> Self) -> Self {
+        authorize(self)
+    }
 }
+
 
 extension Request {
 	public var description: String {

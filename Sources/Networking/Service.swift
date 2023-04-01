@@ -9,15 +9,15 @@ import Foundation
 
 public protocol Service {
     var baseURL: URL { get }
-    var responseDecoder: any DataDecoder { get }
-    var bodyEncoder: any DataEncoder { get }
+    var requestBodyEncoder: any DataEncoder { get }
+    var responseBodyDecoder: any DataDecoder { get }
 
     func authorize<R: Request>(_ request: R) -> R
 }
 
 public extension Service {
-    var bodyEncoder: any DataEncoder { JSONEncoder() }
-    var responseDecoder: any DataDecoder { JSONDecoder() }
+    var requestBodyEncoder: any DataEncoder { JSONEncoder() }
+    var responseBodyDecoder: any DataDecoder { JSONDecoder() }
 
     func authorize<R: Request>(_ request: R) -> R {
         request

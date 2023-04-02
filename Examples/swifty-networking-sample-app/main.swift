@@ -6,3 +6,7 @@
 //
 
 import Foundation
+import Networking
+
+let session = Session()
+let service = BackendService()

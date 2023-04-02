@@ -17,10 +17,44 @@ public enum Method: String {
 }
 
 public protocol Request {
+    associatedtype Body: Request
+
     var id: UUID { get }
-    
-    var configuration: Configuration { get set }
+    var body: Body { get }
+
+    var configuration: Configuration? { get set }
 }
+
+public extension Request {
+    var id: UUID { UUID() }
+    var body: some Request { EmptyRequest() }
+
+    var configuration: Configuration? {
+        get {
+            let anyConfiguration: Configuration?
+            
+            if let method = body as? any MethodRequest, let methodConfiguration = method.configuration {
+                anyConfiguration = methodConfiguration
+            } else {
+                anyConfiguration = nil
+            }
+
+            return anyConfiguration
+        }
+
+        set {     }
+    }
+}
+
+public extension Request {
+    
+}
+
+
+
+
+
+
 
 
 
@@ -53,7 +87,7 @@ public extension Old_Request {
         set {     }
     }
 	
-    var body: some Old_Request { EmptyRequest() }
+    var body: some Old_Request { Old_EmptyRequest() }
 	
     var content: Content? {
 		get {

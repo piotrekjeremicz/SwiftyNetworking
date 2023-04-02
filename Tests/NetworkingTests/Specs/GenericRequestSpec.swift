@@ -17,7 +17,7 @@ final class GenericRequestSpec: QuickSpec {
         
         describe("using generic requests") {
             context("as GET") {
-                let getRequest = Get("path", "to", "endpoint", from: service)
+                let getRequest = Old_Get("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .get, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -40,7 +40,7 @@ final class GenericRequestSpec: QuickSpec {
                 }
 
                 it("can handle custom coder") {
-                    let customRequest = Get("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+                    let customRequest = Old_Get("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
 
                     let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
                     expect(bodyEncoder).neverTo(beNil())

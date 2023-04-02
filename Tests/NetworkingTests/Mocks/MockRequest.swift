@@ -16,7 +16,7 @@ struct MockRequest: Old_Request {
     typealias ResponseError = Empty
     
     var body: some Old_Request {
-        Get("getArticles", from: service)
+        Old_Get("getArticles", from: service)
             .headers {
                 Key("key", value: "value")
             }

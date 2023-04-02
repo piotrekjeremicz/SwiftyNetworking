@@ -24,7 +24,7 @@ extension GenericRequest {
     }
 }
 
-public struct EmptyRequest: GenericRequest {
+public struct Old_EmptyRequest: GenericRequest {
     public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
@@ -39,7 +39,7 @@ public struct EmptyRequest: GenericRequest {
     }
 }
 
-public struct Get: GenericRequest {
+public struct Old_Get: GenericRequest {
     public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     

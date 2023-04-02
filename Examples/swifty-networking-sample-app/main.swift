@@ -10,3 +10,9 @@ import Networking
 
 let session = Session()
 let service = BackendService()
+
+struct GetExampleRequest: Request {
+    var body: some Request {
+        Get("foo", "bar", from: service)
+    }
+}

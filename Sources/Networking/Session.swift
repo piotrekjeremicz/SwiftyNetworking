@@ -24,7 +24,7 @@ public final class Session {
         self.debugLogging = debugLogging
     }
     
-    public func send<RequestType: Request>(request: RequestType) async -> (Response<RequestType.ResponseBody>?, ResponseError<RequestType.ResponseError>?) {
+    public func send<RequestType: Old_Request>(request: RequestType) async -> (Response<RequestType.ResponseBody>?, ResponseError<RequestType.ResponseError>?) {
 		do {
 			let response = try await run(for: request)
 			return (response, nil)
@@ -38,7 +38,7 @@ public final class Session {
 		}
     }
     
-    public func trySend<RequestType: Request>(request: RequestType) async throws -> Response<RequestType.ResponseBody> {
+    public func trySend<RequestType: Old_Request>(request: RequestType) async throws -> Response<RequestType.ResponseBody> {
 		try await run(for: request)
     }
     
@@ -70,13 +70,13 @@ public final class Session {
 extension Session {
     public enum RequestType {
         case allTasks
-        case every(_ type: any Request.Type)
+        case every(_ type: any Old_Request.Type)
         case only(_ id: UUID)
     }
 }
 
 private extension Session {
-	func run<RequestType: Request>(for request: RequestType) async throws -> Response<RequestType.ResponseBody> {
+	func run<RequestType: Old_Request>(for request: RequestType) async throws -> Response<RequestType.ResponseBody> {
 		do {
 #if DEBUG
 			if debugLogging { print(request) }

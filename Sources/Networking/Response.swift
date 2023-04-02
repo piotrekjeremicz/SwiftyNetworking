@@ -15,7 +15,7 @@ public struct Response<Body: Codable> {
 	private let requestName: String
 	private let bodyEncoder: any DataEncoder
 	
-	init<RequestType: Request>(_ result: (data: Data, response: URLResponse), from request: RequestType) throws {
+	init<RequestType: Old_Request>(_ result: (data: Data, response: URLResponse), from request: RequestType) throws {
 		guard let content = request.content
 		else { throw RequestError.requestContentIsNotSet }
 		

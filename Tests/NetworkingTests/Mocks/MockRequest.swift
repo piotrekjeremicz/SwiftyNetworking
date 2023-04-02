@@ -8,14 +8,14 @@
 import Foundation
 import Networking
 
-struct MockRequest: Request {
+struct MockRequest: Old_Request {
     
     let service: Service
     
     typealias ResponseBody = Empty
     typealias ResponseError = Empty
     
-    var body: some Request {
+    var body: some Old_Request {
         Get("getArticles", from: service)
             .headers {
                 Key("key", value: "value")

@@ -16,8 +16,22 @@ public enum Method: String {
     case delete
 }
 
-public protocol Request: CustomStringConvertible {
-    associatedtype Body: Request
+public protocol Request {
+    var id: UUID { get }
+    
+    var configuration: Configuration { get set }
+}
+
+
+
+
+
+
+
+
+
+public protocol Old_Request: CustomStringConvertible {
+    associatedtype Body: Old_Request
 
     associatedtype ResponseBody: Codable
     associatedtype ResponseError: Codable
@@ -31,7 +45,7 @@ public protocol Request: CustomStringConvertible {
     func urlRequest() throws -> URLRequest
 }
 
-public extension Request {
+public extension Old_Request {
     var id: UUID { UUID() }
     
     var mock: Mock? {
@@ -39,7 +53,7 @@ public extension Request {
         set {     }
     }
 	
-    var body: some Request { EmptyRequest() }
+    var body: some Old_Request { EmptyRequest() }
 	
     var content: Content? {
 		get {
@@ -83,7 +97,7 @@ public extension Request {
     }
 }
 
-extension Request {
+public extension Old_Request {
     @inlinable func headers(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> Self {
         var request = self
 
@@ -143,7 +157,7 @@ extension Request {
 }
 
 
-extension Request {
+extension Old_Request {
 	public var description: String {
 		var array = [String]()
 		array.append("• Request: " + String(describing: type(of: self)))

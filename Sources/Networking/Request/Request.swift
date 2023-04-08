@@ -47,6 +47,13 @@ public extension Request {
 }
 
 public extension Request {
+    @inlinable func body(json: Json) -> Self {
+        var request = self
+        request.configuration?.body = json.root.compactMap({ $0 as? Codable }) as? any Codable
+
+        return request
+    }
+
     @inlinable func body(_ data: any Codable) -> Self {
         var request = self
         request.configuration?.body = data
@@ -61,9 +68,28 @@ public extension Request {
         return request
     }
 
-    @inlinable func body(json: Json) -> Self {
+    @inlinable func headers(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> Self {
         var request = self
-        request.configuration?.body = json.root.compactMap({ $0 as? Codable }) as? any Codable
+
+        if var headers = request.configuration?.headers {
+            headers.append(contentsOf: items())
+            request.configuration?.headers = headers
+        } else {
+            request.configuration?.headers = items()
+        }
+
+        return request
+    }
+
+    @inlinable func queryItems(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> Self {
+        var request = self
+
+        if var queryItems = request.configuration?.queryItems {
+            queryItems.append(contentsOf: items())
+            request.configuration?.queryItems = queryItems
+        } else {
+            request.configuration?.queryItems = items()
+        }
 
         return request
     }

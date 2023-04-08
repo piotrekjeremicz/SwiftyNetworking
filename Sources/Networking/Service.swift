@@ -9,6 +9,7 @@ import Foundation
 
 public protocol Service {
     var baseURL: URL { get }
+    
     var requestBodyEncoder: any DataEncoder { get }
     var responseBodyDecoder: any DataDecoder { get }
 

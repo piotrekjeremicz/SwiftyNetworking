@@ -16,8 +16,17 @@ public struct Delete<ResponseBody: Codable, ResponseError: Codable>: HttpRequest
 }
 
 public extension Delete where ResponseBody == Empty, ResponseError == Empty {
-    init(_ path: String..., from service: Service, bodyEncoder: (any DataEncoder)? = nil) {
-        self.configuration = Configuration(path: path, service: service, method: .delete, bodyEncoder: bodyEncoder)
+    init(_ path: String..., from service: Service, bodyEncoder: (any DataEncoder)? = nil, responseDecoder: (any DataDecoder)? = nil) {
+        let bodyEncoder = bodyEncoder == nil ? service.requestBodyEncoder : bodyEncoder!
+        let responseDecoder = responseDecoder == nil ? service.responseBodyDecoder : responseDecoder!
+
+        self.configuration = Configuration(
+            path: path,
+            service: service,
+            method: .delete,
+            requestBodyEncoder: bodyEncoder,
+            responseBodyDecoder: responseDecoder
+        )
     }
 }
 

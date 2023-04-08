@@ -30,18 +30,7 @@ public extension Request {
     var body: some Request { EmptyRequest() }
 
     var configuration: Configuration? {
-        get {
-            let anyConfiguration: Configuration?
-            
-            if let method = body as? any HttpRequest, let methodConfiguration = method.configuration {
-                anyConfiguration = methodConfiguration
-            } else {
-                anyConfiguration = nil
-            }
-
-            return anyConfiguration
-        }
-
+        get { nil }
         set {     }
     }
 }
@@ -109,6 +98,11 @@ public extension Request {
         return array.joined(separator: "\n") + "\n"
     }
 }
+
+
+
+
+
 
 
 

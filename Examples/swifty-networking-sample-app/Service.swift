@@ -20,5 +20,8 @@ struct BackendExtentedService: Service {
     
     func authorize<R>(_ request: R) -> R where R : Old_Request {
         request
+            .headers {
+                Authorization("BASIC secret_token")
+            }
     }
 }

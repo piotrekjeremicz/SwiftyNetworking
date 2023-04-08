@@ -16,7 +16,8 @@ public struct Configuration {
     public var headers: [any KeyValueProvider]?
     public var queryItems: [any KeyValueProvider]?
     
-    public var bodyEncoder: (any DataEncoder)?
+    public var requestBodyEncoder: (any DataEncoder)?
+    public var responseBodyDecoder: (any DataDecoder)?
 
     internal init(
         path: [String],
@@ -25,7 +26,8 @@ public struct Configuration {
         body: (any Codable)? = nil,
         headers: [any KeyValueProvider]? = nil,
         queryItems: [any KeyValueProvider]? = nil,
-        bodyEncoder: DataEncoder?
+        requestBodyEncoder: DataEncoder?,
+        responseBodyDecoder: DataDecoder?
     ) {
         self.path = path.joined(separator: "/")
         self.service = service
@@ -35,7 +37,8 @@ public struct Configuration {
         self.headers = headers
         self.queryItems = queryItems
 
-        self.bodyEncoder = bodyEncoder
+        self.requestBodyEncoder = requestBodyEncoder
+        self.responseBodyDecoder = responseBodyDecoder
     }
 }
 
@@ -49,7 +52,7 @@ extension Configuration: CustomStringConvertible {
             array.append(contentsOf: headers.map({ "\($0.key): \($0.value)" }))
         }
 
-        if let body, let data = try? bodyEncoder?.encode(body), let string = String(data: data, encoding: .utf8) {
+        if let body, let data = try? requestBodyEncoder?.encode(body), let string = String(data: data, encoding: .utf8) {
             array.append("Content-Type: application/json")
             array.append("Content-Length: \(data.count)")
             array.append("")

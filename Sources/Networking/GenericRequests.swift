@@ -60,7 +60,7 @@ public struct Old_Get: GenericRequest {
     }
 }
 
-public struct Post: GenericRequest {
+public struct Old_Post: GenericRequest {
     public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
@@ -81,7 +81,7 @@ public struct Post: GenericRequest {
     }
 }
 
-public struct Put: GenericRequest {
+public struct Old_Put: GenericRequest {
     public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
@@ -102,7 +102,7 @@ public struct Put: GenericRequest {
     }
 }
 
-public struct Patch: GenericRequest {
+public struct Old_Patch: GenericRequest {
     public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     
@@ -123,7 +123,7 @@ public struct Patch: GenericRequest {
     }
 }
 
-public struct Delete: GenericRequest {
+public struct Old_Delete: GenericRequest {
     public typealias ResponseBody = Empty
     public typealias ResponseError = Empty
     

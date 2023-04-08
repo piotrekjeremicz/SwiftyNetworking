@@ -53,7 +53,7 @@ final class GenericRequestSpec: QuickSpec {
             }
             
             context("as POST") {
-                let postRequest = Post("path", "to", "endpoint", from: service)
+                let postRequest = Old_Post("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .post, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -76,7 +76,7 @@ final class GenericRequestSpec: QuickSpec {
                 }
 
                 it("can handle custom coder") {
-                    let customRequest = Post("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+                    let customRequest = Old_Post("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
 
                     let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
                     expect(bodyEncoder).neverTo(beNil())
@@ -89,7 +89,7 @@ final class GenericRequestSpec: QuickSpec {
             }
             
             context("as PUT") {
-                let putRequest = Put("path", "to", "endpoint", from: service)
+                let putRequest = Old_Put("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .put, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -112,7 +112,7 @@ final class GenericRequestSpec: QuickSpec {
                 }
 
                 it("can handle custom coder") {
-                    let customRequest = Put("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+                    let customRequest = Old_Put("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
 
                     let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
                     expect(bodyEncoder).neverTo(beNil())
@@ -125,7 +125,7 @@ final class GenericRequestSpec: QuickSpec {
             }
             
             context("as PATCH") {
-                let pathRequest = Patch("path", "to", "endpoint", from: service)
+                let pathRequest = Old_Patch("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .patch, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -148,7 +148,7 @@ final class GenericRequestSpec: QuickSpec {
                 }
 
                 it("can handle custom coder") {
-                    let customRequest = Patch("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+                    let customRequest = Old_Patch("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
 
                     let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
                     expect(bodyEncoder).neverTo(beNil())
@@ -161,7 +161,7 @@ final class GenericRequestSpec: QuickSpec {
             }
             
             context("as DELETE") {
-                let deleteRequest = Delete("path", "to", "endpoint", from: service)
+                let deleteRequest = Old_Delete("path", "to", "endpoint", from: service)
                 let content = Content(path: path, service: service, method: .delete, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
                 
                 it("has proper request content") {
@@ -184,7 +184,7 @@ final class GenericRequestSpec: QuickSpec {
                 }
 
                 it("can handle custom coder") {
-                    let customRequest = Delete("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
+                    let customRequest = Old_Delete("path", "to", "endpoint", from: service, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
 
                     let bodyEncoder = customRequest.content?.bodyEncoder as? JSONEncoder
                     expect(bodyEncoder).neverTo(beNil())

@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct ExampleRequestBodyModel: Codable {
+    let id: UUID
+    let count: Int
+}
+
 struct ExampleResponseModel: Codable {
     let id: UUID
     let title: String

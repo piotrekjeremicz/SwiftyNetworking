@@ -16,7 +16,7 @@ public enum Method: String {
     case delete
 }
 
-public protocol Request {
+public protocol Request: CustomStringConvertible {
     associatedtype Body: Request
 
     var id: UUID { get }
@@ -95,7 +95,20 @@ public extension Request {
     }
 }
 
+public extension Request {
+    var description: String {
+        var array = [String]()
+        array.append("• Request: " + String(describing: type(of: self)))
 
+        if let configuration {
+            array.append(configuration.description)
+        } else {
+            array.append("No content")
+        }
+
+        return array.joined(separator: "\n") + "\n"
+    }
+}
 
 
 

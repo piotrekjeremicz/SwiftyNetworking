@@ -33,7 +33,7 @@ public extension Request {
         get {
             let anyConfiguration: Configuration?
             
-            if let method = body as? any MethodRequest, let methodConfiguration = method.configuration {
+            if let method = body as? any HttpRequest, let methodConfiguration = method.configuration {
                 anyConfiguration = methodConfiguration
             } else {
                 anyConfiguration = nil
@@ -47,10 +47,27 @@ public extension Request {
 }
 
 public extension Request {
-    
+    @inlinable func body(_ data: any Codable) -> Self {
+        var request = self
+        request.configuration?.body = data
+
+        return request
+    }
+
+    @inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> Self {
+        var request = self
+        request.configuration?.body = json().compactMap({ $0 as? Codable }) as? any Codable
+
+        return request
+    }
+
+    @inlinable func body(json: Json) -> Self {
+        var request = self
+        request.configuration?.body = json.root.compactMap({ $0 as? Codable }) as? any Codable
+
+        return request
+    }
 }
-
-
 
 
 

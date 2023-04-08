@@ -1,0 +1,16 @@
+//
+//  HttpRequest.swift
+//  
+//
+//  Created by Piotrek Jeremicz on 02/04/2023.
+//
+
+import Foundation
+
+public protocol HttpRequest: Request {
+    associatedtype ResponseBody: Codable
+    associatedtype ResponseError: Codable
+
+    init(configuration: Configuration?)
+}
+

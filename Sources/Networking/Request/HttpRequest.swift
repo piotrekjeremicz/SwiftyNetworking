@@ -8,9 +8,6 @@
 import Foundation
 
 public protocol HttpRequest: Request {
-    associatedtype ResponseBody: Codable
-    associatedtype ResponseError: Codable
-
     init(configuration: Configuration?)
 }
 

@@ -13,14 +13,15 @@ public protocol Service {
     var requestBodyEncoder: any DataEncoder { get }
     var responseBodyDecoder: any DataDecoder { get }
 
-    func authorize<R: Old_Request>(_ request: R) -> R
+    func authorize<R: Request>(_ request: R) -> R
+    func afterAuthorization<R: Request>(_ response: R.ResponseBody) -> R
 }
 
 public extension Service {
     var requestBodyEncoder: any DataEncoder { JSONEncoder() }
     var responseBodyDecoder: any DataDecoder { JSONDecoder() }
 
-    func authorize<R: Old_Request>(_ request: R) -> R {
+    func authorize<R: Request>(_ request: R) -> R {
         request
     }
 }

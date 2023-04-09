@@ -31,11 +31,11 @@ public extension Post where ResponseBody == Empty, ResponseError == Empty {
 }
 
 public extension Post {
-    func error<E: Codable>(_ type: E.Type) -> Post<ResponseBody, E> {
+    func responseError<E: Codable>(_ type: E.Type) -> Post<ResponseBody, E> {
         Post<ResponseBody, E>(configuration: self.configuration)
     }
 
-    func response<R: Codable>(_ type: R.Type) -> Post<R, ResponseError> {
+    func responseBody<R: Codable>(_ type: R.Type) -> Post<R, ResponseError> {
         Post<R, ResponseError>(configuration: self.configuration)
     }
 }

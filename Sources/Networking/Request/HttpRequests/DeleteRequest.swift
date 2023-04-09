@@ -31,11 +31,11 @@ public extension Delete where ResponseBody == Empty, ResponseError == Empty {
 }
 
 public extension Delete {
-    func error<E: Codable>(_ type: E.Type) -> Delete<ResponseBody, E> {
+    func responseError<E: Codable>(_ type: E.Type) -> Delete<ResponseBody, E> {
         Delete<ResponseBody, E>(configuration: self.configuration)
     }
 
-    func response<R: Codable>(_ type: R.Type) -> Delete<R, ResponseError> {
+    func responseBody<R: Codable>(_ type: R.Type) -> Delete<R, ResponseError> {
         Delete<R, ResponseError>(configuration: self.configuration)
     }
 }

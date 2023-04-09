@@ -18,20 +18,53 @@ public enum Method: String {
 
 public protocol Request: CustomStringConvertible {
     associatedtype Body: Request
+    associatedtype ResponseBody: Codable
+    associatedtype ResponseError: Codable
 
     var id: UUID { get }
     var body: Body { get }
 
     var configuration: Configuration? { get set }
+
+    func urlRequest() throws -> URLRequest
 }
 
 public extension Request {
+    typealias ResponseBody = Empty
+    typealias ResponseError = Empty
+
     var id: UUID { UUID() }
     var body: some Request { EmptyRequest() }
 
     var configuration: Configuration? {
         get { nil }
         set {     }
+    }
+
+    func urlRequest() throws -> URLRequest {
+        guard let configuration = configuration
+        else { throw RequestError.requestContentIsNotSet }
+
+        guard var urlComponents = URLComponents(url: configuration.service.baseURL.appendingPathComponent(configuration.path), resolvingAgainstBaseURL: false)
+        else { throw RequestError.resolvingUrlComponentsFailed }
+
+        urlComponents.queryItems = configuration.queryItems?.map { URLQueryItem(name: $0.key, value: $0.value.description) }
+
+        guard let url = urlComponents.url
+        else { throw RequestError.resolvingUrlComponentsFailed }
+
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = configuration.method.rawValue
+        urlRequest.addValue(id.uuidString, forHTTPHeaderField: "X-Request-ID")
+        configuration.headers?.forEach { urlRequest.addValue($0.value.description, forHTTPHeaderField: $0.key) }
+
+        if let body = configuration.body {
+            let data = try? configuration.requestBodyEncoder?.encode(body)
+            urlRequest.httpBody = data
+            urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
+
+        return urlRequest
     }
 }
 
@@ -82,6 +115,20 @@ public extension Request {
 
         return request
     }
+
+    @inlinable func authorize() -> Self {
+        guard let configuration else { return self }
+        return configuration.service.authorize(self)
+    }
+
+    @inlinable func authorize(_ authorize: (Self) -> Self) -> Self {
+        authorize(self)
+    }
+
+    @inlinable func afterAutorization(_ response: Self.ResponseBody) -> Self {
+
+        return self
+    }
 }
 
 public extension Request {
@@ -98,6 +145,15 @@ public extension Request {
         return array.joined(separator: "\n") + "\n"
     }
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -230,14 +286,14 @@ public extension Old_Request {
         return request
     }
 
-    @inlinable func authorized() -> Self {
-        guard let content else { return self }
-        return content.service.authorize(self)
-    }
-
-    @inlinable func authorized(_ authorize: (Self) -> Self) -> Self {
-        authorize(self)
-    }
+//    @inlinable func authorized() -> Self {
+//        guard let content else { return self }
+//        return content.service.authorize(self)
+//    }
+//
+//    @inlinable func authorized(_ authorize: (Self) -> Self) -> Self {
+//        authorize(self)
+//    }
 }
 
 

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		243D2A9B29E14A5700190D74 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243D2A9A29E14A5700190D74 /* Models.swift */; };
+		247D836129E2DA0E00DDFF8D /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247D836029E2DA0E00DDFF8D /* Requests.swift */; };
 		248EEF6929D9AB410050A1CC /* Networking in Frameworks */ = {isa = PBXBuildFile; productRef = 248EEF6829D9AB410050A1CC /* Networking */; };
 		24D986EA29D8DECF00115BD3 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D986E929D8DECF00115BD3 /* Service.swift */; };
 		24D986F629D8EAC300115BD3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D986F529D8EAC300115BD3 /* main.swift */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		243D2A9A29E14A5700190D74 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		247D836029E2DA0E00DDFF8D /* Requests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
 		248EEF6729D9A9780050A1CC /* SwiftyNetworking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SwiftyNetworking; path = ..; sourceTree = "<group>"; };
 		24D986E629D8DECF00115BD3 /* swifty-networking-sample-app */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "swifty-networking-sample-app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24D986E929D8DECF00115BD3 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				24D986F529D8EAC300115BD3 /* main.swift */,
 				243D2A9A29E14A5700190D74 /* Models.swift */,
 				24D986E929D8DECF00115BD3 /* Service.swift */,
+				247D836029E2DA0E00DDFF8D /* Requests.swift */,
 			);
 			path = "swifty-networking-sample-app";
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				243D2A9B29E14A5700190D74 /* Models.swift in Sources */,
+				247D836129E2DA0E00DDFF8D /* Requests.swift in Sources */,
 				24D986F629D8EAC300115BD3 /* main.swift in Sources */,
 				24D986EA29D8DECF00115BD3 /* Service.swift in Sources */,
 			);

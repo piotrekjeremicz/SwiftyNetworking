@@ -12,6 +12,11 @@ struct ExampleRequestBodyModel: Codable {
     let count: Int
 }
 
+struct ExampleAuthResponseModel: Codable {
+    let token: String
+    let refreshToken: String
+}
+
 struct ExampleResponseModel: Codable {
     let id: UUID
     let title: String

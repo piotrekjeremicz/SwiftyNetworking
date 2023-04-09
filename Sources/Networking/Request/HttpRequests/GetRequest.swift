@@ -31,11 +31,11 @@ public extension Get where ResponseBody == Empty, ResponseError == Empty {
 }
 
 public extension Get {
-    func error<E: Codable>(_ type: E.Type) -> Get<ResponseBody, E> {
+    func responseError<E: Codable>(_ type: E.Type) -> Get<ResponseBody, E> {
         Get<ResponseBody, E>(configuration: self.configuration)
     }
 
-    func response<R: Codable>(_ type: R.Type) -> Get<R, ResponseError> {
+    func responseBody<R: Codable>(_ type: R.Type) -> Get<R, ResponseError> {
         Get<R, ResponseError>(configuration: self.configuration)
     }
 }

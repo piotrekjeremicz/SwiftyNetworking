@@ -31,11 +31,11 @@ public extension Put where ResponseBody == Empty, ResponseError == Empty {
 }
 
 public extension Put {
-    func error<E: Codable>(_ type: E.Type) -> Put<ResponseBody, E> {
+    func responseError<E: Codable>(_ type: E.Type) -> Put<ResponseBody, E> {
         Put<ResponseBody, E>(configuration: self.configuration)
     }
 
-    func response<R: Codable>(_ type: R.Type) -> Put<R, ResponseError> {
+    func responseBody<R: Codable>(_ type: R.Type) -> Put<R, ResponseError> {
         Put<R, ResponseError>(configuration: self.configuration)
     }
 }

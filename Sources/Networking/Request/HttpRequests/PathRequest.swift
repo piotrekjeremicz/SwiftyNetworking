@@ -31,11 +31,11 @@ public extension Path where ResponseBody == Empty, ResponseError == Empty {
 }
 
 public extension Path {
-    func error<E: Codable>(_ type: E.Type) -> Path<ResponseBody, E> {
+    func responseError<E: Codable>(_ type: E.Type) -> Path<ResponseBody, E> {
         Path<ResponseBody, E>(configuration: self.configuration)
     }
 
-    func response<R: Codable>(_ type: R.Type) -> Path<R, ResponseError> {
+    func responseBody<R: Codable>(_ type: R.Type) -> Path<R, ResponseError> {
         Path<R, ResponseError>(configuration: self.configuration)
     }
 }

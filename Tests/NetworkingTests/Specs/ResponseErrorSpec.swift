@@ -26,7 +26,7 @@ final class ResponseErrorSpec: QuickSpec {
                 }
                 
                 it("is a `request` if RequestError happened") {
-                    let requestError = RequestError.requestContentIsNotSet
+                    let requestError = RequestError.requestConfigurationIsNotSet
                     let responseError = ResponseError<Any>(requestError)
                     
                     guard case ResponseError.request(let error) = responseError else {

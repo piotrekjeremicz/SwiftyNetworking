@@ -43,7 +43,7 @@ public extension Request {
 
     func urlRequest() throws -> URLRequest {
         guard let configuration = configuration
-        else { throw RequestError.requestContentIsNotSet }
+        else { throw RequestError.requestConfigurationIsNotSet }
 
         guard var urlComponents = URLComponents(url: configuration.service.baseURL.appendingPathComponent(configuration.path), resolvingAgainstBaseURL: false)
         else { throw RequestError.resolvingUrlComponentsFailed }
@@ -59,7 +59,7 @@ public extension Request {
         configuration.headers?.forEach { urlRequest.addValue($0.value.description, forHTTPHeaderField: $0.key) }
 
         if let body = configuration.body {
-            let data = try? configuration.requestBodyEncoder?.encode(body)
+            let data = try? configuration.requestBodyEncoder.encode(body)
             urlRequest.httpBody = data
             urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         }
@@ -125,6 +125,8 @@ public extension Request {
         authorize(self)
     }
 
+
+    //TODO: After Authorization
     @inlinable func afterAutorization(_ response: Self.ResponseBody) -> Self {
 
         return self
@@ -212,7 +214,7 @@ public extension Old_Request {
     
     func urlRequest() throws -> URLRequest {
         guard let content = content
-        else { throw RequestError.requestContentIsNotSet }
+        else { throw RequestError.requestConfigurationIsNotSet }
         
         guard var urlComponents = URLComponents(url: content.service.baseURL.appendingPathComponent(content.path), resolvingAgainstBaseURL: false)
         else { throw RequestError.resolvingUrlComponentsFailed }

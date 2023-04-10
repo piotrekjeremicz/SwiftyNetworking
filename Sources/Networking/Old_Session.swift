@@ -8,8 +8,8 @@
 import Combine
 import Foundation
 
-public final class Session {
-    public static let manager = Session()
+public final class Old_Session {
+    public static let manager = Old_Session()
     
     public let debugLogging: Bool
     
@@ -24,7 +24,7 @@ public final class Session {
         self.debugLogging = debugLogging
     }
     
-    public func send<RequestType: Old_Request>(request: RequestType) async -> (Response<RequestType.ResponseBody>?, ResponseError<RequestType.ResponseError>?) {
+    public func send<RequestType: Old_Request>(request: RequestType) async -> (Old_Response<RequestType.ResponseBody>?, ResponseError<RequestType.ResponseError>?) {
 		do {
 			let response = try await run(for: request)
 			return (response, nil)
@@ -38,7 +38,7 @@ public final class Session {
 		}
     }
     
-    public func trySend<RequestType: Old_Request>(request: RequestType) async throws -> Response<RequestType.ResponseBody> {
+    public func trySend<RequestType: Old_Request>(request: RequestType) async throws -> Old_Response<RequestType.ResponseBody> {
 		try await run(for: request)
     }
     
@@ -67,7 +67,7 @@ public final class Session {
     }
 }
 
-extension Session {
+extension Old_Session {
     public enum RequestType {
         case allTasks
         case every(_ type: any Old_Request.Type)
@@ -75,8 +75,8 @@ extension Session {
     }
 }
 
-private extension Session {
-	func run<RequestType: Old_Request>(for request: RequestType) async throws -> Response<RequestType.ResponseBody> {
+private extension Old_Session {
+	func run<RequestType: Old_Request>(for request: RequestType) async throws -> Old_Response<RequestType.ResponseBody> {
 		do {
 #if DEBUG
 			if debugLogging { print(request) }
@@ -86,7 +86,7 @@ private extension Session {
             requestTypes.append((request.id, String(describing: request.self)))
             
 			let result = try await session.data(for: urlRequest)
-			let response = try Response<RequestType.ResponseBody>(result, from: request)
+			let response = try Old_Response<RequestType.ResponseBody>(result, from: request)
             requestTypes.removeAll(where: { $0.id == request.id })
 			
 #if DEBUG

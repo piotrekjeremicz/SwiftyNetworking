@@ -20,7 +20,7 @@ final class RequestSpec: QuickSpec {
                 
                 it("should have proper generic request") {
                     let genericRequest = request.body
-                    expect(genericRequest.body).to(beAKindOf(EmptyRequest.self))
+                    expect(genericRequest.body).to(beAKindOf(Old_EmptyRequest.self))
                     expect(genericRequest.content).toNever(beNil())
                 }
                 

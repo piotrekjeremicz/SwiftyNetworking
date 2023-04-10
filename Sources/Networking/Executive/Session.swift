@@ -71,7 +71,7 @@ private extension Session {
 public extension Session {
     enum RequestType {
         case allTasks
-        case every(_ type: any Old_Request.Type)
+        case every(_ type: any Request.Type)
         case only(_ id: UUID)
     }
 

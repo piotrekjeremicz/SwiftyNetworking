@@ -11,10 +11,17 @@ import Networking
 struct AuthExampleRequest: Request {
     let service: Service
 
+    let login: String
+    let password: String
+
     var body: some Request {
         Get("auth", "login", from: service)
             .headers {
                 X_Api_Key("secret_token")
+            }
+            .queryItems{
+                Key("login", value: login)
+                Key("password", value: password)
             }
             .responseBody(ExampleAuthResponseModel.self)
     }

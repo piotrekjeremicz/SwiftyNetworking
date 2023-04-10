@@ -8,11 +8,9 @@
 import Foundation
 import Networking
 
-let session = Session()
+let session = Old_Session()
 let service = BackendService()
 
-let requestBody = ExampleRequestBodyModel(id: .init(), count: 4)
-
-
+let authRequest = AuthExampleRequest(service: service, login: "username", password: "secret")
 
 let getRequest = GetExampleRequest()

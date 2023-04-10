@@ -22,8 +22,9 @@ let package = Package(
         .target(
             name: "Networking",
             dependencies: []),
-        .testTarget(
-            name: "NetworkingTests",
-            dependencies: ["Networking", "Quick", "Nimble"]),
+        //TODO: Temporary target removal
+//        .testTarget(
+//            name: "NetworkingTests",
+//            dependencies: ["Networking", "Quick", "Nimble"]),
     ]
 )

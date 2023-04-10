@@ -15,7 +15,7 @@ final class SessionSpec: QuickSpec {
     override func spec() {
         describe("creating") {
             context("default session") {
-                let session = Session()
+                let session = Old_Session()
                 let service = MockService()
                 let request = MockRequest(service: service)
                 

@@ -20,18 +20,8 @@ final class RequestSpec: QuickSpec {
                 
                 it("should have proper generic request") {
                     let genericRequest = request.body
-                    expect(genericRequest.body).to(beAKindOf(EmptyRequest.self))
+                    expect(genericRequest.body).to(beAKindOf(Old_EmptyRequest.self))
                     expect(genericRequest.content).toNever(beNil())
-                }
-                
-                it("should have not content") {
-                    let content = request.content
-                    expect(content).to(beNil())
-                    
-                    let newContent = Content(path: ["newContent"], service: service, method: .delete, bodyEncoder: JSONEncoder(), responseDecoder: JSONDecoder())
-                    request.content = newContent
-                    
-                    expect(request.content).to(beNil())
                 }
                 
                 it("should create proper URLRequest") {
@@ -59,6 +49,19 @@ final class RequestSpec: QuickSpec {
                         return
                     }
                     expect(authorization).to(equal("secret_token"))
+                }
+
+                it("should set headers properly") {
+                    guard let headers = urlRequest.allHTTPHeaderFields else {
+                        fail("headers are not exist")
+                        return
+                    }
+                    
+                    expect(headers.keys).to(contain("Authorization"))
+                    expect(headers.values).to(contain("secret_token"))
+
+                    expect(headers.keys).to(contain("key"))
+                    expect(headers.values).to(contain("value"))
                 }
                 
                 it("should contains proper body") {

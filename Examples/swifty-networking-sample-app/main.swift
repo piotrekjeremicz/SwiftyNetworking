@@ -8,9 +8,17 @@
 import Foundation
 import Networking
 
-let session = Old_Session()
+let session = Session(debugLogging: true)
 let service = BackendService()
 
 let authRequest = AuthExampleRequest(service: service, login: "username", password: "secret")
+let getRequest = GetExampleRequest(requestBody: .init(id: UUID(), count: 2))
 
-let getRequest = GetExampleRequest()
+Task {
+    let (auth, error) = await session.send(request: getRequest)
+
+    print(auth)
+    print(error)
+}
+
+sleep(10)

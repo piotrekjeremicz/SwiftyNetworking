@@ -21,19 +21,27 @@ public final class Session {
         self.session = session
         self.debugLogging = debugLogging
     }
+
+    public func send<R: Request>(request: R) async -> (Response<R.Body.ResponseBody>?, ResponseError<R.Body.ResponseError>?) {
+        do {
+            let response = try await run(for: request.body)
+            return (response, nil)
+        } catch {
+            if let error = error as? ResponseError<R.Body.ResponseError> {
+                return (nil, error)
+            } else {
+                return (nil, .unknown(error))
+            }
+        }
+    }
+
+    public func trySend<R: Request>(request: R) async throws -> Response<R.Body.ResponseBody> {
+        try await run(for: request.body)
+    }
 }
 
-
-
-
-
-
-
-
-
-
-extension Session {
-    func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody, R.ResponseError> {
+private extension Session {
+    func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
 #if DEBUG
             if debugLogging { print(request) }
@@ -43,7 +51,7 @@ extension Session {
             requestTypes.append((request.id, String(describing: request.self)))
 
             let result = try await session.data(for: urlRequest)
-            let response = try Response<R.ResponseBody, R.ResponseError>(result, from: request)
+            let response = try Response<R.ResponseBody>(result, from: request)
             requestTypes.removeAll(where: { $0.id == request.id })
 
 #if DEBUG

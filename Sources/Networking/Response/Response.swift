@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Response<Body: Codable, Error: Codable> {
+public struct Response<Body: Codable> {
     public let body: Body
 
     public let statusCode: Int
@@ -29,10 +29,10 @@ public struct Response<Body: Codable, Error: Codable> {
         self.dataEncoder = configuration.responseBodyEncoder
 
         guard (200..<400).contains(statusCode) else {
-            if let errorDescription = try? configuration.responseBodyDecoder.decode(Error.self, from: result.data)  {
-                throw ResponseError<Error>.badResponse(httpResponse, errorDescription)
+            if let errorDescription = try? configuration.responseBodyDecoder.decode(R.ResponseError.self, from: result.data)  {
+                throw ResponseError<R.ResponseError>.badResponse(httpResponse, (errorDescription as? R.ResponseError))
             } else {
-                throw ResponseError<Error>.badResponse(httpResponse, .none)
+                throw ResponseError<R.ResponseError>.badResponse(httpResponse, .none)
             }
         }
 

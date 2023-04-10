@@ -30,6 +30,6 @@ public enum ResponseError<ErrorDescription>: Error {
 }
 
 public enum RequestError: Error {
-    case  requestConfigurationIsNotSet
+    case requestConfigurationIsNotSet
     case resolvingUrlComponentsFailed
 }

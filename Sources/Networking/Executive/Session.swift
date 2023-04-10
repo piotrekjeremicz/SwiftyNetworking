@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Session.swift
 //  
 //
 //  Created by Piotrek Jeremicz on 09/04/2023.

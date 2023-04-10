@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 public enum Method: String {
     case get

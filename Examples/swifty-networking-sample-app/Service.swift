@@ -18,7 +18,7 @@ struct BackendExtentedService: Service {
     var requestBodyEncoder: DataEncoder { JSONEncoder() }
     var responseBodyDecoder: DataDecoder { JSONDecoder() }
     
-    func authorize<R>(_ request: R) -> R where R : Old_Request {
+    func authorize<R>(_ request: R) -> R where R : Request {
         request
             .headers {
                 Authorization("BASIC secret_token")

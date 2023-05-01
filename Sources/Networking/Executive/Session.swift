@@ -22,12 +22,12 @@ public final class Session {
         self.debugLogging = debugLogging
     }
 
-    public func send<R: Request>(request: R) async -> (Response<R.Body.ResponseBody>?, ResponseError<R.Body.ResponseError>?) {
+    public func send<R: Request>(request: R) async -> (Response<R.ResponseBody>?, ResponseError<R.ResponseError>?) {
         do {
-            let response = try await run(for: request.body)
+            let response = try await run(for: request)
             return (response, nil)
         } catch {
-            if let error = error as? ResponseError<R.Body.ResponseError> {
+            if let error = error as? ResponseError<R.ResponseError> {
                 return (nil, error)
             } else {
                 return (nil, .unknown(error))
@@ -35,8 +35,8 @@ public final class Session {
         }
     }
 
-    public func trySend<R: Request>(request: R) async throws -> Response<R.Body.ResponseBody> {
-        try await run(for: request.body)
+    public func trySend<R: Request>(request: R) async throws -> Response<R.ResponseBody> {
+        try await run(for: request)
     }
 }
 

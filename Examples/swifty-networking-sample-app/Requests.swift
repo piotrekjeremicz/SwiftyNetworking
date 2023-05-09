@@ -29,11 +29,8 @@ struct AuthExampleRequest: Request {
 
 
 struct GetExampleRequest: Request {
-    let requestBody: ExampleRequestBodyModel
-
     var body: some Request {
         Post("foo", "bar", from: service)
-            .body(requestBody)
             .headers {
                 X_Api_Key("secret_token")
             }

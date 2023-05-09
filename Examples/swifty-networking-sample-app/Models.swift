@@ -7,11 +7,6 @@
 
 import Foundation
 
-struct ExampleRequestBodyModel: Codable {
-    let id: UUID
-    let count: Int
-}
-
 struct ExampleAuthResponseModel: Codable {
     let token: String
     let refreshToken: String

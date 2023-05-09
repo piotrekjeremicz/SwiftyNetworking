@@ -34,6 +34,10 @@ struct ExampleErrorModel: Codable {
 3. Describe request by using `Request` abstraction.
 ```swift
 struct ExampleRequest: Request {
+
+    typealias ResponseBody = ExampleResponseModel
+    typealias ResponseError = ExampleErrorModel
+    
     let bar: String
     
     var body: some Request {
@@ -131,6 +135,19 @@ request
             //do something
         }
     })
+```
+
+### Get rid of associated types
+```swift
+// I would like to have only a modifier that will apply the final response type
+struct ExampleRequest: Request {
+    var body: some Request {
+        Get("foo", "bar", from: ExampleService())
+            .responseBody(ExampleResponseModel.self)
+            .responseError(ExampleErrorModel.self)
+        }
+    }
+}
 ```
 
 ### Queueing requests

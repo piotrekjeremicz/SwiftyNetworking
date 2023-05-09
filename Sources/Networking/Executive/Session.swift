@@ -22,12 +22,12 @@ public final class Session {
         self.debugLogging = debugLogging
     }
 
-    public func send<R: Request>(request: R) async -> (Response<R.Body.ResponseBody>?, ResponseError<R.Body.ResponseError>?) {
+    public func send<R: Request>(request: R) async -> (Response<R.ResponseBody>?, ResponseError<R.ResponseError>?) {
         do {
-            let response = try await run(for: request.body)
+            let response = try await run(for: request)
             return (response, nil)
         } catch {
-            if let error = error as? ResponseError<R.Body.ResponseError> {
+            if let error = error as? ResponseError<R.ResponseError> {
                 return (nil, error)
             } else {
                 return (nil, .unknown(error))
@@ -35,8 +35,8 @@ public final class Session {
         }
     }
 
-    public func trySend<R: Request>(request: R) async throws -> Response<R.Body.ResponseBody> {
-        try await run(for: request.body)
+    public func trySend<R: Request>(request: R) async throws -> Response<R.ResponseBody> {
+        try await run(for: request)
     }
 }
 
@@ -44,15 +44,15 @@ private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
 #if DEBUG
-            if debugLogging { print(request) }
+            if debugLogging { print(request.body) }
 #endif
 
-            let urlRequest = try request.urlRequest()
-            requestTypes.append((request.id, String(describing: request.self)))
+            let urlRequest = try request.body.urlRequest()
+            requestTypes.append((request.body.id, String(describing: request.body.self)))
 
             let result = try await session.data(for: urlRequest)
-            let response = try Response<R.ResponseBody>(result, from: request)
-            requestTypes.removeAll(where: { $0.id == request.id })
+            let response = try Response<R.ResponseBody>(result, from: request.body)
+            requestTypes.removeAll(where: { $0.id == request.body.id })
 
 #if DEBUG
             if debugLogging { print(response) }

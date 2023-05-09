@@ -44,15 +44,15 @@ private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
 #if DEBUG
-            if debugLogging { print(request) }
+            if debugLogging { print(request.body) }
 #endif
 
-            let urlRequest = try request.urlRequest()
-            requestTypes.append((request.id, String(describing: request.self)))
+            let urlRequest = try request.body.urlRequest()
+            requestTypes.append((request.body.id, String(describing: request.body.self)))
 
             let result = try await session.data(for: urlRequest)
-            let response = try Response<R.ResponseBody>(result, from: request)
-            requestTypes.removeAll(where: { $0.id == request.id })
+            let response = try Response<R.ResponseBody>(result, from: request.body)
+            requestTypes.removeAll(where: { $0.id == request.body.id })
 
 #if DEBUG
             if debugLogging { print(response) }

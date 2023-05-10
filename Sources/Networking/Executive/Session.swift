@@ -27,11 +27,7 @@ public final class Session {
             let response = try await run(for: request)
             return (response, nil)
         } catch {
-            if let error = error as? ResponseError<R.ResponseError> {
-                return (nil, error)
-            } else {
-                return (nil, .unknown(error))
-            }
+            return (nil, ResponseError<R.ResponseError>(error))
         }
     }
 

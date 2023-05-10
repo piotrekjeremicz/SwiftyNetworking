@@ -123,13 +123,6 @@ public extension Request {
     @inlinable func authorize(_ authorize: (Self) -> Self) -> Self {
         authorize(self)
     }
-
-
-    //TODO: After Authorization
-    @inlinable func afterAutorization(_ response: Self.ResponseBody) -> Self {
-
-        return self
-    }
 }
 
 public extension Request {

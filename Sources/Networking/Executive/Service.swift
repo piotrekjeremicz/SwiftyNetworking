@@ -16,6 +16,8 @@ public protocol Service {
     var responseBodyEncoder: any DataEncoder { get }
 
     func authorize<R: Request>(_ request: R) -> R
+    
+    var authorizationProvider: AuthorizationProvider? { get }
 }
 
 public extension Service {
@@ -32,4 +34,6 @@ public extension Service {
     func authorize<R: Request>(_ request: R) -> R {
         request
     }
+    
+    var authorizationProvider: AuthorizationProvider? { nil }
 }

@@ -11,13 +11,13 @@ extension DecodingError {
     public var failureReason: String? {
         switch self {
         case .typeMismatch(_, let context):
-            return "Key \(DecodingError.key(from: context.codingPath)) has a wrong type. \(context.debugDescription)"
+            return "Key \(key(from: context.codingPath)) has a wrong type. \(context.debugDescription)"
             
         case .valueNotFound(_, let context):
-            return "Key \(DecodingError.key(from: context.codingPath)) can not be associated with a value. \(context.debugDescription)"
+            return "Key \(key(from: context.codingPath)) can not be associated with a value. \(context.debugDescription)"
             
         case .keyNotFound(_, let context):
-            return "Key \(DecodingError.key(from: context.codingPath)) can not be found. \(context.debugDescription)"
+            return "Key \(key(from: context.codingPath)) can not be found. \(context.debugDescription)"
             
         case .dataCorrupted(let context):
             return "Data is corupted. \(context.debugDescription)"
@@ -25,9 +25,9 @@ extension DecodingError {
         @unknown default:
             return "Unknown decoding error."
         }
-    }
-    
-    static func key(from codingKeys: [CodingKey]) -> String {
-        return codingKeys.map({ $0.stringValue }).joined(separator: ".")
+        
+        func key(from codingKeys: [CodingKey]) -> String {
+            return codingKeys.map({ $0.stringValue }).joined(separator: ".")
+        }
     }
 }

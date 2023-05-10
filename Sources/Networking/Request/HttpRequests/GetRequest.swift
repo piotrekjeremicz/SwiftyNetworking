@@ -35,11 +35,15 @@ public extension Get where ResponseBody == Empty, ResponseError == Empty {
 }
 
 public extension Get {
-    func responseError<E: Codable>(_ type: E.Type) -> Get<ResponseBody, E> {
+    @inlinable func responseError<E: Codable>(_ type: E.Type) -> Get<ResponseBody, E> {
         Get<ResponseBody, E>(configuration: self.configuration)
     }
 
-    func responseBody<R: Codable>(_ type: R.Type) -> Get<R, ResponseError> {
+    @inlinable func responseBody<R: Codable>(_ type: R.Type) -> Get<R, ResponseError> {
         Get<R, ResponseError>(configuration: self.configuration)
+    }
+    
+    @inlinable func afterAutorization(_ completion: @escaping (_ response: ResponseBody, _ store: AuthorizationStore) -> Void) -> Self {
+        return self
     }
 }

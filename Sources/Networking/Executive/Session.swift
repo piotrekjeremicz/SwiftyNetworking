@@ -49,6 +49,8 @@ private extension Session {
             let result = try await session.data(for: urlRequest)
             let response = try Response<R.ResponseBody>(result, from: request.body)
             requestTypes.removeAll(where: { $0.id == request.body.id })
+            
+//            request.configuration?.service.authorizationProvider?.afterAuthorization()
 
 #if DEBUG
             if debugLogging { print(response) }

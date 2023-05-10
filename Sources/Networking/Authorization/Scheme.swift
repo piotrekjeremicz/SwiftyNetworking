@@ -1,5 +1,5 @@
 //
-//  AuthorizationScheme.swift
+//  Scheme.swift
 //  
 //
 //  Created by Piotrek Jeremicz on 10/05/2023.

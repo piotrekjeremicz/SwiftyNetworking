@@ -30,6 +30,7 @@ public extension Post where ResponseBody == Empty, ResponseError == Empty {
         responseBodyDecoder: (any DataDecoder)? = nil,
         responseBodyEncoder: (any DataEncoder)? = nil
     ) {
+        self.builder = ResponseBuilder<ResponseBody>()
         self.configuration = Configuration(
             path: path,
             service: service,
@@ -42,11 +43,15 @@ public extension Post where ResponseBody == Empty, ResponseError == Empty {
 }
 
 public extension Post {
-    func responseError<E: Codable>(_ type: E.Type) -> Post<ResponseBody, E> {
+    @inlinable func responseError<E: Codable>(_ type: E.Type) -> Post<ResponseBody, E> {
         Post<ResponseBody, E>(configuration: self.configuration)
     }
 
-    func responseBody<R: Codable>(_ type: R.Type) -> Post<R, ResponseError> {
+    @inlinable func responseBody<R: Codable>(_ type: R.Type) -> Post<R, ResponseError> {
         Post<R, ResponseError>(configuration: self.configuration)
+    }
+    
+    @inlinable func afterAutorization(_ completion: @escaping (_ response: ResponseBody, _ store: AuthorizationStore) -> Void) -> Self {
+        return Post<ResponseBody, ResponseError>(configuration: self.configuration, afterAuthorization: completion)
     }
 }

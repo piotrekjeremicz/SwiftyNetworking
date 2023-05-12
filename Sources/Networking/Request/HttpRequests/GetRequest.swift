@@ -30,6 +30,7 @@ public extension Get where ResponseBody == Empty, ResponseError == Empty {
         responseBodyDecoder: (any DataDecoder)? = nil,
         responseBodyEncoder: (any DataEncoder)? = nil
     ) {
+        self.builder = ResponseBuilder<ResponseBody>()
         self.configuration = Configuration(
             path: path,
             service: service,
@@ -51,6 +52,6 @@ public extension Get {
     }
     
     @inlinable func afterAutorization(_ completion: @escaping (_ response: ResponseBody, _ store: AuthorizationStore) -> Void) -> Self {
-        return self
+        return Get<ResponseBody, ResponseError>(configuration: self.configuration, afterAuthorization: completion)
     }
 }

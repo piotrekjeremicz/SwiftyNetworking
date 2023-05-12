@@ -80,28 +80,54 @@ And that’s it!
 ### Authorization
 **SwiftyNetworking** provides easy to use and elastic authorization model. Assuming that most authorizations consist in obtaining a token from one request and using it in the others, this package contains a simple system that allows you to catch and use such values.
 
-1. Implement additional methods in **Service**.
+1. Create a new inheritance structure from `AuthorizationService`. There are two variables and one method that are needed to store sensitive data. The most important part is `func authorize<R: Request>(_ request: R) -> R` which is a place where you can inject token from the store.
 ```swift
-struct ExampleService: Service {
-    //[...]
-    
-    func authorize<R>(_ request: R) -> R where R : Request {
-        request
-            .headers {
-                Authorization("BASIC secret_token")
+struct BackendAuthorization: AuthorizationProvider {
+
+    var store: AuthorizationStore = BackendAuthorizationStore()
+    var afterAuthorization: ((Codable, AuthorizationStore) -> Void)? = nil
+        
+    func authorize<R: Request>(_ request: R) -> R {
+        if let token = store.get(key: .token) {
+            return request.headers {
+                Authorization(.bearer(token: token))
             }
+        } else {
+            return request
+        }
     }
 }
 ```
 
-
-2. Capture credentials from the appropriate query.
+2. Create a new inheritance structure from `AuthorizationStore`. There will be a default `KeychainAuthorizationStore` implementation, but for now I will use a custom structure.
 ```swift
-//TODO: Sample code
+struct BackendAuthorizationStore: AuthorizationStore {
+    let keychain = Keychain(service: "com.beforedaily.app")
+    
+    func store(key: String, value: String) {
+        try? keychain.set(value, key: key)
+    }
+    
+    func get(key: String) -> String? {
+        try? keychain.get(key)
+    }
+}
+```
+3. We are ready to catch our credentials. In this case, it will be a token that the server returns after authentication process.
+```swift
+struct ExampleLoginRequest: Request {    
+    var body: some Request {
+        Get("login", from: ExampleService())
+            //[...]
+            .responseBody(LoginResponse.self)
+            .afterAutorization { response, store in
+                store.value(.token(response.token))
+            }
+        }
+  
 ```
 
-
-3. Add `authorize()` modifier to each request that requires authorization.
+4. Add `authorize()` modifier to each request that requires authorization.
 ```swift
 struct ExampleAuthorizedRequest: Request {    
     var body: some Request {
@@ -113,6 +139,7 @@ struct ExampleAuthorizedRequest: Request {
 }
 ```
 
+And that is it!
 
 ## Roadmap
 - **Version 0.6:** finish `Authorization` layer

@@ -9,9 +9,16 @@ import Foundation
 
 public struct Put<ResponseBody: Codable, ResponseError: Codable>: HttpRequest {
     public var configuration: Configuration?
-
+    public var builder: ResponseBuilder<ResponseBody>
+    
     public init(configuration: Configuration?) {
         self.configuration = configuration
+        self.builder = ResponseBuilder<ResponseBody>()
+    }
+    
+    public init(configuration: Configuration?, afterAuthorization: @escaping (_ response: ResponseBody, _ store: AuthorizationStore) -> Void) {
+        self.configuration = configuration
+        self.builder = ResponseBuilder(afterAuthorization: afterAuthorization)
     }
 }
 

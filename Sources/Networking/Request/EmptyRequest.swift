@@ -8,8 +8,12 @@
 import Foundation
 
 public struct EmptyRequest: Request {
-
+    
+    public typealias ResponseBody = Empty
+    public typealias ResponseError = Empty
+    
     public var configuration: Configuration?
+    public var builder: ResponseBuilder<Empty> = ResponseBuilder()
 
     public init() {
         configuration = nil

@@ -25,4 +25,9 @@ public struct Authorization: KeyValueProvider {
         self.key = "Authorization"
         self.value = value
     }
+    
+    public init(_ scheme: AuthorizationScheme) {
+        self.key = "Authorization"
+        self.value = scheme.token
+    }
 }

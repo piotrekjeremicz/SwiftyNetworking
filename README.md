@@ -142,7 +142,6 @@ struct ExampleAuthorizedRequest: Request {
 And that is it!
 
 ## Roadmap
-- **Version 0.6:** finish `Authorization` layer
 - **Version 0.7:** add `before`, `after` and `beforeEach`, `afterEach` modifiers to provide basic middleware support
 - **Version 0.8:** add `Mock` result that will be an alternative output for `Request`
 - **Version 0.9:** refactor, unit tests and whatever else that will be needed to be proud of this package 😇

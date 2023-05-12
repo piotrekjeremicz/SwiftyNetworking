@@ -27,11 +27,7 @@ public final class Session {
             let response = try await run(for: request)
             return (response, nil)
         } catch {
-            if let error = error as? ResponseError<R.ResponseError> {
-                return (nil, error)
-            } else {
-                return (nil, .unknown(error))
-            }
+            return (nil, ResponseError<R.ResponseError>(error))
         }
     }
 
@@ -51,9 +47,9 @@ private extension Session {
             requestTypes.append((request.body.id, String(describing: request.body.self)))
 
             let result = try await session.data(for: urlRequest)
-            let response = try Response<R.ResponseBody>(result, from: request.body)
+            let response = try request.builder.resolve(result: result, request: request.body)
             requestTypes.removeAll(where: { $0.id == request.body.id })
-
+            
 #if DEBUG
             if debugLogging { print(response) }
 #endif

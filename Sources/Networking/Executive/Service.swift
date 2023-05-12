@@ -16,15 +16,24 @@ public protocol Service {
     var responseBodyEncoder: any DataEncoder { get }
 
     func authorize<R: Request>(_ request: R) -> R
+    
+    var authorizationProvider: AuthorizationProvider? { get }
 }
 
 public extension Service {
     var requestBodyEncoder: any DataEncoder { JSONEncoder() }
     
     var responseBodyDecoder: any DataDecoder { JSONDecoder() }
-    var responseBodyEncoder: any DataEncoder { JSONEncoder() }
+    var responseBodyEncoder: any DataEncoder {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        return encoder
+    }
 
     func authorize<R: Request>(_ request: R) -> R {
         request
     }
+    
+    var authorizationProvider: AuthorizationProvider? { nil }
 }

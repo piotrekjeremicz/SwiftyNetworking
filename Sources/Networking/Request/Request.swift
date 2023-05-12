@@ -22,15 +22,14 @@ public protocol Request: CustomStringConvertible {
 
     var id: UUID { get }
     var body: Body { get }
-
+    
     var configuration: Configuration? { get set }
+    var builder: ResponseBuilder<ResponseBody> { get set }
 
     func urlRequest() throws -> URLRequest
 }
 
 public extension Request {
-    typealias ResponseBody = Empty
-    typealias ResponseError = Empty
 
     var id: UUID { UUID() }
     var body: some Request { EmptyRequest() }
@@ -38,6 +37,11 @@ public extension Request {
     var configuration: Configuration? {
         get { nil }
         set {     }
+    }
+    
+    var builder: ResponseBuilder<ResponseBody> {
+        get { ResponseBuilder<ResponseBody>() }
+        set {                                 }
     }
 
     func urlRequest() throws -> URLRequest {
@@ -122,13 +126,6 @@ public extension Request {
 
     @inlinable func authorize(_ authorize: (Self) -> Self) -> Self {
         authorize(self)
-    }
-
-
-    //TODO: After Authorization
-    @inlinable func afterAutorization(_ response: Self.ResponseBody) -> Self {
-
-        return self
     }
 }
 

@@ -15,5 +15,5 @@ public protocol AuthorizationProvider {
 }
 
 public extension AuthorizationProvider {
-    var store: AuthorizationStore { AuthorizationStore() }
+    var store: AuthorizationStore { KeychainAuthorizationStore() }
 }

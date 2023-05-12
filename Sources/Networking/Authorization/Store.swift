@@ -7,16 +7,40 @@
 
 import Foundation
 
-public struct AuthorizationStore {
-    public enum Value {
-        case token(_ value: String)
-        case refreshToken(_ value: String)
-        case credentials(username: String, password: String)
-        
-        case value(_ value: String, key: String)
-    }
+public enum AuthorizationValue {
+    case token(_ value: String)
+    case refreshToken(_ value: String)
+    case credentials(username: String, password: String)
     
-    private struct Constants {
+    case value(_ value: String, key: String)
+}
+
+public protocol AuthorizationStore {
+    func store(key: String, value: String)
+    func value(_ value: AuthorizationValue)
+}
+
+extension AuthorizationStore {
+    public func value(_ value: AuthorizationValue) {
+        switch value {
+        case .token(let value):
+            store(key: KeychainAuthorizationStore.Constants.token, value: value)
+            
+        case .refreshToken(let value):
+            store(key: KeychainAuthorizationStore.Constants.refreshToken, value: value)
+            
+        case .credentials(let username, let password):
+            store(key: KeychainAuthorizationStore.Constants.username, value: username)
+            store(key: KeychainAuthorizationStore.Constants.password, value: password)
+            
+        case .value(let value, let key):
+            store(key: key, value: value)
+        }
+    }
+}
+
+public struct KeychainAuthorizationStore: AuthorizationStore {
+    public struct Constants {
         static let token: String = "com.jeremicz.networking.token"
         static let refreshToken: String = "com.jeremicz.networking.refresh-token"
         
@@ -26,23 +50,7 @@ public struct AuthorizationStore {
     
     public init() { }
     
-    public func value(_ value: Value) {
-        switch value {
-        case .token(let value):
-            print(value)
-            
-        case .refreshToken(let value):
-            print(value)
-            
-        case .credentials(let username, let password):
-            print(username)
-            
-        case .value(let value, let key):
-            print(value)
-        }
-    }
-    
-    private func store(key: String, value: String) {
-        
+    public func store(key: String, value: String) {
+        print(key + ": " + value)
     }
 }

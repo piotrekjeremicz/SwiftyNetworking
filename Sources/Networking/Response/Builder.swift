@@ -20,7 +20,7 @@ public struct ResponseBuilder<Body: Codable> {
         let response = try Response<Body>(result, from: request)
         
         if let store = request.configuration?.service.authorizationProvider?.store {
-            request.builder.afterAuthorization?(response.body as! R.ResponseBody, AuthorizationStore())
+            request.builder.afterAuthorization?(response.body as! R.ResponseBody, store)
         }
         
         return response

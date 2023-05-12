@@ -15,7 +15,15 @@ public enum AuthorizationValue {
     case value(_ value: String, key: String)
 }
 
+public enum AuthorizationKey: String {
+    case token = "com.jeremicz.networking.token"
+    case refreshToken = "com.jeremicz.networking.refresh-token"
+    case username = "com.jeremicz.networking.username"
+    case password = "com.jeremicz.networking.password"
+}
+
 public protocol AuthorizationStore {
+    func get(key: AuthorizationKey) -> String?
     func store(key: String, value: String)
     func value(_ value: AuthorizationValue)
 }
@@ -51,6 +59,12 @@ public struct KeychainAuthorizationStore: AuthorizationStore {
     public init() { }
     
     public func store(key: String, value: String) {
+        //TODO: Implement default keychain usage
         print(key + ": " + value)
+    }
+    
+    public func get(key: AuthorizationKey) -> String? {
+        print("get " + key.rawValue)
+        return nil
     }
 }

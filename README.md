@@ -102,7 +102,7 @@ struct BackendAuthorization: AuthorizationProvider {
 2. Create a new inheritance structure from `AuthorizationStore`. There will be a default `KeychainAuthorizationStore` implementation, but for now I will use a custom structure.
 ```swift
 struct BackendAuthorizationStore: AuthorizationStore {
-    let keychain = Keychain(service: "com.beforedaily.app")
+    let keychain = Keychain(service: "com.example.app")
     
     func store(key: String, value: String) {
         try? keychain.set(value, key: key)

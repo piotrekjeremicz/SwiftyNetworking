@@ -24,8 +24,10 @@ public enum AuthorizationKey: String {
 
 public protocol AuthorizationStore {
     func get(key: AuthorizationKey) -> String?
-    func store(key: String, value: String)
     func value(_ value: AuthorizationValue)
+    func remove(key: Networking.AuthorizationKey)
+
+    func store(key: String, value: String)
 }
 
 extension AuthorizationStore {
@@ -48,6 +50,7 @@ extension AuthorizationStore {
 }
 
 public struct KeychainAuthorizationStore: AuthorizationStore {
+    
     public struct Constants {
         static let token: String = "com.jeremicz.networking.token"
         static let refreshToken: String = "com.jeremicz.networking.refresh-token"
@@ -61,6 +64,10 @@ public struct KeychainAuthorizationStore: AuthorizationStore {
     public func store(key: String, value: String) {
         //TODO: Implement default keychain usage
         print(key + ": " + value)
+    }
+
+    public func remove(key: AuthorizationKey) {
+        print(key)
     }
     
     public func get(key: AuthorizationKey) -> String? {

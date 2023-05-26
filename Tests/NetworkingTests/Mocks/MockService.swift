@@ -31,7 +31,7 @@ struct MockService: Service {
 
     func authorize<R>(_ request: R) -> R where R : Old_Request {
         request.headers {
-            Authorization("secret_token")
+            Authorization(value: "secret_token")
         }
     }
 }

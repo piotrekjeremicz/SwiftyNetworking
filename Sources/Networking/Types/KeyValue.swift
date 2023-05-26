@@ -12,19 +12,36 @@ internal enum KeyValueCodingKey: String, CodingKey {
 }
 
 public protocol KeyValueProvider: ValueBasicType {
+    associatedtype Value: ValueBasicType
+    
     var key: String { get }
-    var value: any ValueBasicType { get }
-    var dictionary: [String: any ValueBasicType] { get }
+    var value: Value { get }
+    var dictionary: [String: Value] { get }
+    
+    init(_ key: String, value: Value)
 }
 
 extension KeyValueProvider {
     public var description: String { "\(key): \(value.description)"}
-    public var dictionary: [String: any ValueBasicType] { [key: value] }
+    public var dictionary: [String: Value] { [key: value] }
 
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let keyValue = try container.decode([String: Value].self).first
+        
+        guard let key = keyValue?.key, let value = keyValue?.value else {
+            throw DecodingError.dataCorruptedError(
+              in: container,
+              debugDescription: "Invalid key and value: \(String(describing: keyValue))"
+            )
+        }
+        
+        self = .init(key, value: value)
+    }
+    
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: KeyValueCodingKey.self)
-        try container.encode(key, forKey: .key)
-        try container.encode(value, forKey: .value)
+        var container = encoder.singleValueContainer()
+        try container.encode(dictionary)
     }
 
     public static func == (lhs: Self, rhs: Self) -> Bool {

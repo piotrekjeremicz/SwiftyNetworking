@@ -27,6 +27,10 @@ public enum ResponseError<ErrorDescription>: Error {
             self = error as? ResponseError ?? .unknown(error)
         }
     }
+    
+    public var localizedDescription: String {
+        description
+    }
 }
 
 public enum RequestError: Error {

@@ -23,13 +23,13 @@ final class KeyValueSpec: QuickSpec {
 
             context("as key template") {
                 it("is authorization") {
-                    let authorization = Authorization("sample")
+                    let authorization = Authorization(value: "sample")
 					expect(authorization.key).to(equal("Authorization"))
 					expect(authorization.value.description).to(equal("sample"))
                 }
 
                 it("is x-api-key") {
-                    let authorization = X_Api_Key("key")
+                    let authorization = X_Api_Key(value: "key")
 					expect(authorization.key).to(equal("X-Api-Key"))
 					expect(authorization.value.description).to(equal("key"))
                 }

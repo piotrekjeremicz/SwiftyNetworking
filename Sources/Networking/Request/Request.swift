@@ -22,6 +22,7 @@ public protocol Request: CustomStringConvertible {
 
     var id: UUID { get }
     var body: Body { get }
+    var resolve: Self { get }
     
     var configuration: Configuration? { get set }
     var builder: ResponseBuilder<ResponseBody> { get set }
@@ -34,6 +35,14 @@ public extension Request {
     var id: UUID { UUID() }
     var body: some Request { EmptyRequest() }
 
+    var resolve: Self {
+        if let service = configuration?.service, let request = service.beforeEach(self) as? Self {
+            return request
+        } else {
+            return self
+        }
+    }
+    
     var configuration: Configuration? {
         get { nil }
         set {     }

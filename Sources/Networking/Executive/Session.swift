@@ -39,11 +39,12 @@ public final class Session {
 private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
+            
 #if DEBUG
-            if debugLogging { print(request.body) }
+            if debugLogging { print(request.body.resolve) }
 #endif
 
-            let urlRequest = try request.body.urlRequest()
+            let urlRequest = try request.body.resolve.urlRequest()
             requestTypes.append((request.body.id, String(describing: request.body.self)))
 
             let result = try await session.data(for: urlRequest)

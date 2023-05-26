@@ -39,17 +39,17 @@ public final class Session {
 private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
-            
+            let resolved = request.body.resolve
 #if DEBUG
-            if debugLogging { print(request.body.resolve) }
+            if debugLogging { print(resolved) }
 #endif
 
-            let urlRequest = try request.body.resolve.urlRequest()
-            requestTypes.append((request.body.id, String(describing: request.body.self)))
+            let urlRequest = try resolved.urlRequest()
+            requestTypes.append((resolved.id, String(describing: resolved.self)))
 
             let result = try await session.data(for: urlRequest)
-            let response = try request.builder.resolve(result: result, request: request.body)
-            requestTypes.removeAll(where: { $0.id == request.body.id })
+            let response = try request.builder.resolve(result: result, request: resolved)
+            requestTypes.removeAll(where: { $0.id == resolved.id })
             
 #if DEBUG
             if debugLogging { print(response) }

@@ -7,22 +7,22 @@
 
 import Foundation
 
-public struct X_Api_Key: KeyValueProvider {
+public struct X_Api_Key: KeyValueProvider {  
     public let key: String
-    public let value: any ValueBasicType
+    public let value: String
 
-    public init(_ value: String) {
-        self.key = "X-Api-Key"
+    public init(_ key: String = "X-Api-Key", value: String) {
+        self.key = key
         self.value = value
     }
 }
 
 public struct Authorization: KeyValueProvider {
     public let key: String
-    public let value: any ValueBasicType
+    public let value: String
 
-    public init(_ value: String) {
-        self.key = "Authorization"
+    public init(_ key: String = "Authorization", value: String) {
+        self.key = key
         self.value = value
     }
     

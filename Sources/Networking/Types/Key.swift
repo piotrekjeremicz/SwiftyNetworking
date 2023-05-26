@@ -7,17 +7,12 @@
 
 import Foundation
 
-public struct Key: KeyValueProvider {
+public struct Key<V>: KeyValueProvider where V: ValueBasicType {
     public let key: String
-    public let value: any ValueBasicType
+    public let value: V
 
-    public init(_ key: String, value: any ValueBasicType) {
+    public init(_ key: String, value: V) {
         self.key = key
         self.value = value
-    }
-
-    public init(_ key: String, @JsonBuilder json: () -> [any JsonKey]) {
-        self.key = key
-        self.value = json() as? (any ValueBasicType) ?? Array<Key>()
     }
 }

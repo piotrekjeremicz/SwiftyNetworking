@@ -18,10 +18,10 @@ public enum AuthorizationScheme {
     public var token: String {
         switch self {
         case .basic(let username, let password):
-            return "BASIC " + (username + ":" + password).data(using: .utf8)!.base64EncodedString()
+            return "Basic " + (username + ":" + password).data(using: .utf8)!.base64EncodedString()
             
         case .bearer(let token):
-            return "BEARER " + token
+            return "Bearer " + token
             
         case .raw(let scheme, let token):
             return scheme.capitalized + " " + token

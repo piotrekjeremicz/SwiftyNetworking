@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol ValueBasicType: Encodable, CustomStringConvertible, Equatable { }
+public protocol ValueBasicType: Codable, CustomStringConvertible, Equatable { }
 
 extension Swift.Int: ValueBasicType { }
 extension Swift.Bool: ValueBasicType { }

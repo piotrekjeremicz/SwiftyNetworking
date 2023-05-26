@@ -43,7 +43,7 @@ struct ExampleRequest: Request {
     var body: some Request {
         Get("foo", bar, "buzz", from: ExampleService())
             .headers {
-                X_Api_Key("sample_token")
+                X_Api_Key(value: "sample_token")
             }
             .queryItems {
                 Key("hello", value: "world")

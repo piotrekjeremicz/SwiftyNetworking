@@ -15,6 +15,6 @@ public protocol AuthorizationProvider {
 }
 
 public extension AuthorizationProvider {
-    //TODO: Finish `KeychainAuthorizationService` as a default `AuthorizationStore
+    //TODO: Finish `KeychainAuthorizationService` as a default `AuthorizationStore`
 //    var store: AuthorizationStore { KeychainAuthorizationStore() }
 }

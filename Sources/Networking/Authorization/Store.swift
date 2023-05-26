@@ -49,6 +49,7 @@ extension AuthorizationStore {
     }
 }
 
+//TODO: Finish `KeychainAuthorizationStore` as a default `AuthorizationStore`
 public struct KeychainAuthorizationStore: AuthorizationStore {
     
     public struct Constants {

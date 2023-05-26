@@ -18,15 +18,12 @@ public struct Group: JsonKey {
 	}
     
     public init(from decoder: Decoder) throws {
-//        var container = try decoder.unkeyedContainer()
-//        let keyValues = try container.decode([KeyValueProvider].self)
-        
+        //TODO: Implement decoder
         self = .init({ })
     }
     
     public func encode(to encoder: Encoder) throws {
-//        var container = try encoder.unkeyedContainer()
-//        try container.encode(group)
+        //TODO: Implement encoder
     }
 }
 

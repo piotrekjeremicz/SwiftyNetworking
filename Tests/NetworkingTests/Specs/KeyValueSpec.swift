@@ -29,7 +29,7 @@ final class KeyValueSpec: QuickSpec {
                 }
 
                 it("is x-api-key") {
-                    let authorization = X_Api_Key("key")
+                    let authorization = X_Api_Key(value: "key")
 					expect(authorization.key).to(equal("X-Api-Key"))
 					expect(authorization.value.description).to(equal("key"))
                 }

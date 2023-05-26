@@ -86,12 +86,8 @@ public extension Request {
         return request
     }
 
-//    @inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> Self {
-//        var request = self
-//        request.configuration?.body = json() as! any Codable
-//
-//        return request
-//    }
+// TODO: Implement additional modifier
+// @inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> Self
 
     @inlinable func headers(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> Self {
         var request = self

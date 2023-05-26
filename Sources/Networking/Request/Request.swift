@@ -74,7 +74,7 @@ public extension Request {
 public extension Request {
     @inlinable func body(json: Json) -> Self {
         var request = self
-        request.configuration?.body = json.root.compactMap({ $0 as? Codable }) as? any Codable
+        request.configuration?.body = json.root
 
         return request
     }
@@ -86,12 +86,12 @@ public extension Request {
         return request
     }
 
-    @inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> Self {
-        var request = self
-        request.configuration?.body = json().compactMap({ $0 as? Codable }) as? any Codable
-
-        return request
-    }
+//    @inlinable func body(@JsonBuilder _ json: () -> [any JsonKey]) -> Self {
+//        var request = self
+//        request.configuration?.body = json() as! any Codable
+//
+//        return request
+//    }
 
     @inlinable func headers(@KeyValueBuilder _ items:  () -> [any KeyValueProvider]) -> Self {
         var request = self
@@ -121,7 +121,7 @@ public extension Request {
 
     @inlinable func authorize() -> Self {
         guard let configuration else { return self }
-        return configuration.service.authorize(self)
+        return configuration.service.authorizationProvider?.authorize(self) ?? self
     }
 
     @inlinable func authorize(_ authorize: (Self) -> Self) -> Self {

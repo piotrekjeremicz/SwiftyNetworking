@@ -23,7 +23,7 @@ final class KeyValueSpec: QuickSpec {
 
             context("as key template") {
                 it("is authorization") {
-                    let authorization = Authorization("sample")
+                    let authorization = Authorization(value: "sample")
 					expect(authorization.key).to(equal("Authorization"))
 					expect(authorization.value.description).to(equal("sample"))
                 }

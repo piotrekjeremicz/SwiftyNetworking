@@ -39,23 +39,25 @@ public final class Session {
 private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
-            let resolved = request.body.resolve
+            let resolvedRequest = request.body.resolve
 #if DEBUG
-            if debugLogging { print(resolved) }
+            if debugLogging { print(resolvedRequest) }
 #endif
 
-            let urlRequest = try resolved.urlRequest()
-            requestTypes.append((resolved.id, String(describing: resolved.self)))
+            let urlRequest = try resolvedRequest.urlRequest()
+            requestTypes.append((resolvedRequest.id, String(describing: resolvedRequest.self)))
 
             let result = try await session.data(for: urlRequest)
-            let response = try request.builder.resolve(result: result, request: resolved)
-            requestTypes.removeAll(where: { $0.id == resolved.id })
+            let response = try request.builder.resolve(result: result, request: resolvedRequest)
+            requestTypes.removeAll(where: { $0.id == resolvedRequest.id })
+
+            let resolvedResponse = request.configuration?.service.afterEach(response) ?? response
             
 #if DEBUG
-            if debugLogging { print(response) }
+            if debugLogging { print(resolvedResponse) }
 #endif
 
-            return response
+            return resolvedResponse
         } catch {
 #if DEBUG
             if debugLogging { print("• Error: " + String(describing: type(of: request)) + "\n\(error)"  + "\n") }

@@ -43,7 +43,7 @@ struct ExampleRequest: Request {
     var body: some Request {
         Get("foo", bar, "buzz", from: ExampleService())
             .headers {
-                X_Api_Key("sample_token")
+                X_Api_Key(value: "sample_token")
             }
             .queryItems {
                 Key("hello", value: "world")
@@ -140,6 +140,26 @@ struct ExampleAuthorizedRequest: Request {
 ```
 
 And that is it!
+
+### Middleware
+Working with the network layer, we very often perform repetitive actions such as adding the appropriate authorization header or want to save the effect of the request sent. **SwiftyNetworking** allows you to perform actions just before completing the query and just after receiving a response.
+```swift
+struct ExampleService: Service {
+
+    //[...]
+    
+    func beforeEach<R>(_ request: R) -> R where R : Request {
+        request
+            .headers {
+                X_Api_Key(value: "secret_token")
+            }
+    }
+
+    func afterEach<B>(_ response: Response<B>) -> Response<B> where B : Decodable, B : Encodable {
+        statistics.store(response.statusCode)
+    }
+}
+```
 
 ## Roadmap
 - **Version 0.7:** add `before`, `after` and `beforeEach`, `afterEach` modifiers to provide basic middleware support

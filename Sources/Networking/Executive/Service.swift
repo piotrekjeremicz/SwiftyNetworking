@@ -15,7 +15,8 @@ public protocol Service {
     var responseBodyDecoder: any DataDecoder { get }
     var responseBodyEncoder: any DataEncoder { get }
 
-    func authorize<R: Request>(_ request: R) -> R
+    func beforeEach<R: Request>(_ request: R) -> R
+    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B>
     
     var authorizationProvider: AuthorizationProvider? { get }
 }
@@ -31,8 +32,12 @@ public extension Service {
         return encoder
     }
 
-    func authorize<R: Request>(_ request: R) -> R {
+    func beforeEach<R: Request>(_ request: R) -> R {
         request
+    }
+
+    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B> {
+        response
     }
     
     var authorizationProvider: AuthorizationProvider? { nil }

@@ -36,11 +36,7 @@ public extension Request {
     var body: some Request { EmptyRequest() }
 
     var resolve: Self {
-        if let service = configuration?.service, let request = service.beforeEach(self) as? Self {
-            return request
-        } else {
-            return self
-        }
+        configuration?.service.beforeEach(self) ?? self
     }
     
     var configuration: Configuration? {

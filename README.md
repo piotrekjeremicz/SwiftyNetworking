@@ -1,5 +1,5 @@
 # SwiftyNetworking
-Keep in mind - this package is in the process of **hard** development! 👨🏻‍💻 🚀
+Keep in mind - this package is in the process of **heavy** development! 👨🏻‍💻 🚀
 
 ## Overview
 Swifty Networking is a simple package that supports the networking layer and provide, similar to SwiftUI's ViewBuilder, request building pattern.

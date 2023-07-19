@@ -32,6 +32,7 @@ public protocol Request: CustomStringConvertible {
 
 public extension Request {
 
+    var id: UUID { UUID() }
     var body: some Request { EmptyRequest() }
 
     var resolve: Self {

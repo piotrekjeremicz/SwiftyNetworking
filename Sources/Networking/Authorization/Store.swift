@@ -7,6 +7,26 @@
 
 import Foundation
 
+public enum AuthorizationKey {
+    case token, refreshToken, username, password
+    case raw(_ key: String)
+    
+    func representant<Store: AuthorizationStore>(for type: Store.Type) -> String {
+        switch self {
+        case .token:
+            return Store.tokenKey
+        case .refreshToken:
+            return Store.refreshTokenKey
+        case .username:
+            return Store.usernameKey
+        case .password:
+            return Store.passwordKey
+        case .raw(let key):
+            return key
+        }
+    }
+}
+
 public enum AuthorizationValue {
     case token(_ value: String)
     case refreshToken(_ value: String)
@@ -16,28 +36,38 @@ public enum AuthorizationValue {
 }
 
 public protocol AuthorizationStore {
-    func get(key: String) -> String?
-    func value(_ value: AuthorizationValue)
-    func remove(key: String)
+    static var tokenKey: String { get }
+    static var refreshTokenKey: String { get }
+    static var usernameKey: String { get }
+    static var passwordKey: String { get }
     
-    func store(key: String, value: String)
+    func get(key: AuthorizationKey) -> String?
+    func save(_ value: AuthorizationValue)
+    func remove(key: AuthorizationKey)
+    
+    func store(key: AuthorizationKey, value: String)
 }
 
 extension AuthorizationStore {
-    public func value(_ value: AuthorizationValue) {
+    public static var tokenKey: String { KeychainAuthorizationStore.Constants.token }
+    public static var refreshTokenKey: String { KeychainAuthorizationStore.Constants.refreshToken }
+    public static var usernameKey: String { KeychainAuthorizationStore.Constants.username }
+    public static var passwordKey: String { KeychainAuthorizationStore.Constants.password }
+    
+    public func save(_ value: AuthorizationValue) {
         switch value {
         case .token(let value):
-            store(key: KeychainAuthorizationStore.Constants.token, value: value)
+            store(key: .token, value: value)
             
         case .refreshToken(let value):
-            store(key: KeychainAuthorizationStore.Constants.refreshToken, value: value)
+            store(key: .refreshToken, value: value)
             
         case .credentials(let username, let password):
-            store(key: KeychainAuthorizationStore.Constants.username, value: username)
-            store(key: KeychainAuthorizationStore.Constants.password, value: password)
+            store(key: .username, value: username)
+            store(key: .password, value: password)
             
         case .value(let value, let key):
-            store(key: key, value: value)
+            store(key: .raw(key), value: value)
         }
     }
 }
@@ -53,16 +83,16 @@ public struct KeychainAuthorizationStore: AuthorizationStore {
     
     public init() { }
     
-    public func store(key: String, value: String) {
-        save(Data(value.utf8), account: key)
+    public func store(key: AuthorizationKey, value: String) {
+        save(Data(value.utf8), account: key.representant(for: Self.self))
     }
     
-    public func remove(key: String) {
-        delete(account: key)
+    public func remove(key: AuthorizationKey) {
+        delete(account: key.representant(for: Self.self))
     }
     
-    public func get(key: String) -> String? {
-        guard let data = read(account: key) else { return nil }
+    public func get(key: AuthorizationKey) -> String? {
+        guard let data = read(account: key.representant(for: Self.self)) else { return nil }
         return String(data: data, encoding: .utf8)
     }
 }

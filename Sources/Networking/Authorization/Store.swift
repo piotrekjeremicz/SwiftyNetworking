@@ -11,7 +11,7 @@ public enum AuthorizationKey {
     case token, refreshToken, username, password
     case raw(_ key: String)
     
-    func representant<Store: AuthorizationStore>(for type: Store.Type) -> String {
+    public func representant<Store: AuthorizationStore>(for type: Store.Type) -> String {
         switch self {
         case .token:
             return Store.tokenKey

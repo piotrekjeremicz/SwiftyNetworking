@@ -8,6 +8,7 @@
 import Foundation
 
 public struct EmptyRequest: Request {
+    public var id: UUID = .init()
     
     public typealias ResponseBody = Empty
     public typealias ResponseError = Empty

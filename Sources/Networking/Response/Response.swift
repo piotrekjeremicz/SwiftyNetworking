@@ -26,7 +26,7 @@ public struct Response<Body: Codable> {
 
         self.statusCode = httpResponse.statusCode
         self.headers = httpResponse.allHeaderFields
-        self.requestId = request.body.resolve.id
+        self.requestId = request.id
         self.requestName = String(describing: type(of: request))
         self.dataEncoder = configuration.responseBodyEncoder
 

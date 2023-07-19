@@ -8,6 +8,8 @@
 import Foundation
 
 public struct Put<ResponseBody: Codable, ResponseError: Codable>: HttpRequest {
+    public var id: UUID = .init()
+    
     public var configuration: Configuration?
     public var builder: ResponseBuilder<ResponseBody>
     

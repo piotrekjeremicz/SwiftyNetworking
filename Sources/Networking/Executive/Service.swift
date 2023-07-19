@@ -5,10 +5,14 @@
 //  Created by Piotrek on 18/06/2022.
 //
 
+import OSLog
 import Foundation
+
+fileprivate let networkingLogger = Logger(subsystem: "com.jeremicz.networking", category: "networking")
 
 public protocol Service {
     var baseURL: URL { get }
+    var logger: Logger { get }
     
     var requestBodyEncoder: any DataEncoder { get }
 
@@ -19,9 +23,13 @@ public protocol Service {
     func afterEach<B: Codable>(_ response: Response<B>) -> Response<B>
     
     var authorizationProvider: AuthorizationProvider? { get }
+    
+    
 }
 
 public extension Service {
+    var logger: Logger { networkingLogger }
+    
     var requestBodyEncoder: any DataEncoder { JSONEncoder() }
     
     var responseBodyDecoder: any DataDecoder { JSONDecoder() }

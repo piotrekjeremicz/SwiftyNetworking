@@ -5,10 +5,14 @@
 //  Created by Piotrek on 18/06/2022.
 //
 
+import OSLog
 import Foundation
+
+fileprivate let networkingLogger = Logger(subsystem: "com.jeremicz.networking", category: "networking")
 
 public protocol Service {
     var baseURL: URL { get }
+    var logger: Logger { get }
     
     var requestBodyEncoder: any DataEncoder { get }
 
@@ -22,6 +26,8 @@ public protocol Service {
 }
 
 public extension Service {
+    var logger: Logger { networkingLogger }
+    
     var requestBodyEncoder: any DataEncoder { JSONEncoder() }
     
     var responseBodyDecoder: any DataDecoder { JSONDecoder() }
@@ -32,13 +38,9 @@ public extension Service {
         return encoder
     }
 
-    func beforeEach<R: Request>(_ request: R) -> R {
-        request
-    }
+    func beforeEach<R: Request>(_ request: R) -> R { request }
 
-    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B> {
-        response
-    }
+    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B> { response }
     
     var authorizationProvider: AuthorizationProvider? { nil }
 }

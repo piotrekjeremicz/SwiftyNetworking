@@ -1,11 +1,31 @@
 //
 //  Store.swift
-//  
+//
 //
 //  Created by Piotrek Jeremicz on 10/05/2023.
 //
 
 import Foundation
+
+public enum AuthorizationKey {
+    case token, refreshToken, username, password
+    case raw(_ key: String)
+    
+    public func representant<Store: AuthorizationStore>(for type: Store.Type) -> String {
+        switch self {
+        case .token:
+            return Store.tokenKey
+        case .refreshToken:
+            return Store.refreshTokenKey
+        case .username:
+            return Store.usernameKey
+        case .password:
+            return Store.passwordKey
+        case .raw(let key):
+            return key
+        }
+    }
+}
 
 public enum AuthorizationValue {
     case token(_ value: String)
@@ -15,43 +35,44 @@ public enum AuthorizationValue {
     case value(_ value: String, key: String)
 }
 
-public enum AuthorizationKey: String {
-    case token = "com.jeremicz.networking.token"
-    case refreshToken = "com.jeremicz.networking.refresh-token"
-    case username = "com.jeremicz.networking.username"
-    case password = "com.jeremicz.networking.password"
-}
-
 public protocol AuthorizationStore {
+    static var tokenKey: String { get }
+    static var refreshTokenKey: String { get }
+    static var usernameKey: String { get }
+    static var passwordKey: String { get }
+    
     func get(key: AuthorizationKey) -> String?
-    func value(_ value: AuthorizationValue)
-    func remove(key: Networking.AuthorizationKey)
-
-    func store(key: String, value: String)
+    func save(_ value: AuthorizationValue)
+    func remove(key: AuthorizationKey)
+    
+    func store(key: AuthorizationKey, value: String)
 }
 
 extension AuthorizationStore {
-    public func value(_ value: AuthorizationValue) {
+    public static var tokenKey: String { KeychainAuthorizationStore.Constants.token }
+    public static var refreshTokenKey: String { KeychainAuthorizationStore.Constants.refreshToken }
+    public static var usernameKey: String { KeychainAuthorizationStore.Constants.username }
+    public static var passwordKey: String { KeychainAuthorizationStore.Constants.password }
+    
+    public func save(_ value: AuthorizationValue) {
         switch value {
         case .token(let value):
-            store(key: KeychainAuthorizationStore.Constants.token, value: value)
+            store(key: .token, value: value)
             
         case .refreshToken(let value):
-            store(key: KeychainAuthorizationStore.Constants.refreshToken, value: value)
+            store(key: .refreshToken, value: value)
             
         case .credentials(let username, let password):
-            store(key: KeychainAuthorizationStore.Constants.username, value: username)
-            store(key: KeychainAuthorizationStore.Constants.password, value: password)
+            store(key: .username, value: username)
+            store(key: .password, value: password)
             
         case .value(let value, let key):
-            store(key: key, value: value)
+            store(key: .raw(key), value: value)
         }
     }
 }
 
-//TODO: Finish `KeychainAuthorizationStore` as a default `AuthorizationStore`
 public struct KeychainAuthorizationStore: AuthorizationStore {
-    
     public struct Constants {
         static let token: String = "com.jeremicz.networking.token"
         static let refreshToken: String = "com.jeremicz.networking.refresh-token"
@@ -62,17 +83,48 @@ public struct KeychainAuthorizationStore: AuthorizationStore {
     
     public init() { }
     
-    public func store(key: String, value: String) {
-        //TODO: Implement default keychain usage
-        print(key + ": " + value)
+    public func store(key: AuthorizationKey, value: String) {
+        save(Data(value.utf8), account: key.representant(for: Self.self))
     }
-
+    
     public func remove(key: AuthorizationKey) {
-        print(key)
+        delete(account: key.representant(for: Self.self))
     }
     
     public func get(key: AuthorizationKey) -> String? {
-        print("get " + key.rawValue)
-        return nil
+        guard let data = read(account: key.representant(for: Self.self)) else { return nil }
+        return String(data: data, encoding: .utf8)
+    }
+}
+
+private extension KeychainAuthorizationStore {
+    func save(_ data: Data, account: String) {
+        let query = [kSecValueData: data, kSecClass: kSecClassGenericPassword, kSecAttrAccount: account] as CFDictionary
+        let saveStatus = SecItemAdd(query, nil)
+        
+        if saveStatus != errSecSuccess { print("Error: \(saveStatus)") }
+        if saveStatus == errSecDuplicateItem { update(data, account: account) }
+    }
+    
+    func update(_ data: Data, account: String) {
+        let query = [kSecClass: kSecClassGenericPassword, kSecAttrAccount: account] as CFDictionary
+        let updatedData = [kSecValueData: data] as CFDictionary
+        
+        SecItemUpdate(query, updatedData)
+    }
+    
+    func read(account: String) -> Data? {
+        let query = [kSecClass: kSecClassGenericPassword, kSecAttrAccount: account, kSecReturnData: true] as CFDictionary
+        
+        var result: AnyObject?
+        SecItemCopyMatching(query, &result)
+
+        return result as? Data
+    }
+    
+    func delete(account: String) {
+        let query = [kSecClass: kSecClassGenericPassword, kSecAttrAccount: account] as CFDictionary
+        
+        SecItemDelete(query)
     }
 }

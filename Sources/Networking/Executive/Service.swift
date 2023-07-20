@@ -23,8 +23,6 @@ public protocol Service {
     func afterEach<B: Codable>(_ response: Response<B>) -> Response<B>
     
     var authorizationProvider: AuthorizationProvider? { get }
-    
-    
 }
 
 public extension Service {
@@ -40,13 +38,9 @@ public extension Service {
         return encoder
     }
 
-    func beforeEach<R: Request>(_ request: R) -> R {
-        request
-    }
+    func beforeEach<R: Request>(_ request: R) -> R { request }
 
-    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B> {
-        response
-    }
+    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B> { response }
     
     var authorizationProvider: AuthorizationProvider? { nil }
 }

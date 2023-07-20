@@ -147,18 +147,6 @@ struct ExampleAuthorizedRequest: Request {
 
 And that is it!
 
-### Logger
-**SwiftyNetworking** provides default OSLog entity. You can use your own Logger object.
-```swift
-import OSLog
-
-struct ExampleService: Service {
-    //[...]
-    
-    let logger = Logger(subsystem: "com.example.app", category: "networking")
-}
-```
-
 ### Middleware
 Working with the network layer, we very often perform repetitive actions such as adding the appropriate authorization header or want to save the effect of the request sent. **SwiftyNetworking** allows you to perform actions just before completing the query and just after receiving a response.
 ```swift
@@ -176,6 +164,18 @@ struct ExampleService: Service {
     func afterEach<B>(_ response: Response<B>) -> Response<B> where B : Decodable, B : Encodable {
         statistics.store(response.statusCode)
     }
+}
+```
+
+### Logger
+**SwiftyNetworking** provides default OSLog entity. You can use your own Logger object.
+```swift
+import OSLog
+
+struct ExampleService: Service {
+    //[...]
+    
+    let logger = Logger(subsystem: "com.example.app", category: "networking")
 }
 ```
 

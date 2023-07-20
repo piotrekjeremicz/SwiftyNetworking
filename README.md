@@ -1,5 +1,5 @@
 # SwiftyNetworking
-Keep in mind - this package is in the process of **hard** development! 👨🏻‍💻 🚀
+Keep in mind - this package is in the process of **heavy** development! 👨🏻‍💻 🚀
 
 ## Overview
 Swifty Networking is a simple package that supports the networking layer and provide, similar to SwiftUI's ViewBuilder, request building pattern.
@@ -99,17 +99,23 @@ struct BackendAuthorization: AuthorizationProvider {
 }
 ```
 
-2. Create a new inheritance structure from `AuthorizationStore`. There will be a default `KeychainAuthorizationStore` implementation, but for now I will use a custom structure.
+2. You can use default `KeychainAuthorizationStore` or create a new inheritance structure from `AuthorizationStore`.
 ```swift
 struct BackendAuthorizationStore: AuthorizationStore {
     let keychain = Keychain(service: "com.example.app")
     
-    func store(key: String, value: String) {
-        try? keychain.set(value, key: key)
+    static var tokenKey: String { "com.example.app.token" }
+    static var refreshTokenKey: String { "com.example.app.refresh-token" }
+    static var usernameKey: String { "com.example.app.username" }
+    static var passwordKey: String { "com.example.app.password" }
+    
+    //I would like to make it better
+    func store(key: AuthorizationKey, value: String) {
+        try? keychain.set(value, key: key.representant(for: Self.self))
     }
     
-    func get(key: String) -> String? {
-        try? keychain.get(key)
+    func get(key: AuthorizationKey) -> String? {
+        try? keychain.get(key.representant(for: Self.self))
     }
 }
 ```
@@ -158,6 +164,18 @@ struct ExampleService: Service {
     func afterEach<B>(_ response: Response<B>) -> Response<B> where B : Decodable, B : Encodable {
         statistics.store(response.statusCode)
     }
+}
+```
+
+### Logger
+**SwiftyNetworking** provides default OSLog entity. You can use your own Logger object.
+```swift
+import OSLog
+
+struct ExampleService: Service {
+    //[...]
+    
+    let logger = Logger(subsystem: "com.example.app", category: "networking")
 }
 ```
 

@@ -133,7 +133,7 @@ public extension Request {
 public extension Request {
     var description: String {
         var array = [String]()
-        array.append("• Request: " + String(describing: type(of: self)))
+        array.append("• Request<\(id)>: " + String(describing: type(of: self)))
 
         if let configuration {
             array.append(configuration.description)

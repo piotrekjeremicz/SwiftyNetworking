@@ -13,6 +13,7 @@ public struct Response<Body: Codable> {
     public let statusCode: Int
     public let headers: [AnyHashable: Any]
 
+    private let requestId: UUID
     private let requestName: String
     private let dataEncoder: any DataEncoder
 
@@ -25,6 +26,7 @@ public struct Response<Body: Codable> {
 
         self.statusCode = httpResponse.statusCode
         self.headers = httpResponse.allHeaderFields
+        self.requestId = request.id
         self.requestName = String(describing: type(of: request))
         self.dataEncoder = configuration.responseBodyEncoder
 
@@ -47,7 +49,7 @@ public struct Response<Body: Codable> {
 extension Response: CustomStringConvertible {
     public var description: String {
         var array = [String]()
-        array.append("• Response: " + requestName)
+        array.append("• Response<\(requestId)>: " + requestName)
         array.append("HTTP/1.1 \(statusCode) " + HTTPURLResponse.localizedString(forStatusCode: statusCode).capitalized)
         array.append(contentsOf: headers.map({ "\($0.key): \($0.value)" }))
 

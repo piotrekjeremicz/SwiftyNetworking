@@ -48,7 +48,14 @@ public struct Configuration {
 extension Configuration: CustomStringConvertible {
     public var description: String {
         var array = [String]()
-        array.append("\(method.rawValue.uppercased()) /\(path) HTTP/1.1")
+        
+        if let queryItems {
+            let items = queryItems.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
+            array.append("\(method.rawValue.uppercased()) /\(path)?\(items) HTTP/1.1")
+        } else {
+            array.append("\(method.rawValue.uppercased()) /\(path) HTTP/1.1")
+        }
+        
         array.append("Host: \(service.baseURL)")
 
         if let headers {

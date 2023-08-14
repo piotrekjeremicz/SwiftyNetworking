@@ -45,11 +45,17 @@ private extension Session {
 #endif
 
             let urlRequest = try resolvedRequest.urlRequest()
-            requestTypes.append((resolvedRequest.id, String(describing: resolvedRequest.self)))
+            DispatchQueue.global(qos: .background).sync {
+                requestTypes.append((resolvedRequest.id, String(describing: resolvedRequest.self)))
+            }
+
 
             let result = try await session.data(for: urlRequest)
             let response = try request.builder.resolve(result: result, request: resolvedRequest)
-            requestTypes.removeAll(where: { $0.id == resolvedRequest.id })
+
+            DispatchQueue.global(qos: .background).sync {
+                requestTypes.removeAll(where: { $0.id == resolvedRequest.id })
+            }
 
             let resolvedResponse = request.configuration?.service.afterEach(response) ?? response
             

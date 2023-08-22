@@ -12,6 +12,7 @@ public struct Response<Body: Codable> {
 
     public let statusCode: Int
     public let headers: [AnyHashable: Any]
+    public let originalResponse: URLResponse
 
     private let requestId: UUID
     private let requestName: String
@@ -24,8 +25,10 @@ public struct Response<Body: Codable> {
         guard let httpResponse = result.response as? HTTPURLResponse
         else { throw ResponseError<Empty>.unsupportedResponseType(result.response) }
 
+        self.originalResponse = httpResponse
         self.statusCode = httpResponse.statusCode
         self.headers = httpResponse.allHeaderFields
+        
         self.requestId = request.id
         self.requestName = String(describing: type(of: request))
         self.dataEncoder = configuration.responseBodyEncoder

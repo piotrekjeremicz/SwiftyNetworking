@@ -11,14 +11,16 @@ public final class Session {
     
     public let debugLogging: Bool
 
+    private let registry: Registry
     private let session: URLSession
-    private var requestTypes: [(id: UUID, type: String)] = []
+    
 
     public init(
         session: URLSession = URLSession(configuration: .default),
         debugLogging: Bool = false
     ) {
         self.session = session
+        self.registry = Registry()
         self.debugLogging = debugLogging
     }
 
@@ -45,17 +47,12 @@ private extension Session {
 #endif
 
             let urlRequest = try resolvedRequest.urlRequest()
-            DispatchQueue.global(qos: .background).sync {
-                requestTypes.append((resolvedRequest.id, String(describing: resolvedRequest.self)))
-            }
+            await registry.register(resolvedRequest)
 
 
             let result = try await session.data(for: urlRequest)
             let response = try request.builder.resolve(result: result, request: resolvedRequest)
-
-            DispatchQueue.global(qos: .background).sync {
-                requestTypes.removeAll(where: { $0.id == resolvedRequest.id })
-            }
+            await registry.remove(resolvedRequest)
 
             let resolvedResponse = request.configuration?.service.afterEach(response) ?? response
             
@@ -86,21 +83,21 @@ public extension Session {
             session.invalidateAndCancel()
 
         case .every(let type):
-            let requests = requestTypes.filter({ $0.type == String(describing: type) })
-            await session.allTasks.forEach({ task in
+            let requests = await registry.get(by: type)
+            for task in await session.allTasks {
                 if let request = task.originalRequest, let id = request.value(forHTTPHeaderField: "X-Request-ID"), requests.contains(where: { $0.id.uuidString == id }) {
                     task.cancel()
-                    requestTypes.removeAll(where: { $0.id.uuidString == id })
+                    await registry.remove(id)
                 }
-            })
+            }
 
         case .only(let id):
-            await session.allTasks.forEach({ task in
+            for task in await session.allTasks {
                 if let request = task.originalRequest, let requestId = request.value(forHTTPHeaderField: "X-Request-ID"), id.uuidString == requestId {
                     task.cancel()
-                    requestTypes.removeAll(where: { $0.id.uuidString == id.uuidString })
+                    await registry.remove(id.uuidString)
                 }
-            })
+            }
         }
     }
 }

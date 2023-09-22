@@ -1,4 +1,4 @@
-import MyMacro
+import NetworkingMacro
 
 let a = 17
 let b = 25

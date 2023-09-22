@@ -15,12 +15,12 @@ let package = Package(
             name: "Networking",
             targets: ["Networking"]),
         .library(
-            name: "MyMacro",
-            targets: ["MyMacro"]
+            name: "NetworkingMacro",
+            targets: ["NetworkingMacro"]
         ),
         .executable(
-            name: "MyMacroClient",
-            targets: ["MyMacroClient"]
+            name: "NetworkingMacroClient",
+            targets: ["NetworkingMacroClient"]
         ),
     ],
     dependencies: [
@@ -34,7 +34,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         // Macro implementation that performs the source transformation of a macro.
         .macro(
-            name: "MyMacroMacros",
+            name: "NetworkingMacros",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
@@ -42,16 +42,16 @@ let package = Package(
         ),
 
         // Library that exposes a macro as part of its API, which is used in client programs.
-        .target(name: "MyMacro", dependencies: ["MyMacroMacros"]),
+        .target(name: "NetworkingMacro", dependencies: ["NetworkingMacros"]),
 
         // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(name: "MyMacroClient", dependencies: ["MyMacro"]),
+        .executableTarget(name: "NetworkingMacroClient", dependencies: ["NetworkingMacro"]),
         
         // A test target used to develop the macro implementation.
         .testTarget(
             name: "MyMacroTests",
             dependencies: [
-                "MyMacroMacros",
+                "NetworkingMacros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
         ),

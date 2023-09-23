@@ -8,7 +8,8 @@
 import Foundation
 import Networking
 
-struct AuthExampleRequest: Request {
+@Request
+struct AuthExampleRequest {
     let service: Service
 
     let login: String
@@ -27,8 +28,8 @@ struct AuthExampleRequest: Request {
     }
 }
 
-
-struct GetExampleRequest: Request {
+@Request
+struct GetExampleRequest {
     var body: some Request {
         Post("foo", "bar", from: service)
             .headers {

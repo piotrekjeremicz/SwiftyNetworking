@@ -28,7 +28,7 @@ struct SampleError: Codable {
             })
             .responseBody(SampleBody.self)
             .responseError(SampleError.self)
-    }    
+    }
 }
 
-let test = GetExampleRequest(service: BackendService())
+let exampleRequest = GetExampleRequest(service: BackendService())

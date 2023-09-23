@@ -32,7 +32,7 @@ let package = Package(
     ],
     
     targets: [
-        .target(name: "Networking", dependencies: []),
+        .target(name: "Networking", dependencies: ["NetworkingMacro"]),
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         // Macro implementation that performs the source transformation of a macro.
@@ -45,7 +45,7 @@ let package = Package(
         ),
 
         // Library that exposes a macro as part of its API, which is used in client programs.
-        .target(name: "NetworkingMacro", dependencies: ["NetworkingMacros", "Networking"]),
+        .target(name: "NetworkingMacro", dependencies: ["NetworkingMacros"]),
 
         // A client of the library, which is able to use the macro in its own code.
         .executableTarget(name: "NetworkingMacroClient", dependencies: ["NetworkingMacro"]),

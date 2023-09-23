@@ -7,7 +7,7 @@ import XCTest
 import NetworkingMacros
 
 let testMacros: [String: Macro.Type] = [
-    "stringify": StringifyMacro.self,
+    "Request": RequestMacro.self,
 ]
 #endif
 
@@ -16,10 +16,36 @@ final class NetworkingMacroTests: XCTestCase {
         #if canImport(NetworkingMacros)
         assertMacroExpansion(
             """
-            #stringify(a + b)
+            @Request
+            struct GetExampleRequest: Request {
+            
+                let id: String
+                let service: BackendService
+            
+                var body: some Request {
+                    Post("foo", "bar", id, from: service)
+                        .responseBody(ResponseBody.self)
+                        .responseError(ResponseError.self)
+                        .responseBody(AnotherResponseBody.self)
+                }
+            }
             """,
             expandedSource: """
-            (a + b, "a + b")
+            struct GetExampleRequest: Request {
+                
+                typealias ResponseBody = Empty
+                typealias ResponseError = Empty
+            
+                let id: String
+                let service: BackendService
+                
+                var body: some Request {
+                    Post("foo", "bar", id, from: service)
+                        .responseBody(ResponseBody.self)
+                        .responseError(ResponseError.self)
+                        .responseBody(AnotherResponseBody.self)
+                }
+            }
             """,
             macros: testMacros
         )
@@ -28,19 +54,4 @@ final class NetworkingMacroTests: XCTestCase {
         #endif
     }
 
-    func testMacroWithStringLiteral() throws {
-        #if canImport(NetworkingMacros)
-        assertMacroExpansion(
-            #"""
-            #stringify("Hello, \(name)")
-            """#,
-            expandedSource: #"""
-            ("Hello, \(name)", #""Hello, \(name)""#)
-            """#,
-            macros: testMacros
-        )
-        #else
-        throw XCTSkip("macros are only supported when running tests for the host platform")
-        #endif
-    }
 }

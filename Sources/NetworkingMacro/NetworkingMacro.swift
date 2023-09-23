@@ -4,4 +4,5 @@
 import Networking
 
 @attached(member, names: named(ResponseBody), named(ResponseError))
+@attached(extension, conformances: Request)
 public macro Request() = #externalMacro(module: "NetworkingMacros", type: "RequestMacro")

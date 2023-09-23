@@ -61,6 +61,14 @@ public struct RequestMacro: MemberMacro {
     }
 }
 
+extension RequestMacro: ExtensionMacro {
+    public static func expansion(of node: SwiftSyntax.AttributeSyntax, attachedTo declaration: some SwiftSyntax.DeclGroupSyntax, providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol, conformingTo protocols: [SwiftSyntax.TypeSyntax], in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
+        
+        let requestExtension = try ExtensionDeclSyntax("extension \(type.trimmed): Request {}")        
+        return [requestExtension]
+    }
+}
+
 @main
 struct MyMacroPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [

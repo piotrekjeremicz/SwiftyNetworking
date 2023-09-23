@@ -17,7 +17,7 @@ final class NetworkingMacroTests: XCTestCase {
         assertMacroExpansion(
             """
             @Request
-            struct GetExampleRequest: Request {
+            struct GetExampleRequest {
                 let id: String
                 let service: BackendService
             
@@ -30,7 +30,7 @@ final class NetworkingMacroTests: XCTestCase {
             }
             """,
             expandedSource: """
-            struct GetExampleRequest: Request {
+            struct GetExampleRequest {
                 let id: String
                 let service: BackendService
             
@@ -44,6 +44,9 @@ final class NetworkingMacroTests: XCTestCase {
                 typealias ResponseBody = AnotherResponseBody
             
                 typealias ResponseError = ResponseError
+            }
+            
+            extension GetExampleRequest: Request {
             }
             """,
             macros: testMacros

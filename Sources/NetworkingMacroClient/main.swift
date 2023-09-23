@@ -1,8 +1,32 @@
+import Foundation
+import Networking
 import NetworkingMacro
 
-let a = 17
-let b = 25
+struct BackendService: Service {
+    var baseURL: URL { return URL(string: "https://example.com")! }
+}
 
-let (result, code) = #stringify(a + b)
+struct ResponseBody: Codable {
+    let body: String
+}
 
-print("The value \(result) was produced by the code \"\(code)\"")
+struct ResponseError: Codable {
+    let error: String
+}
+
+@Request struct GetExampleRequest: Request {
+    var body: some Request {
+        Post("foo", "bar", from: BackendService())
+            .authorize()
+            .headers {
+                Key("Test", value: "Abc")
+            }
+            .headers({
+                Key("ABC", value: "123")
+            })
+            .responseBody(ResponseBody.self)
+            .responseError(ResponseError.self)
+    }    
+}
+
+let test = GetExampleRequest()

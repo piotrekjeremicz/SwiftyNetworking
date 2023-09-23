@@ -15,8 +15,14 @@ struct ResponseError: Codable {
 }
 
 @Request struct GetExampleRequest: Request {
+    
+    typealias ResponseBody = Empty
+    typealias ResponseError = Empty
+    
+    let service: BackendService
+    
     var body: some Request {
-        Post("foo", "bar", from: BackendService())
+        Post("foo", "bar", from: service)
             .authorize()
             .headers {
                 Key("Test", value: "Abc")
@@ -29,4 +35,4 @@ struct ResponseError: Codable {
     }    
 }
 
-let test = GetExampleRequest()
+let test = GetExampleRequest(service: BackendService())

@@ -18,7 +18,6 @@ final class NetworkingMacroTests: XCTestCase {
             """
             @Request
             struct GetExampleRequest: Request {
-            
                 let id: String
                 let service: BackendService
             
@@ -32,19 +31,19 @@ final class NetworkingMacroTests: XCTestCase {
             """,
             expandedSource: """
             struct GetExampleRequest: Request {
-                
-                typealias ResponseBody = Empty
-                typealias ResponseError = Empty
-            
                 let id: String
                 let service: BackendService
-                
+            
                 var body: some Request {
                     Post("foo", "bar", id, from: service)
                         .responseBody(ResponseBody.self)
                         .responseError(ResponseError.self)
                         .responseBody(AnotherResponseBody.self)
                 }
+            
+                typealias ResponseBody = AnotherResponseBody
+            
+                typealias ResponseError = ResponseError
             }
             """,
             macros: testMacros

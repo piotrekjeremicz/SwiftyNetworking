@@ -6,19 +6,15 @@ struct BackendService: Service {
     var baseURL: URL { return URL(string: "https://example.com")! }
 }
 
-struct ResponseBody: Codable {
+struct SampleBody: Codable {
     let body: String
 }
 
-struct ResponseError: Codable {
+struct SampleError: Codable {
     let error: String
 }
 
-@Request struct GetExampleRequest: Request {
-    
-    typealias ResponseBody = Empty
-    typealias ResponseError = Empty
-    
+@Request struct GetExampleRequest {
     let service: BackendService
     
     var body: some Request {
@@ -30,8 +26,8 @@ struct ResponseError: Codable {
             .headers({
                 Key("ABC", value: "123")
             })
-            .responseBody(ResponseBody.self)
-            .responseError(ResponseError.self)
+            .responseBody(SampleBody.self)
+            .responseError(SampleError.self)
     }    
 }
 

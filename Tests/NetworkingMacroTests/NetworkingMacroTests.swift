@@ -2,7 +2,6 @@ import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import XCTest
 
-// Macro implementations build for the host, so the corresponding module is not available when cross-compiling. Cross-compiled tests may still make use of the macro itself in end-to-end tests.
 #if canImport(NetworkingMacros)
 import NetworkingMacros
 
@@ -12,8 +11,8 @@ let testMacros: [String: Macro.Type] = [
 #endif
 
 final class NetworkingMacroTests: XCTestCase {
-    func testMacro() throws {
-        #if canImport(NetworkingMacros)
+    func testBaseRequest() throws {
+#if canImport(NetworkingMacros)
         assertMacroExpansion(
             """
             @Request
@@ -51,9 +50,52 @@ final class NetworkingMacroTests: XCTestCase {
             """,
             macros: testMacros
         )
-        #else
+#else
         throw XCTSkip("macros are only supported when running tests for the host platform")
-        #endif
+#endif
     }
-
+    
+    func testRequestWithComment() throws {
+#if canImport(NetworkingMacros)
+        assertMacroExpansion(
+    """
+    @Request
+    struct GetExampleRequest {
+        let id: String
+        let service: BackendService
+    
+        var body: some Request {
+            Post("foo", "bar", id, from: service)
+    //            .responseBody(ResponseBody.self)
+                .responseError(ResponseError.self)
+                .responseBody(AnotherResponseBody.self)
+        }
+    }
+    """,
+    expandedSource: """
+    struct GetExampleRequest {
+        let id: String
+        let service: BackendService
+    
+        var body: some Request {
+            Post("foo", "bar", id, from: service)
+    //            .responseBody(ResponseBody.self)
+                .responseError(ResponseError.self)
+                .responseBody(AnotherResponseBody.self)
+        }
+    
+        typealias ResponseBody = Empty
+    
+        typealias ResponseError = ResponseError
+    }
+    
+    extension GetExampleRequest: Request {
+    }
+    """,
+    macros: testMacros
+        )
+#else
+        throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+    }
 }

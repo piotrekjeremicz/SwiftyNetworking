@@ -32,14 +32,16 @@ let package = Package(
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]
         ),
+        
+        .testTarget(
+            name: "NetworkingMacroTests",
+            dependencies: [
+                "NetworkingMacros",
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+            ]
+        ),
+        
         //TODO: Temporary test targets removal
-//        .testTarget(
-//            name: "NetworkingMacroTests",
-//            dependencies: [
-//                "NetworkingMacros",
-//                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-//            ]
-//        ),
 //        .testTarget(
 //            name: "NetworkingTests",
 //            dependencies: ["Networking", "Quick", "Nimble"]),

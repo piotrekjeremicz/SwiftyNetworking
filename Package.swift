@@ -14,15 +14,7 @@ let package = Package(
     products: [
         .library(
             name: "Networking",
-            targets: ["Networking"]),
-        .library(
-            name: "NetworkingMacro",
-            targets: ["NetworkingMacro"]
-        ),
-        .executable(
-            name: "NetworkingMacroClient",
-            targets: ["NetworkingMacroClient"]
-        ),
+            targets: ["Networking", "NetworkingMacro"]),
     ],
     
     dependencies: [
@@ -32,25 +24,23 @@ let package = Package(
     ],
     
     targets: [
-        .target(name: "Networking", dependencies: ["NetworkingMacro"]),
+        .target(name: "Networking", dependencies: ["NetworkingMacros"]),
         .macro(
             name: "NetworkingMacros",
             dependencies: [
+                "Networking",
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]
         ),
-        .target(name: "NetworkingMacro", dependencies: ["NetworkingMacros"]),
-        .executableTarget(name: "NetworkingMacroClient", dependencies: ["NetworkingMacro"]),
-        .testTarget(
-            name: "NetworkingMacroTests",
-            dependencies: [
-                "NetworkingMacros",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-            ]
-        ),
-        
-        //TODO: Temporary target removal
+        //TODO: Temporary test targets removal
+//        .testTarget(
+//            name: "NetworkingMacroTests",
+//            dependencies: [
+//                "NetworkingMacros",
+//                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+//            ]
+//        ),
 //        .testTarget(
 //            name: "NetworkingTests",
 //            dependencies: ["Networking", "Quick", "Nimble"]),

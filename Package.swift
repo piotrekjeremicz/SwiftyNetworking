@@ -14,7 +14,7 @@ let package = Package(
     products: [
         .library(
             name: "Networking",
-            targets: ["Networking", "NetworkingMacro"]),
+            targets: ["Networking"]),
     ],
     
     dependencies: [
@@ -28,7 +28,6 @@ let package = Package(
         .macro(
             name: "NetworkingMacros",
             dependencies: [
-                "Networking",
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]

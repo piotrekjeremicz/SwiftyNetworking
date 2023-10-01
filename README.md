@@ -237,7 +237,9 @@ struct ExampleRequest {
     typealias Response = ExampleResponseModel
     typealias ResponseError = ExampleErrorModel
     
-    var request: some Request { }
+    var body: some Request {
+        "curl -X POST https://www.example/login/ -d 'username=example&password=examle'"
+    }
 }
 ```
 

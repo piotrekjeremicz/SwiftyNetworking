@@ -15,6 +15,9 @@ let package = Package(
         .library(
             name: "Networking",
             targets: ["Networking"]),
+        .executable(
+            name: "NetworkingExampleApp", 
+            targets: ["NetworkingExampleApp"]),
     ],
     
     dependencies: [
@@ -25,6 +28,11 @@ let package = Package(
     
     targets: [
         .target(name: "Networking", dependencies: ["NetworkingMacros"]),
+        .executableTarget(
+            name: "NetworkingExampleApp",
+            dependencies: [.target(name: "Networking")],
+            path: "Examples/NetworkingExampleApp"
+        ),
         .macro(
             name: "NetworkingMacros",
             dependencies: [
@@ -32,7 +40,6 @@ let package = Package(
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]
         ),
-        
         .testTarget(
             name: "NetworkingMacroTests",
             dependencies: [

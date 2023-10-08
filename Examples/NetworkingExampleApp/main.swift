@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  swifty-networking-sample-app
+//  NetworkingExampleApp
 //
 //  Created by Piotrek Jeremicz on 02/04/2023.
 //
@@ -12,7 +12,7 @@ let session = Session(debugLogging: true)
 let service = BackendService()
 
 let authRequest = AuthExampleRequest(service: service, login: "username", password: "secret")
-let getRequest = GetExampleRequest(requestBody: .init(id: UUID(), count: 2))
+let getRequest = GetExampleRequest()
 
 Task {
     let (auth, error) = await session.send(request: getRequest)

@@ -86,9 +86,9 @@ final class NetworkingMacroTests: XCTestCase {
     
         var body: some Request {
             Post("foo", "bar", id, from: service)
-    //            .responseBody(ResponseBody.self)
+                .responseBody(ResponseBody.self)
                 .responseError(ResponseError.self)
-                .responseBody(AnotherResponseBody.self)
+    //          .responseBody(AnotherResponseBody.self)
         }
     }
     """,
@@ -99,13 +99,13 @@ final class NetworkingMacroTests: XCTestCase {
     
         var body: some Request {
             Post("foo", "bar", id, from: service)
-    //            .responseBody(ResponseBody.self)
+                .responseBody(ResponseBody.self)
                 .responseError(ResponseError.self)
-                .responseBody(AnotherResponseBody.self)
+    //          .responseBody(AnotherResponseBody.self)
         }
     
-        typealias ResponseBody = Empty
-    
+        typealias ResponseBody = ResponseBody
+
         typealias ResponseError = ResponseError
     }
     

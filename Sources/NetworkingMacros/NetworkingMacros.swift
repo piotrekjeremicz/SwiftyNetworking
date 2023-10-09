@@ -42,30 +42,63 @@ public struct RequestMacro: MemberMacro {
             throw RequestMacroError.canNotFindFunctionCallExpression
         }
 
-        let types = try RequestMacro.revealResponseTypes(for: bodyPatternSyntax.description)
+        let types = RequestMacro.analyze(syntax: functionCallExpression)
+
         let responseBodyTypealiasDeclSyntax = try TypeAliasDeclSyntax(
             SyntaxNodeString(
-                stringLiteral: "typealias ResponseBody = \(types.literalResponseBody)"
+                stringLiteral: "typealias ResponseBody = \(types.literalResponseBodyTypeName ?? "Empty")"
             )
         )
         
         let responseErrorTypealiasDeclSyntax = try TypeAliasDeclSyntax(
             SyntaxNodeString(
-                stringLiteral: "typealias ResponseError = \(types.literalResponseError)"
+                stringLiteral: "typealias ResponseError = \(types.literalResponseErrorTypeName ?? "Empty")"
             )
         )
         
         return [DeclSyntax(responseBodyTypealiasDeclSyntax), DeclSyntax(responseErrorTypealiasDeclSyntax)]
     }
     
-    private static func revealResponseTypes(for bodyDescription: String) throws -> (literalResponseBody: String, literalResponseError: String) {
-        let responseBodyRegex = try Regex(#"\.responseBody\((.*?)\.self\)"#)
-        let responseErrorRegex = try Regex(#"\.responseError\((.*?)\.self\)"#)
-                
-        let literalResponseBody = bodyDescription.matches(of: responseBodyRegex).last?.last?.value
-        let literalResponseError = bodyDescription.matches(of: responseErrorRegex).last?.last?.value
-        
-        return ("\(literalResponseBody ?? "Empty")", "\(literalResponseError ?? "Empty")" )
+    private static func analyze(syntax: FunctionCallExprSyntax) -> (literalResponseBodyTypeName: String?, literalResponseErrorTypeName: String?) {
+
+        var literalResponseBodyTypeName: String? = nil
+        var literalResponseErrorTypeName: String? = nil
+
+        if 
+            let declNameString = syntax
+                .calledExpression.as(MemberAccessExprSyntax.self)?
+                .declName.baseName.text,
+            let declReferenceNameString = syntax
+                .arguments.first(where: { $0.is(LabeledExprSyntax.self) })?.as(LabeledExprSyntax.self)?
+                .expression.as(MemberAccessExprSyntax.self)?
+                .base?.as(DeclReferenceExprSyntax.self)?
+                .baseName.text
+        {
+            switch declNameString {
+            case "responseBody":
+                literalResponseBodyTypeName = declReferenceNameString
+            case "responseError":
+                literalResponseErrorTypeName = declReferenceNameString
+            default: break
+            }
+        }
+
+        if let nextFunctionCallExpression = syntax
+            .calledExpression.as(MemberAccessExprSyntax.self)?
+            .base?.as(FunctionCallExprSyntax.self)
+        {
+            let (bodyTypeName, errorTypeName) = RequestMacro.analyze(syntax: nextFunctionCallExpression)
+
+            return (
+                literalResponseBodyTypeName ?? bodyTypeName ?? nil,
+                literalResponseErrorTypeName ?? errorTypeName ?? nil
+            )
+        }
+
+        return (
+            literalResponseBodyTypeName  ?? nil,
+            literalResponseErrorTypeName ?? nil
+        )
     }
 }
 

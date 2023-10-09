@@ -76,7 +76,7 @@ And that’s it!
 
 ## Advanced usage
 ### Template
-We love to optimize our work! This is one of the reasons why I prepared a template for the basic implementation of `Request`. Another reason was the discovery of the token menu! Do you like this approach? Give it a star! ⭐️___FILEBASENAME___.swift
+We love to optimize our work! This is one of the reasons why I prepared a template for the basic implementation of `Request`. Another reason was the discovery of the token menu! Do you like this approach? Give it a star! ⭐️
 
 ![Request template](/Docs/Images/request_template.png)
 

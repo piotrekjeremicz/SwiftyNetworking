@@ -18,10 +18,20 @@ final class NetworkingMacroTests: XCTestCase {
             @Request
             struct GetExampleRequest {
                 let id: String
+                let login: String
+                let password: String
                 let service: BackendService
             
                 var body: some Request {
                     Post("foo", "bar", id, from: service)
+                        .headers {
+                            X_Api_Key(value: "secret_token")
+                        }
+                        .queryItems{
+                            Key("login", value: login)
+                            Key("password", value: password)
+                        }
+                        .authorize()
                         .responseBody(ResponseBody.self)
                         .responseError(ResponseError.self)
                         .responseBody(AnotherResponseBody.self)
@@ -31,10 +41,20 @@ final class NetworkingMacroTests: XCTestCase {
             expandedSource: """
             struct GetExampleRequest {
                 let id: String
+                let login: String
+                let password: String
                 let service: BackendService
             
                 var body: some Request {
                     Post("foo", "bar", id, from: service)
+                        .headers {
+                            X_Api_Key(value: "secret_token")
+                        }
+                        .queryItems{
+                            Key("login", value: login)
+                            Key("password", value: password)
+                        }
+                        .authorize()
                         .responseBody(ResponseBody.self)
                         .responseError(ResponseError.self)
                         .responseBody(AnotherResponseBody.self)

@@ -4,12 +4,13 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 enum RequestMacroError: CustomStringConvertible, Error {
-    case onlyApplicableToStruct, canNotFindBodyVariable
+    case onlyApplicableToStruct, canNotFindBodyVariable, canNotFindFunctionCallExpression
     
     var description: String {
         switch self {
         case .canNotFindBodyVariable: "Can not find in struc a body variable"
         case .onlyApplicableToStruct: "@StructInit can only be applied to a structure"
+        case .canNotFindFunctionCallExpression: "Can not find any function caller (modifier) in expression"
         }
     }
 }
@@ -34,6 +35,13 @@ public struct RequestMacro: MemberMacro {
             throw RequestMacroError.canNotFindBodyVariable
         }
         
+        guard
+            let patternBindingSyntax = bodyPatternSyntax.first?.as(PatternBindingSyntax.self),
+            let functionCallExpression = patternBindingSyntax.accessorBlock?.accessors.as(CodeBlockItemListSyntax.self)?.first(where: { $0.is(CodeBlockItemSyntax.self) })?.item.as(FunctionCallExprSyntax.self)
+        else {
+            throw RequestMacroError.canNotFindFunctionCallExpression
+        }
+
         let types = try RequestMacro.revealResponseTypes(for: bodyPatternSyntax.description)
         let responseBodyTypealiasDeclSyntax = try TypeAliasDeclSyntax(
             SyntaxNodeString(

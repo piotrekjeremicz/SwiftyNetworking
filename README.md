@@ -2,10 +2,10 @@
 Keep in mind - this package is in the process of **heavy** development! 👨🏻‍💻 🚀
 
 ## Overview
-Swifty Networking is a simple package that supports the networking layer and provide, similar to SwiftUI's ViewBuilder, request building pattern.
+**SwiftyNetworking** is a simple package that supports the networking layer and provide, similar to SwiftUI's ViewBuilder, request building pattern.
 
 **Note:**
-*The package is under heavy development. The structure of types and methods seems to be final, but over time there may be some changes resulting from the need to implement a new function. Version 0.5 is halfway to the first public stable version. Before this happens, I have to implement a few points according to the roadmap at the bottom.*
+*The package is under heavy development. The structure of types and methods seems to be final, but over time there may be some changes resulting from the need to implement a new function. Version 0.8 is very close to the final release. Before this happens, I would like to add mocks and tests to complete everything that I would like to have in this package..*
 
 ## How to use it?
 1. Create service that provides relevant API.
@@ -75,6 +75,11 @@ if sometingIsWrong {
 And that’s it!
 
 ## Advanced usage
+### Template
+We love to optimize our work! This is one of the reasons why I prepared a template for the basic implementation of `Request`. Another reason was the discovery of the token menu! Do you like this approach? Give it a star! ⭐️
+![Request template](/Docs/Images/request_template.png)
+You can easly install the teplate by running the `install.sh` script located in `Templates` directory.
+
 ### Authorization
 **SwiftyNetworking** provides easy to use and elastic authorization model. Assuming that most authorizations consist in obtaining a token from one request and using it in the others, this package contains a simple system that allows you to catch and use such values.
 

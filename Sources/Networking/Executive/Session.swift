@@ -63,7 +63,7 @@ private extension Session {
             return resolvedResponse
         } catch {
 #if DEBUG
-            if debugLogging { request.configuration?.service.logger.error("• Error: \(String(describing: type(of: request)))\n\(error)\n") }
+            if debugLogging { request.body.resolve.configuration?.service.logger.error("• Error: \(String(describing: type(of: request)))\n\(error)\n") }
 #endif
             throw error
         }

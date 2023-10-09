@@ -2,10 +2,10 @@
 Keep in mind - this package is in the process of **heavy** development! 👨🏻‍💻 🚀
 
 ## Overview
-Swifty Networking is a simple package that supports the networking layer and provide, similar to SwiftUI's ViewBuilder, request building pattern.
+**SwiftyNetworking** is a simple package that supports the networking layer and provide, similar to SwiftUI's ViewBuilder, request building pattern.
 
 **Note:**
-*The package is under heavy development. The structure of types and methods seems to be final, but over time there may be some changes resulting from the need to implement a new function. Version 0.5 is halfway to the first public stable version. Before this happens, I have to implement a few points according to the roadmap at the bottom.*
+*The package is under heavy development. The structure of types and methods seems to be final, but over time there may be some changes resulting from the need to implement a new function. Version 0.8 is very close to the final release. Before this happens, I would like to add mocks and tests to complete everything that I would like to have in this package..*
 
 ## How to use it?
 1. Create service that provides relevant API.
@@ -31,13 +31,11 @@ struct ExampleErrorModel: Codable {
 ```
 
 
-3. Describe request by using `Request` abstraction.
+3. Describe request by using `Request` macro.
 ```swift
-struct ExampleRequest: Request {
+@Request
+struct ExampleRequest {
 
-    typealias ResponseBody = ExampleResponseModel
-    typealias ResponseError = ExampleErrorModel
-    
     let bar: String
     
     var body: some Request {
@@ -77,6 +75,11 @@ if sometingIsWrong {
 And that’s it!
 
 ## Advanced usage
+### Template
+We love to optimize our work! This is one of the reasons why I prepared a template for the basic implementation of `Request`. Another reason was the discovery of the token menu! Do you like this approach? Give it a star! ⭐️
+![Request template](/Docs/Images/request_template.png)
+You can easly install the teplate by running the `install.sh` script located in `Templates` directory.
+
 ### Authorization
 **SwiftyNetworking** provides easy to use and elastic authorization model. Assuming that most authorizations consist in obtaining a token from one request and using it in the others, this package contains a simple system that allows you to catch and use such values.
 
@@ -121,7 +124,8 @@ struct BackendAuthorizationStore: AuthorizationStore {
 ```
 3. We are ready to catch our credentials. In this case, it will be a token that the server returns after authentication process.
 ```swift
-struct ExampleLoginRequest: Request {    
+@Request
+struct ExampleLoginRequest {    
     var body: some Request {
         Get("login", from: ExampleService())
             //[...]
@@ -135,7 +139,8 @@ struct ExampleLoginRequest: Request {
 
 4. Add `authorize()` modifier to each request that requires authorization.
 ```swift
-struct ExampleAuthorizedRequest: Request {    
+@Request
+struct ExampleAuthorizedRequest {    
     var body: some Request {
         Get("foo", bar, "buzz", from: ExampleService())
             //[...]
@@ -154,14 +159,14 @@ struct ExampleService: Service {
 
     //[...]
     
-    func beforeEach<R>(_ request: R) -> R where R : Request {
+    func beforeEach<R>(_ request: R) -> R where R: Request {
         request
             .headers {
                 X_Api_Key(value: "secret_token")
             }
     }
 
-    func afterEach<B>(_ response: Response<B>) -> Response<B> where B : Decodable, B : Encodable {
+    func afterEach<B>(_ response: Response<B>) -> Response<B> where B: Codable {
         statistics.store(response.statusCode)
     }
 }
@@ -180,9 +185,8 @@ struct ExampleService: Service {
 ```
 
 ## Roadmap
-- **Version 0.7:** add `before`, `after` and `beforeEach`, `afterEach` modifiers to provide basic middleware support
-- **Version 0.8:** add `Mock` result that will be an alternative output for `Request`
-- **Version 0.9:** refactor, unit tests and whatever else that will be needed to be proud of this package 😇
+- **Version 0.9:** add `Mock` result that will be an alternative output for `Request`
+- **Version 1.0:** refactor, unit tests and whatever else that will be needed to be proud of this package 😇
 
 ## What’s next?
 There are a few more things I want to add and support::
@@ -201,27 +205,12 @@ request
     })
 ```
 
-### Get rid of associated types
-```swift
-// I would like to have only a modifier that will apply the final response type
-struct ExampleRequest: Request {
-    var body: some Request {
-        Get("foo", "bar", from: ExampleService())
-            .responseBody(ExampleResponseModel.self)
-            .responseError(ExampleErrorModel.self)
-        }
-    }
-}
-```
-
 ### Queueing requests
 ```swift
 // Dummy code
-struct ExampleRequest: Request {
-    typealias Response = ExampleResponseModel
-    typealias ResponseError = ExampleErrorModel
-    
-    var request: some Request {
+@Request
+struct ExampleRequest {
+    var body: some Request {
         Queue {
             Get("/example/1", from: ExampleService())
             Get("/example/2", from: ExampleService())
@@ -231,14 +220,29 @@ struct ExampleRequest: Request {
 }
 ```
 
+### Networking preview
+```swift
+// Dummy code
+@Request
+struct ExampleRequest {
+    var body: some Request { }
+}
+
+#NetworkingPreview {
+    ExampleRequest()
+}
+
+```
+
 ### Supporting curl strings
 ```swift
 // Dummy code
-struct ExampleRequest: Request {
+@Request
+struct ExampleRequest {
     typealias Response = ExampleResponseModel
     typealias ResponseError = ExampleErrorModel
     
-    var request: some Request {
+    var body: some Request {
         "curl -X POST https://www.example/login/ -d 'username=example&password=examle'"
     }
 }

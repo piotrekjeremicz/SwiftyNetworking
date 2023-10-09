@@ -8,7 +8,8 @@
 import Foundation
 import Networking
 
-struct AuthExampleRequest: Request {
+@Request
+struct AuthExampleRequest {
     let service: Service
 
     let login: String
@@ -17,7 +18,7 @@ struct AuthExampleRequest: Request {
     var body: some Request {
         Get("auth", "login", from: service)
             .headers {
-                X_Api_Key("secret_token")
+                X_Api_Key(value: "secret_token")
             }
             .queryItems{
                 Key("login", value: login)
@@ -27,12 +28,12 @@ struct AuthExampleRequest: Request {
     }
 }
 
-
-struct GetExampleRequest: Request {
+@Request
+struct GetExampleRequest {
     var body: some Request {
         Post("foo", "bar", from: service)
             .headers {
-                X_Api_Key("secret_token")
+                X_Api_Key(value: "secret_token")
             }
             .queryItems {
                 Key("type", value: "numbers")

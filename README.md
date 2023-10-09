@@ -75,6 +75,11 @@ if sometingIsWrong {
 And that’s it!
 
 ## Advanced usage
+### Template
+We love to optimize our work! This is one of the reasons why I prepared a template for the basic implementation of `Request`. Another reason was the discovery of the token menu! Do you like this approach? Give it a star! ⭐️___FILEBASENAME___.swift
+
+![Request template](/Docs/Images/request_template.png)
+
 ### Authorization
 **SwiftyNetworking** provides easy to use and elastic authorization model. Assuming that most authorizations consist in obtaining a token from one request and using it in the others, this package contains a simple system that allows you to catch and use such values.
 

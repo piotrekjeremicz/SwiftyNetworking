@@ -8,7 +8,7 @@
 import Foundation
 import Networking
 
-let session = Session(debugLogging: true)
+let session = Session(configuration: .init(logging: true))
 let service = BackendService()
 
 let authRequest = AuthExampleRequest(service: service, login: "username", password: "secret")

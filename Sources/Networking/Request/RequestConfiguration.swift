@@ -1,5 +1,5 @@
 //
-//  Configuration.swift
+//  RequestConfiguration.swift
 //  
 //
 //  Created by Piotrek Jeremicz on 02/04/2023.

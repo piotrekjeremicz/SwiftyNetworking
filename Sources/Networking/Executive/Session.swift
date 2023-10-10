@@ -9,19 +9,18 @@ import Foundation
 
 public final class Session {
     
-    public let debugLogging: Bool
-
     private let registry: Registry
     private let session: URLSession
     
+    private let configuration: Configuration
 
     public init(
         session: URLSession = URLSession(configuration: .default),
-        debugLogging: Bool = false
+        configuration: Configuration = .init()
     ) {
         self.session = session
         self.registry = Registry()
-        self.debugLogging = debugLogging
+        self.configuration = configuration
     }
 
     public func send<R: Request>(request: R) async -> (Response<R.ResponseBody>?, ResponseError<R.ResponseError>?) {
@@ -42,9 +41,8 @@ private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
             let resolvedRequest = request.body.resolve
-#if DEBUG
-            if debugLogging { resolvedRequest.configuration?.service.logger.info("\(resolvedRequest.description)") }
-#endif
+
+            if configuration.logging { resolvedRequest.configuration?.service.logger.info("\(resolvedRequest.description)") }
 
             let urlRequest = try resolvedRequest.urlRequest()
             await registry.register(resolvedRequest)
@@ -56,15 +54,12 @@ private extension Session {
 
             let resolvedResponse = resolvedRequest.configuration?.service.afterEach(response) ?? response
             
-#if DEBUG
-            if debugLogging { resolvedRequest.configuration?.service.logger.info("\(resolvedResponse.description)") }
-#endif
+            if configuration.logging { resolvedRequest.configuration?.service.logger.info("\(resolvedResponse.description)") }
 
             return resolvedResponse
         } catch {
-#if DEBUG
-            if debugLogging { request.body.resolve.configuration?.service.logger.error("• Error: \(String(describing: type(of: request)))\n\(error)\n") }
-#endif
+            if configuration.logging { request.body.resolve.configuration?.service.logger.error("• Error: \(String(describing: type(of: request)))\n\(error)\n") }
+
             throw error
         }
     }

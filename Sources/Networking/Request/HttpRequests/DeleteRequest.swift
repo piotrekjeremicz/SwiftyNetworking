@@ -8,10 +8,12 @@
 import Foundation
 
 public struct Delete<ResponseBody: Codable, ResponseError: Codable>: HttpRequest {
+
     public var id: UUID = .init()
     
     public var configuration: Configuration?
     public var builder: ResponseBuilder<ResponseBody>
+    public var mock: ResponseBody? = nil
     
     public init(configuration: Configuration?) {
         self.configuration = configuration

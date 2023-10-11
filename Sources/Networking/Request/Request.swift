@@ -28,6 +28,7 @@ public protocol Request: CustomStringConvertible {
     var body: Body { get }
     var resolve: Self { get }
     
+    var mock: ResponseBody? { get set }
     var configuration: Configuration? { get set }
     var builder: ResponseBuilder<ResponseBody> { get set }
 
@@ -51,6 +52,11 @@ public extension Request {
     var builder: ResponseBuilder<ResponseBody> {
         get { ResponseBuilder<ResponseBody>() }
         set {                                 }
+    }
+
+    var mock: ResponseBody? {
+        get { nil }
+        set {     }
     }
 
     func urlRequest() throws -> URLRequest {
@@ -135,7 +141,7 @@ public extension Request {
 
     @inlinable func mock(_ block: (_ request: Self) -> Self.ResponseBody) -> Self {
         var request = self
-
+        request.mock = block(self)
 
         return request
     }

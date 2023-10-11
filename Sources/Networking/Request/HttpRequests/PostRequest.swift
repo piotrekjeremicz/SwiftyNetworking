@@ -12,7 +12,8 @@ public struct Post<ResponseBody: Codable, ResponseError: Codable>: HttpRequest {
     
     public var configuration: Configuration?
     public var builder: ResponseBuilder<ResponseBody>
-    
+    public var mock: ResponseBody? = nil
+
     public init(configuration: Configuration?) {
         self.configuration = configuration
         self.builder = ResponseBuilder<ResponseBody>()

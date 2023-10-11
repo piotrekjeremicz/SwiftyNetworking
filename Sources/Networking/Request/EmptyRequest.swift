@@ -8,6 +8,7 @@
 import Foundation
 
 public struct EmptyRequest: Request {
+
     public var id: UUID = .init()
     
     public typealias ResponseBody = Empty
@@ -15,6 +16,7 @@ public struct EmptyRequest: Request {
     
     public var configuration: Configuration?
     public var builder: ResponseBuilder<Empty> = ResponseBuilder()
+    public var mock: Empty?
 
     public init() {
         configuration = nil

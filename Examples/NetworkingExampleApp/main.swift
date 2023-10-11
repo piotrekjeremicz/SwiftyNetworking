@@ -8,16 +8,25 @@
 import Foundation
 import Networking
 
-let session = Session(configuration: .init(logging: true))
+let session = Session(
+    configuration: .init(
+        logging: true,
+        mock: .init(
+            responseDelay: .seconds(2),
+            resolveAs: .successfulResponse
+        )
+    )
+)
+
 let service = BackendService()
 
 let authRequest = AuthExampleRequest(service: service, login: "username", password: "secret")
 let getRequest = GetExampleRequest()
 
 Task {
-    let (auth, error) = await session.send(request: getRequest)
+    let (body, error) = await session.send(request: getRequest)
 
-    print(auth)
+    print(body)
     print(error)
 }
 

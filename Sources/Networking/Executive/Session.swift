@@ -42,6 +42,15 @@ private extension Session {
         do {
             let resolvedRequest = request.body.resolve
 
+            if 
+                configuration.mock.resolveAs != .none,
+                    let mockBody = resolvedRequest.mock,
+                    let data = try resolvedRequest.configuration?.responseBodyEncoder.encode(mockBody)
+            {
+                try await Task.sleep(for: configuration.mock.responseDuration)
+                return try request.builder.resolve(result: (data: data, response: HTTPURLResponse(url: URL(string: "http://example.com")!, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)), request: resolvedRequest)
+            }
+
             if configuration.logging { resolvedRequest.configuration?.service.logger.info("\(resolvedRequest.description)") }
 
             let urlRequest = try resolvedRequest.urlRequest()

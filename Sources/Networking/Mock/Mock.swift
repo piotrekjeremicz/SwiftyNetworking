@@ -9,11 +9,11 @@ import Foundation
 
 public struct Mock {
     public struct Configuration {
-        let responseDelay: TimeInterval
+        let responseDuration: Duration
         let resolveAs: Result
 
-        public init(responseDelay: TimeInterval = 0, resolveAs: Result = .none) {
-            self.responseDelay = responseDelay
+        public init(responseDelay: Duration = .zero, resolveAs: Result = .none) {
+            self.responseDuration = responseDelay
             self.resolveAs = resolveAs
         }
 

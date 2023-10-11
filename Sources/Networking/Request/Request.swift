@@ -132,6 +132,13 @@ public extension Request {
     @inlinable func authorize(_ authorize: (Self) -> Self) -> Self {
         authorize(self)
     }
+
+    @inlinable func mock(_ block: (_ request: Self) -> Self.ResponseBody) -> Self {
+        var request = self
+
+
+        return request
+    }
 }
 
 public extension Request {

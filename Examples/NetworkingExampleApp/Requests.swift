@@ -41,5 +41,8 @@ struct GetExampleRequest {
             .authorize()
             .responseBody(ExampleResponseModel.self)
             .responseError(ExampleErrorModel.self)
+            .mock { request in
+                ExampleResponseModel(id: .init(), title: "self", description: "sef")
+            }
     }
 }

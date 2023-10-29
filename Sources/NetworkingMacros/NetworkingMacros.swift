@@ -68,12 +68,19 @@ public struct RequestMacro: MemberMacro {
             let declNameString = syntax
                 .calledExpression.as(MemberAccessExprSyntax.self)?
                 .declName.baseName.text,
-            let declReferenceNameString = syntax
+            let expressionSyntax = syntax
                 .arguments.first(where: { $0.is(LabeledExprSyntax.self) })?.as(LabeledExprSyntax.self)?
                 .expression.as(MemberAccessExprSyntax.self)?
-                .base?.as(DeclReferenceExprSyntax.self)?
-                .baseName.text
+                .base
         {
+            
+            var declReferenceNameString: String? = nil
+            if let declBaseName = expressionSyntax.as(DeclReferenceExprSyntax.self)?.baseName.text {
+                declReferenceNameString = declBaseName
+            } else if let arrayDeclBaseName = expressionSyntax.as(ArrayExprSyntax.self)?.elements.first(where: { $0.is(ArrayElementSyntax.self) })?.expression.as(DeclReferenceExprSyntax.self)?.baseName.text {
+                declReferenceNameString = "[\(arrayDeclBaseName)]"
+            }
+            
             switch declNameString {
             case "responseBody":
                 literalResponseBodyTypeName = declReferenceNameString

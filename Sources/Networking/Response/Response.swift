@@ -43,6 +43,8 @@ public struct Response<Body: Codable> {
 
         if Body.self == Empty.self {
             self.body = Empty() as! Body
+        } else if Body.self == Data.self {
+            self.body = result.data as! Body
         } else {
             self.body = try configuration.responseBodyDecoder.decode(Body.self, from: result.data)
         }

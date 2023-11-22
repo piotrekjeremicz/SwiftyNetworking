@@ -54,7 +54,7 @@ private extension Session {
             let response = try request.builder.resolve(result: result, request: resolvedRequest)
             await registry.remove(resolvedRequest)
 
-            let resolvedResponse = request.configuration?.service.afterEach(response) ?? response
+            let resolvedResponse = resolvedRequest.configuration?.service.afterEach(response) ?? response
             
 #if DEBUG
             if debugLogging { resolvedRequest.configuration?.service.logger.info("\(resolvedResponse.description)") }

@@ -22,7 +22,7 @@ public protocol Service {
     func beforeEach<R: Request>(_ request: R) -> R
     func afterEach<B: Codable>(_ response: Response<B>) -> Response<B>
     
-    func log(_ type: OSLogType, message: OSLogMessage)
+    func log(_ type: OSLogType, message: String)
     
     var authorizationProvider: AuthorizationProvider? { get }
 }

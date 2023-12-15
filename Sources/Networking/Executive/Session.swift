@@ -43,7 +43,7 @@ private extension Session {
         do {
             let resolvedRequest = request.body.resolve
 #if DEBUG
-            if debugLogging { resolvedRequest.configuration?.service.logger.info("\(resolvedRequest.description)") }
+            if debugLogging { resolvedRequest.configuration?.service.log(.info, message: resolvedRequest.description) }
 #endif
 
             let urlRequest = try resolvedRequest.urlRequest()
@@ -57,13 +57,13 @@ private extension Session {
             let resolvedResponse = resolvedRequest.configuration?.service.afterEach(response) ?? response
             
 #if DEBUG
-            if debugLogging { resolvedRequest.configuration?.service.logger.info("\(resolvedResponse.description)") }
+            if debugLogging { resolvedRequest.configuration?.service.log(.info, message: resolvedResponse.description) }
 #endif
 
             return resolvedResponse
         } catch {
 #if DEBUG
-            if debugLogging { request.body.resolve.configuration?.service.logger.error("• Error: \(String(describing: type(of: request)))\n\(error)\n") }
+            if debugLogging { request.body.resolve.configuration?.service.log(.error, message: "• Error: \(String(describing: type(of: request)))\n\(error)\n") }
 #endif
             throw error
         }

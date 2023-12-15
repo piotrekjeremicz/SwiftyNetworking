@@ -22,11 +22,17 @@ public protocol Service {
     func beforeEach<R: Request>(_ request: R) -> R
     func afterEach<B: Codable>(_ response: Response<B>) -> Response<B>
     
+    func log(_ type: OSLogType, message: OSLogMessage)
+    
     var authorizationProvider: AuthorizationProvider? { get }
 }
 
 public extension Service {
     var logger: Logger { networkingLogger }
+    
+    func log(_ type: OSLogType, message: String) {
+        logger.log(level: type, "\(message)")
+    }
     
     var requestBodyEncoder: any DataEncoder { JSONEncoder() }
     

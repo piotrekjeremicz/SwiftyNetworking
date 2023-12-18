@@ -42,9 +42,8 @@ private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
         do {
             let resolvedRequest = request.body.resolve
-#if DEBUG
+
             if debugLogging { resolvedRequest.configuration?.service.log(.info, message: resolvedRequest.description) }
-#endif
 
             let urlRequest = try resolvedRequest.urlRequest()
             await registry.register(resolvedRequest)
@@ -56,15 +55,11 @@ private extension Session {
 
             let resolvedResponse = resolvedRequest.configuration?.service.afterEach(response) ?? response
             
-#if DEBUG
             if debugLogging { resolvedRequest.configuration?.service.log(.info, message: resolvedResponse.description) }
-#endif
 
             return resolvedResponse
         } catch {
-#if DEBUG
             if debugLogging { request.body.resolve.configuration?.service.log(.error, message: "• Error: \(String(describing: type(of: request)))\n\(error)\n") }
-#endif
             throw error
         }
     }

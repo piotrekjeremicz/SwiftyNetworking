@@ -20,9 +20,13 @@ public protocol Service {
     var responseBodyEncoder: any DataEncoder { get }
 
     func beforeEach<R: Request>(_ request: R) -> R
-    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B>
+    
+    func afterEach<R: Request, B: Codable>(_ response: Response<B>, from request: R) -> Response<B>
     
     var authorizationProvider: AuthorizationProvider? { get }
+
+    @available(*, deprecated, message: "Use `func afterEach<R: Request, B: Codable>(_ response: Response<B>, from request: R) -> Response<B>` instead of this method.")
+    func afterEach<B: Codable>(_ response: Response<B>) -> Response<B>
 }
 
 public extension Service {
@@ -31,6 +35,7 @@ public extension Service {
     var requestBodyEncoder: any DataEncoder { JSONEncoder() }
     
     var responseBodyDecoder: any DataDecoder { JSONDecoder() }
+    
     var responseBodyEncoder: any DataEncoder {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
@@ -41,6 +46,8 @@ public extension Service {
     func beforeEach<R: Request>(_ request: R) -> R { request }
 
     func afterEach<B: Codable>(_ response: Response<B>) -> Response<B> { response }
+    
+    func afterEach<R: Request, B: Codable>(_ response: Response<B>, from request: R) -> Response<B> { response }
     
     var authorizationProvider: AuthorizationProvider? { nil }
 }

@@ -34,10 +34,10 @@ public struct Response<Body: Codable> {
         self.dataEncoder = configuration.responseBodyEncoder
 
         guard (200..<400).contains(statusCode) else {
-            if let errorDescription = try? configuration.responseBodyDecoder.decode(R.ResponseError.self, from: result.data)  {
-                throw ResponseError<R.ResponseError>.badResponse(httpResponse, (errorDescription as? R.ResponseError))
+            if let body = try? configuration.responseBodyDecoder.decode(R.ResponseError.self, from: result.data)  {
+                throw ResponseError.badResponse(httpResponse, body)
             } else {
-                throw ResponseError<R.ResponseError>.badResponse(httpResponse, .none)
+                throw ResponseError.badResponse(httpResponse, Empty())
             }
         }
 

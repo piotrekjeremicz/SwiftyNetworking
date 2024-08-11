@@ -7,11 +7,11 @@
 
 import Foundation
 
-public enum ResponseError<ErrorDescription>: Error {
+public enum ResponseError<Body: Codable>: Error {
     case noResponse
     case url(URLError)
     case decoding(DecodingError)
-    case badResponse(HTTPURLResponse, ErrorDescription?)
+    case badResponse(HTTPURLResponse, Body)
     case unsupportedResponseType(URLResponse)
     case unknown(Swift.Error)
     
@@ -25,6 +25,7 @@ public enum ResponseError<ErrorDescription>: Error {
 
         default:
             self = error as? ResponseError ?? .unknown(error)
+        
         }
     }
     
@@ -47,8 +48,10 @@ extension ResponseError: CustomStringConvertible {
             return "• URL Error: " + error.localizedDescription
         case .decoding(let error):
             return "• Decoding Error: \n   - Description: " + error.localizedDescription + "\n   - Reason: " + (error.failureReason ?? "no reason")
-        case .badResponse(let response, let error):
-            return "• Response Error: \n   - Response: " + response.description + "\n   Error: " + error.debugDescription
+        case .badResponse(let response, let body):
+            let data = (try? JSONEncoder().encode(body)) ?? Data()
+            let description = String(data: data, encoding: .utf8) ?? "<unknown>"
+            return "• Response Error: \n   - Response: " + response.description + "\n   Error: " + description
         case .unsupportedResponseType(let response):
             return "• Unsuported Response Error: \n   - Response: " + response.description
         case .unknown(let error):

@@ -29,7 +29,7 @@ public final class Session {
             let response = try await run(for: request)
             return (response, nil)
         } catch {
-            return (nil, ResponseError<R.ResponseError>(error))
+            return (nil, ResponseError(error))
         }
     }
 
@@ -67,7 +67,7 @@ private extension Session {
             if debugLogging { request.body.resolve.configuration?.service.logger.error("• Error: \(String(describing: type(of: request)))\n\(error)\n") }
 #endif
             await registry.remove(resolvedRequest)
-            resolvedRequest.configuration?.service.afterEach(error as? ResponseError<Any> ?? .unknown(error), from: resolvedRequest)
+            resolvedRequest.configuration?.service.afterEach(error, from: resolvedRequest)
             
             throw error
         }

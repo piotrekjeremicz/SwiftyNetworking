@@ -40,8 +40,9 @@ public final class Session {
 
 private extension Session {
     func run<R: Request>(for request: R) async throws -> Response<R.ResponseBody> {
+        let resolvedRequest = request.body.resolve
+
         do {
-            let resolvedRequest = request.body.resolve
 #if DEBUG
             if debugLogging { resolvedRequest.configuration?.service.logger.info("\(resolvedRequest.description)") }
 #endif
@@ -65,6 +66,9 @@ private extension Session {
 #if DEBUG
             if debugLogging { request.body.resolve.configuration?.service.logger.error("• Error: \(String(describing: type(of: request)))\n\(error)\n") }
 #endif
+            await registry.remove(resolvedRequest)
+            resolvedRequest.configuration?.service.afterEach(error as? ResponseError<Any> ?? .unknown(error), from: resolvedRequest)
+            
             throw error
         }
     }

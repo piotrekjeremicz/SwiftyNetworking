@@ -22,6 +22,7 @@ public protocol Service {
     func beforeEach<R: Request>(_ request: R) -> R
     
     func afterEach<R: Request, B: Codable>(_ response: Response<B>, from request: R) -> Response<B>
+    func afterEach<R: Request>(_ responseError: ResponseError<Any>,from request: R)
     
     var authorizationProvider: AuthorizationProvider? { get }
 
@@ -48,6 +49,8 @@ public extension Service {
     func afterEach<B: Codable>(_ response: Response<B>) -> Response<B> { response }
     
     func afterEach<R: Request, B: Codable>(_ response: Response<B>, from request: R) -> Response<B> { response }
+    
+    func afterEach<R: Request>(_ responseError: ResponseError<Any>,from request: R) { }
     
     var authorizationProvider: AuthorizationProvider? { nil }
 }

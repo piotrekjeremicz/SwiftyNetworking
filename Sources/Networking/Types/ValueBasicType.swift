@@ -14,9 +14,3 @@ extension Swift.Bool: ValueBasicType { }
 extension Swift.Double: ValueBasicType { }
 extension Swift.String: ValueBasicType { }
 extension Swift.Array: ValueBasicType where Element: ValueBasicType { }
-
-extension ValueBasicType {
-    public static func == (lhs: any ValueBasicType, rhs: any ValueBasicType) -> Bool {
-        lhs.description == rhs.description
-    }
-}

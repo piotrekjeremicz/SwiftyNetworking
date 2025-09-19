@@ -1,56 +1,26 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
-import CompilerPluginSupport
 
 let package = Package(
     name: "SwiftyNetworking",
-    platforms: [
-        .iOS(.v16),
-        .macOS(.v13)
-    ],
-    
     products: [
+        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Networking",
-            targets: ["Networking"]),
-        .executable(
-            name: "NetworkingExampleApp", 
-            targets: ["NetworkingExampleApp"]),
-    ],
-    
-    dependencies: [
-        .package(url: "https://github.com/Quick/Quick.git", from: "5.0.0"),
-        .package(url: "https://github.com/Quick/Nimble.git", from: "10.0.0"),
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
-    ],
-    
-    targets: [
-        .target(name: "Networking", dependencies: ["NetworkingMacros"]),
-        .executableTarget(
-            name: "NetworkingExampleApp",
-            dependencies: [.target(name: "Networking")],
-            path: "Examples/NetworkingExampleApp"
+            name: "SwiftyNetworking",
+            targets: ["SwiftyNetworking"]
         ),
-        .macro(
-            name: "NetworkingMacros",
-            dependencies: [
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-            ]
+    ],
+    targets: [
+        // Targets are the basic building blocks of a package, defining a module or a test suite.
+        // Targets can depend on other targets in this package and products from dependencies.
+        .target(
+            name: "SwiftyNetworking"
         ),
         .testTarget(
-            name: "NetworkingMacroTests",
-            dependencies: [
-                "NetworkingMacros",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-            ]
+            name: "SwiftyNetworkingTests",
+            dependencies: ["SwiftyNetworking"]
         ),
-        
-        //TODO: Temporary test targets removal
-//        .testTarget(
-//            name: "NetworkingTests",
-//            dependencies: ["Networking", "Quick", "Nimble"]),
     ]
 )

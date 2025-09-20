@@ -1,11 +1,11 @@
 //
-//  GetRequest.swift
+//  PostRequest.swift
 //  SwiftyNetworking
 //
 //  Created by Piotrek Jeremicz on 20.09.2025.
 //
 
-public struct Get: Request {
+public struct Post: Request {
     let path: String
     
     public init(_ path: String) {
@@ -23,6 +23,6 @@ public struct Get: Request {
     public var body: some Request {
         EmptyRequest()
             .path(path)
-            .method(.get)
+            .method(.post)
     }
 }

@@ -5,6 +5,14 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftyNetworking",
+    platforms: [
+        .iOS(.v26),
+        .tvOS(.v26),
+        .macOS(.v26),
+        .watchOS(.v26),
+        .visionOS(.v26),
+        .macCatalyst(.v26),
+    ],
     products: [
         .library(
             name: "Networking",
@@ -12,14 +20,18 @@ let package = Package(
         ),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Networking"
+            name: "Networking",
+            swiftSettings: [
+                .swiftLanguageMode(.v6),
+            ]
         ),
         .testTarget(
             name: "NetworkingTests",
-            dependencies: ["Networking"]
+            dependencies: ["Networking"],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
+            ]
         ),
     ]
 )

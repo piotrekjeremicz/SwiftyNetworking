@@ -11,3 +11,9 @@ public protocol RequestModifier {
     
     func body(content: Self.Content) -> Self.Body
 }
+
+public extension Request {
+    func modifier<T>(_ modifier: T) -> ModifiedContent<Self, T> {
+        ModifiedContent(content: self, modifier: modifier)
+    }
+}

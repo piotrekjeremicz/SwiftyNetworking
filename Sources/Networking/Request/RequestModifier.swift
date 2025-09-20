@@ -13,7 +13,7 @@ public protocol RequestModifier {
 }
 
 public extension Request {
-    func modifier<T>(_ modifier: T) -> ModifiedContent<Self, T> {
-        ModifiedContent(content: self, modifier: modifier)
+    func modifier<T>(_ modifier: T) -> ModifiedRequest<Self, T> {
+        ModifiedRequest(content: self, modifier: modifier)
     }
 }

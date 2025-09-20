@@ -14,7 +14,7 @@ public struct MethodModifier<Content>: RequestModifier where Content: Request {
 }
 
 public extension Request {
-    func method(_ method: Method) -> ModifiedContent<Self, MethodModifier<Self>> {
+    func method(_ method: Method) -> ModifiedRequest<Self, MethodModifier<Self>> {
         modifier(MethodModifier(method: method))
     }
 }

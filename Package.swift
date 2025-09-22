@@ -27,6 +27,13 @@ let package = Package(
                 .defaultIsolation(MainActor.self)
             ]
         ),
+        .executableTarget(
+            name: "NetworkingExample",
+            dependencies: ["Networking"],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
+            ]
+        ),
         .testTarget(
             name: "NetworkingTests",
             dependencies: ["Networking"],
@@ -36,3 +43,4 @@ let package = Package(
         ),
     ]
 )
+

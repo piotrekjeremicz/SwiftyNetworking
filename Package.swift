@@ -24,6 +24,7 @@ let package = Package(
             name: "Networking",
             swiftSettings: [
                 .swiftLanguageMode(.v6),
+                .defaultIsolation(MainActor.self)
             ]
         ),
         .testTarget(

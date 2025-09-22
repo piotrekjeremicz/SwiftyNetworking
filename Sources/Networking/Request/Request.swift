@@ -8,5 +8,10 @@
 public protocol Request {
     associatedtype Body: Request
     
-    var body: Body { get }
+    var body: Body { get }    
+    var configuration: ConfigurationValues { get }
+}
+
+public extension Request {
+    var configuration: ConfigurationValues { body.configuration }
 }

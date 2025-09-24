@@ -9,7 +9,7 @@ public struct MethodModifier<Content>: RequestModifier where Content: Request {
     let method: Method
     
     public func body(content: Content) -> some Request {
-        content
+        content.configuration(\.method, value: method)
     }
 }
 

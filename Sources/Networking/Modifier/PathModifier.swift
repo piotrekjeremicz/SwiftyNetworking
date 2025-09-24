@@ -17,7 +17,7 @@ public struct PathModifier<Content>: RequestModifier where Content: Request {
     }
     
     public func body(content: Content) -> some Request {
-        content
+        content.configuration(\.path, value: path)
     }
 }
 

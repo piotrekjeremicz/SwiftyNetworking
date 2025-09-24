@@ -1,0 +1,31 @@
+//
+//  QueryItemsModifier.swift
+//  SwiftyNetworking
+//
+//  Created by Piotrek Jeremicz on 21.09.2025.
+//
+
+import Foundation
+
+public struct QueryItemsModifier<Content>: RequestModifier where Content: Request {
+    let queryItems: [URLQueryItem]
+    
+    public func body(content: Content) -> some Request {
+        content.configuration(\.queryItems, value: queryItems)
+    }
+}
+
+public extension Request {
+    func headers(_ items: [String: String]) -> ModifiedRequest<Self, QueryItemsModifier<Self>> {
+        modifier(
+            QueryItemsModifier(
+                queryItems: items.map {
+                    URLQueryItem(
+                        name: $0.key,
+                        value: $0.value
+                    )
+                }
+            )
+        )
+    }
+}

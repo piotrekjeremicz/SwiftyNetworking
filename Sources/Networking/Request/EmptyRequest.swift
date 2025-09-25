@@ -6,7 +6,7 @@
 //
 
 public struct EmptyRequest: Request {
-    public var configuration: ConfigurationValues = .init()
+    public var configuration: ConfigurationValues? = .init()
     
     @_spi(Private)
     public var body: Never {

@@ -12,7 +12,8 @@ extension Never: Request {
     }
 
     @_spi(Private)
-    public var configuration: ConfigurationValues {
-        fatalError("Never does not support the `configuration` property.")
+    public var configuration: ConfigurationValues? {
+        get { fatalError("Never does not support the `configuration` property.") }
+        set { fatalError("Never does not support the `configuration` property.") }
     }
 }

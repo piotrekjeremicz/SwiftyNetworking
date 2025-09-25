@@ -9,9 +9,26 @@ public protocol Request {
     associatedtype Body: Request
     
     var body: Body { get }    
-    var configuration: ConfigurationValues { get }
+    var configuration: ConfigurationValues? { get set }
+    
+    func makeRequest() -> ConfigurationValues
 }
 
 public extension Request {
-    var configuration: ConfigurationValues { body.configuration }
+    var configuration: ConfigurationValues? {
+        get { nil }
+        set {     }
+    }
+}
+
+public extension Request {
+    func makeRequest() -> ConfigurationValues {
+        if Self.self is EmptyRequest.Type {
+            return .init()
+        } else if let configuration {
+            return configuration
+        } else {
+            return body.makeRequest()
+        }
+    }
 }

@@ -16,7 +16,11 @@ public struct QueryItemsModifier<Content>: RequestModifier where Content: Reques
 }
 
 public extension Request {
-    func headers(_ items: [String: String]) -> ModifiedRequest<Self, QueryItemsModifier<Self>> {
+    func queryItems(_ items: [URLQueryItem]) -> ModifiedRequest<Self, QueryItemsModifier<Self>> {
+        modifier(QueryItemsModifier(queryItems: items))
+    }
+
+    func queryItems(_ items: [String: String]) -> ModifiedRequest<Self, QueryItemsModifier<Self>> {
         modifier(
             QueryItemsModifier(
                 queryItems: items.map {

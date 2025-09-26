@@ -17,4 +17,14 @@ public extension Request {
     func headers(_ fields: [String: String]) -> ModifiedRequest<Self, HeaderModifier<Self>> {
         modifier(HeaderModifier(headers: fields))
     }
+    
+    func headers(@KeyValueBuilder _ fields: () -> [any KeyValuePair]) -> ModifiedRequest<Self, HeaderModifier<Self>> {
+        modifier(
+            HeaderModifier(
+                headers: Dictionary(
+                    uniqueKeysWithValues: fields().map { ($0.key, $0.value.description) }
+                )
+            )
+        )
+    }
 }

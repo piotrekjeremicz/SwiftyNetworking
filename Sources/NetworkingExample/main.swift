@@ -21,7 +21,17 @@ struct PostCommentRequest: Request {
     
     var body: some Request {
         Post("posts", postId, "comment")
-            .body(message.data(using: .utf8))
+            .headers {
+                Accept.json
+                ContentType.json
+                CacheControl.maxAge(60)
+            }
+            .queryItems {
+                Key("flag", value: true)
+            }
+            .body {
+                Key("message", value: message)
+            }
     }
 }
 

@@ -19,4 +19,12 @@ public extension Request {
     func body(_ data: Data?) -> ModifiedRequest<Self, BodyModifier<Self>> {
         modifier(BodyModifier(body: data ?? Data()))
     }
+    
+    func body(@KeyValueBuilder _ items: () -> [any KeyValuePair]) -> ModifiedRequest<Self, BodyModifier<Self>> {
+        modifier(
+            BodyModifier(
+                body: (try? JSONEncoder().encode(KeyValueGroup(items))) ?? Data()
+            )
+        )
+    }
 }

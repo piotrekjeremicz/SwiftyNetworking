@@ -32,4 +32,17 @@ public extension Request {
             )
         )
     }
+    
+    func queryItems(@KeyValueBuilder _ items: () -> [any KeyValuePair]) -> ModifiedRequest<Self, QueryItemsModifier<Self>> {
+        modifier(
+            QueryItemsModifier(
+                queryItems: items().map {
+                    URLQueryItem(
+                        name: $0.key,
+                        value: $0.value.description
+                    )
+                }
+            )
+        )
+    }
 }

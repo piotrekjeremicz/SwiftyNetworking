@@ -2,7 +2,7 @@
 //  Key.swift
 //  SwiftyNetworking
 //
-//  Created by Piotrek Jeremicz on 26.09.2025.
+//  Created by Piotrek Jeremicz on 28.09.2025.
 //
 
 public struct Key<V>: @MainActor KeyValuePair where V: ValueBasicType {
@@ -12,5 +12,12 @@ public struct Key<V>: @MainActor KeyValuePair where V: ValueBasicType {
     public init(_ key: String, value: V) {
         self.key = key
         self.value = value
+    }
+}
+
+extension Key where V == KeyValueGroup {
+    public init(_ key: String, @KeyValueBuilder value: () -> [any KeyValuePair]) {
+        self.key = key
+        self.value = KeyValueGroup(value)
     }
 }

@@ -5,7 +5,11 @@
 //  Created by Piotrek Jeremicz on 21.09.2025.
 //
 
+import Foundation
+
 public class ConfigurationValues: CustomDebugStringConvertible {
+    public let id: UUID = .init()
+    
     private var storage: [ObjectIdentifier: Any] = [:]
     private var keyNames: [ObjectIdentifier: String] = [:]
     

@@ -11,7 +11,7 @@ struct GetPostRequest: Request {
     let postId: Int
     
     var body: some Request {
-        Get("posts", postId)
+        Get("posts", postId, from: ExampleService())
     }
 }
 
@@ -20,7 +20,7 @@ struct PostCommentRequest: Request {
     let message: String
     
     var body: some Request {
-        Post("posts", postId, "comment")
+        Post("posts", postId, "comment", from: ExampleService())
             .headers {
                 Accept.json
                 ContentType.json
@@ -39,7 +39,7 @@ struct DeleteCommentRequest: Request {
     let commentId: Int
     
     var body: some Request {
-        Delete("comments", commentId)
+        Delete("comments", commentId, from: ExampleService())
     }
 }
 

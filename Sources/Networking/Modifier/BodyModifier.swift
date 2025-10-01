@@ -16,11 +16,11 @@ public struct BodyModifier<Content>: RequestModifier where Content: Request {
 }
 
 public extension Request {
-    func body(_ data: Data?) -> ModifiedRequest<Self, BodyModifier<Self>> {
+    func body(_ data: Data?) -> some Request {
         modifier(BodyModifier(body: data ?? Data()))
     }
     
-    func body(@KeyValueBuilder _ items: () -> [any KeyValuePair]) -> ModifiedRequest<Self, BodyModifier<Self>> {
+    func body(@KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
         modifier(
             BodyModifier(
                 body: (try? JSONEncoder().encode(KeyValueGroup(items))) ?? Data()

@@ -22,11 +22,11 @@ public struct PathModifier<Content>: RequestModifier where Content: Request {
 }
 
 public extension Request {
-    func path(_ path: String) -> ModifiedRequest<Self, PathModifier<Self>> {
+    func path(_ path: String) -> some Request {
         modifier(PathModifier(path))
     }
     
-    func path(_ path: String...) -> ModifiedRequest<Self, PathModifier<Self>> {
+    func path(_ path: String...) -> some Request {
         modifier(PathModifier(path))
     }
 }

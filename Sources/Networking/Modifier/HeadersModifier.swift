@@ -14,11 +14,11 @@ public struct HeaderModifier<Content>: RequestModifier where Content: Request {
 }
 
 public extension Request {
-    func headers(_ fields: [String: String]) -> ModifiedRequest<Self, HeaderModifier<Self>> {
+    func headers(_ fields: [String: String]) -> some Request {
         modifier(HeaderModifier(headers: fields))
     }
     
-    func headers(@KeyValueBuilder _ fields: () -> [any KeyValuePair]) -> ModifiedRequest<Self, HeaderModifier<Self>> {
+    func headers(@KeyValueBuilder _ fields: () -> [any KeyValuePair]) -> some Request {
         modifier(
             HeaderModifier(
                 headers: Dictionary(

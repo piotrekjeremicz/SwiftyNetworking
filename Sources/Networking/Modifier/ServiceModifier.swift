@@ -14,7 +14,7 @@ public struct ServiceModifier<Content>: RequestModifier where Content: Request {
 }
 
 public extension Request {
-    func service(_ service: Service) -> ModifiedRequest<Self, ServiceModifier<Self>> {
+    func service(_ service: Service) -> some Request {
         modifier(ServiceModifier(service: service))
     }
 }

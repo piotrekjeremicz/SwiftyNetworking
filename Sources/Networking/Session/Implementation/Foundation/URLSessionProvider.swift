@@ -9,9 +9,9 @@
 import Foundation
 
 final class URLSessionProvider: SessionProvider {
-    func run<R>(_ request: R) async throws -> String where R: Request {
+    func run<R: Request>(_ request: R) async throws -> R.ResponseBody {
         let urlRequest = try createURLRequest(from: request)
-        return ""
+        return "" as! R.ResponseBody
     }
     
     func createURLRequest<R>(from request: R) throws -> URLRequest where R: Request {
@@ -21,7 +21,7 @@ final class URLSessionProvider: SessionProvider {
         guard let service = configuration[keyPath: \.service]
         else { throw RequestError.missingService }
         
-        guard var urlComponents = URLComponents(url: service.baseURL, resolvingAgainstBaseURL: false)
+        guard var urlComponents = URLComponents(string: service.baseURL)
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         urlComponents.path = configuration[keyPath: \.path]

@@ -6,5 +6,5 @@
 //
 
 protocol SessionProvider {
-    func run<R: Request>(_ request: R) async throws -> String
+    func run<R: Request>(_ request: R) async throws -> R.ResponseBody
 }

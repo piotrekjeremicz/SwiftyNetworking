@@ -14,7 +14,7 @@ public final class Session {
 }
 
 public extension Session {
-    func send<R: Request>(_ request: R, completion: @escaping (Result<String, Error>) -> Void) {
+    func send<R: Request>(_ request: R, completion: @escaping (Result<R.ResponseBody, Error>) -> Void) {
         Task {
             do {
                 let response = try await provider.run(request)
@@ -25,7 +25,7 @@ public extension Session {
         }
     }
     
-    func send<R: Request>(_ request: R) async -> Result<String, Error> {
+    func send<R: Request>(_ request: R) async -> Result<R.ResponseBody, Error> {
         do {
             let response = try await provider.run(request)
             return .success(response)
@@ -34,7 +34,7 @@ public extension Session {
         }
     }
     
-    func trySend<R: Request>(_ request: R) async throws -> String {
+    func trySend<R: Request>(_ request: R) async throws -> R.ResponseBody {
         try await provider.run(request)
     }
 }
@@ -43,9 +43,9 @@ public extension Session {
 import Combine
 
 public extension Session {
-    func send<R: Request>(_ request: R) -> AnyPublisher<String, Error> {
+    func send<R: Request>(_ request: R) -> AnyPublisher<R.ResponseBody, Error> {
         Deferred { [provider = self.provider] in
-            Future<String, Error> { promise in
+            Future<R.ResponseBody, Error> { promise in
                 Task {
                     do {
                         let response = try await provider.run(request)

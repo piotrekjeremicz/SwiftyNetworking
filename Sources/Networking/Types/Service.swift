@@ -8,7 +8,7 @@
 import OSLog
 
 public protocol Service {
-    var baseURL: URL { get }
+    var baseURL: String { get }
     var logger: Logger { get }
 }
 

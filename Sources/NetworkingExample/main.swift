@@ -7,18 +7,23 @@
 
 import Networking
 
-struct GetPostRequest: Request {
-    let postId: Int
-    
-    var body: some Request {
-        Get("posts", postId, from: ExampleService())
-    }
+struct ExampleService: Service {
+    var baseURL: String = "https://example.com"
 }
 
-struct PostCommentRequest: Request {
+struct SampleModel: Codable {
+    let foo: String
+}
+
+struct SampleError: Codable {
+    let test: String
+}
+
+@Request
+struct SampleRequest {
     let postId: Int
     let message: String
-    
+
     var body: some Request {
         Post("posts", postId, "comment", from: ExampleService())
             .headers {
@@ -32,35 +37,19 @@ struct PostCommentRequest: Request {
             .body {
                 Key("message", value: message)
             }
+            .responseBody(SampleModel.self)
+            .responseError(SampleError.self)
     }
 }
 
-struct DeleteCommentRequest: Request {
-    let commentId: Int
-    
-    var body: some Request {
-        Delete("comments", commentId, from: ExampleService())
-    }
+let sampleRequest = SampleRequest(postId: 41, message: "Hello, world!")
+
+let session = Session()
+Task {
+    let response = try! await session.trySend(sampleRequest)
+    print(response.foo)
 }
 
-let getPostRequest = GetPostRequest(postId: 4)
-let postCommentRequest = PostCommentRequest(postId: 4, message: "Hello, world!")
-let deleteCommentRequest = DeleteCommentRequest(commentId: 123)
-
-let group = Key("dictionary") {
-    Key("int", value: 1)
-    Key("double", value: 3.14)
-    Key("string", value: "foo")
-    Key("boolean", value: true)
-    Key("null", value: Optional<String>.none)
-    Key("arrays") {
-        Key("int", value: [1, 2, 3])
-        Key("double", value: [3.14, 1.71, 1.41])
-        Key("string", value: ["foo", "bar", "baz"])
-        Key("boolean", value: [true, false, true])
-        Key("null", value: ["foo", nil, "baz"])
-        Key("foo") {
-            Key("bar", value: "baz")
-        }
-    }
+Task {
+    print(sampleRequest.debugDescription)
 }

@@ -2,6 +2,7 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import CompilerPluginSupport
 
 let package = Package(
     name: "SwiftyNetworking",
@@ -19,9 +20,24 @@ let package = Package(
             targets: ["Networking"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "602.0.0"),
+    ],
     targets: [
+        .macro(
+            name: "NetworkingMacros",
+            dependencies: [
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6),
+                .defaultIsolation(MainActor.self)
+            ]
+        ),
         .target(
             name: "Networking",
+            dependencies: ["NetworkingMacros"],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
                 .defaultIsolation(MainActor.self)
@@ -31,7 +47,8 @@ let package = Package(
             name: "NetworkingExample",
             dependencies: ["Networking"],
             swiftSettings: [
-                .swiftLanguageMode(.v6)
+                .swiftLanguageMode(.v6),
+                .defaultIsolation(MainActor.self)
             ]
         ),
         .testTarget(

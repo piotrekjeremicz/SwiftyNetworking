@@ -13,6 +13,6 @@ public extension Request {
         var configuration = makeRequest()
         configuration[keyPath: keyPath] = value
         
-        return OverrideRequest(content: self, configuration: configuration)
+        return OverrideRequest<Self, Self.ResponseBody, Self.ResponseError>(content: self, configuration: configuration)
     }
 }

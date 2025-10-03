@@ -7,8 +7,10 @@
 
 public protocol Request {
     associatedtype Body: Request
+    associatedtype ResponseBody: Codable = Body.ResponseBody
+    associatedtype ResponseError: Codable = Body.ResponseError
     
-    var body: Body { get }    
+    var body: Body { get }
     var configuration: ConfigurationValues? { get set }
     
     func makeRequest() -> ConfigurationValues

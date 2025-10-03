@@ -6,6 +6,9 @@
 //
 
 extension Never: Request {
+    public typealias ResponseBody = Never
+    public typealias ResponseError = Never
+    
     @_spi(Private)
     public var body: Never {
         fatalError("Never does not support the `body` property.")

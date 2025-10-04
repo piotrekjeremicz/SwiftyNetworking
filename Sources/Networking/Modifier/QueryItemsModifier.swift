@@ -8,21 +8,31 @@
 import Foundation
 
 public struct QueryItemsModifier<Content>: RequestModifier where Content: Request {
+    let override: Bool
     let queryItems: [URLQueryItem]
     
     public func body(content: Content) -> some Request {
-        content.configuration(\.queryItems, value: queryItems)
+        var items = content.configuration[keyPath: \.?.queryItems] ?? []
+        
+        if override {
+            items = queryItems
+        } else {
+            items.append(contentsOf: queryItems)
+        }
+        
+        return content.configuration(\.queryItems, value: items)
     }
 }
 
 public extension Request {
-    func queryItems(_ items: [URLQueryItem]) -> some Request {
-        modifier(QueryItemsModifier(queryItems: items))
+    func queryItems(override: Bool = false, _ items: [URLQueryItem]) -> some Request {
+        modifier(QueryItemsModifier(override: override, queryItems: items))
     }
 
-    func queryItems(_ items: [String: String]) -> some Request {
+    func queryItems(override: Bool = false, _ items: [String: String]) -> some Request {
         modifier(
             QueryItemsModifier(
+                override: override,
                 queryItems: items.map {
                     URLQueryItem(
                         name: $0.key,
@@ -33,9 +43,10 @@ public extension Request {
         )
     }
     
-    func queryItems(@KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
+    func queryItems(override: Bool = false, @KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
         modifier(
             QueryItemsModifier(
+                override: override,
                 queryItems: items().map {
                     URLQueryItem(
                         name: $0.key,

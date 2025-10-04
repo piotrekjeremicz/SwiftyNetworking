@@ -27,4 +27,26 @@ public extension Request {
             )
         )
     }
+    
+    func body(_ contentType: ContentType, @KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
+        modifier(
+            BodyModifier(
+                body: (try? JSONEncoder().encode(KeyValueGroup(items))) ?? Data()
+            )
+        )
+        .headers {
+            contentType
+        }
+    }
+    
+    func body(encoding: String.Encoding = .utf8, _ string: String) -> some Request {
+        modifier(
+            BodyModifier(
+                body: string.data(using: encoding) ?? Data()
+            )
+        )
+        .headers {
+            ContentType.plainText
+        }
+    }
 }

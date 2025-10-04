@@ -28,13 +28,12 @@ struct SampleRequest {
         Post("posts", postId, "comment", from: ExampleService())
             .headers {
                 Accept.json
-                ContentType.json
                 CacheControl.maxAge(60)
             }
             .queryItems {
                 Key("flag", value: true)
             }
-            .body {
+            .body(.json) {
                 Key("message", value: message)
             }
             .responseBody(SampleModel.self)
@@ -53,3 +52,18 @@ Task {
 Task {
     print(sampleRequest.debugDescription)
 }
+
+@Request
+struct SampleBodyRequest {
+    var body: some Request {
+        Post("article", from: ExampleService())
+            .body(encoding: .utf8, "{\"title\": \"Hello, world!\"}")
+            .headers(override: true) {
+                ContentType.json
+            }
+    }
+}
+
+
+
+let sampleBodyRequest = SampleBodyRequest()

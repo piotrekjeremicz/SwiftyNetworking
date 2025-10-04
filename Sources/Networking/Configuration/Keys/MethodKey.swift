@@ -6,7 +6,7 @@
 //
 
 enum MethodKey: ConfigurationKey {
-    static var defaultValue: Method = .get
+    static let defaultValue: Method = .get
     typealias Value = Method
 }
 

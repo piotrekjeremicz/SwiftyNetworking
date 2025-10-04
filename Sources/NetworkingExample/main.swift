@@ -11,16 +11,16 @@ struct ExampleService: Service {
     var baseURL: String = "https://example.com"
 }
 
-struct SampleModel: Codable {
+nonisolated struct SampleModel: Codable, Sendable {
     let foo: String
 }
 
-struct SampleError: Codable {
+nonisolated struct SampleError: Codable, Sendable {
     let test: String
 }
 
 @Request
-struct SampleRequest {
+nonisolated struct SampleRequest: Sendable {
     let postId: Int
     let message: String
 
@@ -43,11 +43,20 @@ struct SampleRequest {
 
 let sampleRequest = SampleRequest(postId: 41, message: "Hello, world!")
 
+
+
+
 let session = Session()
 Task {
-    let response = try! await session.trySend(sampleRequest)
+    let response = try! await session
+        .trySend(sampleRequest)
+    
     print(response.foo)
 }
+
+
+
+
 
 Task {
     print(sampleRequest.debugDescription)
@@ -67,3 +76,4 @@ struct SampleBodyRequest {
 
 
 let sampleBodyRequest = SampleBodyRequest()
+

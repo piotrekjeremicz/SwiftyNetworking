@@ -5,7 +5,7 @@
 //  Created by Piotrek Jeremicz on 27.09.2025.
 //
 
-public struct ApiKey: @MainActor KeyValuePair {
+public struct ApiKey: KeyValuePair {
     public let key: String
     public let value: String
     

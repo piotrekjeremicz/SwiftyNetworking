@@ -5,7 +5,7 @@
 //  Created by Piotrek Jeremicz on 26.09.2025.
 //
 
-nonisolated public protocol ValueBasicType: Encodable, CustomStringConvertible { }
+nonisolated public protocol ValueBasicType: Encodable, CustomStringConvertible, Sendable { }
 
 extension Swift.Int: ValueBasicType {}
 

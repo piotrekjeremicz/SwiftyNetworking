@@ -7,7 +7,7 @@
 
 import OSLog
 
-public protocol Service {
+public protocol Service: Sendable {
     var baseURL: String { get }
     var logger: Logger { get }
 }

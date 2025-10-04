@@ -6,7 +6,7 @@
 //
 
 enum ServiceKey: ConfigurationKey {
-    static var defaultValue: (any Service)? = nil
+    static let defaultValue: (any Service)? = nil
     typealias Value = (any Service)?
 }
 

@@ -8,7 +8,7 @@
 import Foundation
 
 enum BodyKey: ConfigurationKey {
-    static var defaultValue: Data? = nil
+    static let defaultValue: Data? = nil
     typealias Value = Data?
 }
 

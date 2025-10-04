@@ -5,7 +5,7 @@
 //  Created by Piotrek Jeremicz on 27.09.2025.
 //
 
-public struct CacheControl: @MainActor KeyValuePair {
+public struct CacheControl: KeyValuePair {
     public let key: String
     public let value: String
 
@@ -16,7 +16,7 @@ public struct CacheControl: @MainActor KeyValuePair {
 
     public static let noCache = CacheControl(value: "no-cache")
     public static let noStore = CacheControl(value: "no-store")
-    public static let maxAge = { (seconds: Int) in
+    public static func maxAge(_ seconds: Int) -> CacheControl{
         CacheControl(value: "max-age=\(seconds)")
     }
 }

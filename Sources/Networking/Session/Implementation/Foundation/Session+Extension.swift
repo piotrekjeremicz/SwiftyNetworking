@@ -7,7 +7,7 @@
 
 #if canImport(Foundation)
 extension Session {
-    public convenience init() {
+    public init() {
         self.init(provider: URLSessionProvider())
     }
 }

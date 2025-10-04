@@ -5,7 +5,7 @@
 //  Created by Piotrek Jeremicz on 28.09.2025.
 //
 
-public struct Key<V>: @MainActor KeyValuePair where V: ValueBasicType {
+public struct Key<V>: KeyValuePair where V: ValueBasicType {
     public let key: String
     public let value: V
 

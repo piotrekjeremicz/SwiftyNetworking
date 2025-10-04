@@ -5,7 +5,7 @@
 //  Created by Piotrek Jeremicz on 19.09.2025.
 //
 
-public protocol RequestModifier {
+public protocol RequestModifier: Sendable {
     associatedtype Body: Request
     associatedtype Content: Request
     

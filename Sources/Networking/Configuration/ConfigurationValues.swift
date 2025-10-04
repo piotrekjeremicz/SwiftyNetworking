@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ConfigurationValues: CustomDebugStringConvertible {
+public class ConfigurationValues: CustomDebugStringConvertible, @unchecked Sendable {
     public let id: UUID = .init()
     
     private var storage: [ObjectIdentifier: Any] = [:]

@@ -31,16 +31,14 @@ let package = Package(
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6),
-                .defaultIsolation(MainActor.self)
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: "Networking",
             dependencies: ["NetworkingMacros"],
             swiftSettings: [
-                .swiftLanguageMode(.v6),
-                .defaultIsolation(MainActor.self)
+                .swiftLanguageMode(.v6)
             ]
         ),
         .executableTarget(

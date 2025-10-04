@@ -6,7 +6,7 @@
 //
 
 enum PathKey: ConfigurationKey {
-    static var defaultValue: String = ""
+    static let defaultValue: String = ""
     typealias Value = String
 }
 

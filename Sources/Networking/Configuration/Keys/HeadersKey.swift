@@ -6,7 +6,7 @@
 //
 
 enum HeadersKey: ConfigurationKey {
-    static var defaultValue: [String: String] = [:]
+    static let defaultValue: [String: String] = [:]
     typealias Value = [String: String]
 }
 

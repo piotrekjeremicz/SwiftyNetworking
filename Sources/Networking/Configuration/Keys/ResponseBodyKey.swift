@@ -6,7 +6,7 @@
 //
 
 enum ResponseBodyKey: ConfigurationKey {
-    static var defaultValue: Any.Type = Never.self
+    static let defaultValue: Any.Type = Never.self
     typealias Value = Any.Type
 }
 

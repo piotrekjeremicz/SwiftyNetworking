@@ -8,7 +8,7 @@
 import Foundation
 
 enum QueryItemsKey: ConfigurationKey {
-    static var defaultValue: [URLQueryItem] = []
+    static let defaultValue: [URLQueryItem] = []
     typealias Value = [URLQueryItem]
 }
 

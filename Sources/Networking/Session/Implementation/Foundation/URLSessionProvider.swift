@@ -55,11 +55,70 @@ public actor URLSessionProvider: SessionProvider {
         return urlRequest
     }
 }
+
+extension URLSessionProvider {
+    func cancel(requests: Session.RequestType) async {
+        switch requests {
+        case .allTasks:
+            session.invalidateAndCancel()
+            
+        case let .every(type):
+            let requests = await registry.get(by: type)
+            for task in await session.allTasks {
+                if let request = task.originalRequest,
+                   let id = request.value(forHTTPHeaderField: "X-Request-ID"),
+                   requests.contains(where: { $0.id.uuidString == id })
+                {
+                    task.cancel()
+                    await registry.remove(id)
+                }
+            }
+            
+        case let .only(id):
+            for task in await session.allTasks {
+                if let request = task.originalRequest,
+                    let requestId = request.value(forHTTPHeaderField: "X-Request-ID"),
+                    id.uuidString == requestId
+                {
+                    task.cancel()
+                    await registry.remove(id.uuidString)
+                }
+            }
+        }
+    }
+}
+
+private extension URLSessionProvider {
+    func describe<R>(_ request: R, by urlRequest: URLRequest, for id: UUID) -> String where R: Request {
+        var array = [String]()
+        array.append("• Request<\(id)>: " + String(describing: type(of: request)))
+        array.append(urlRequest.requestDescription)
+        
+        return array.joined(separator: "\n") + "\n"
+    }
+    
+    func describe<R>(_ result: (data: Data, urlResponse: URLResponse), from request: R, for id: UUID) -> String where R: Request {
+        var array = [String]()
+        array.append("• Response<\(id)>: " + String(describing: type(of: request)))
+        array.append(result.urlResponse.responseDescription)
+        
+        let bodyString: String? = {
+            if let utf8 = String(data: result.data, encoding: .utf8) {
+                return utf8
+            }
+            // Fall back to ISO-8859-1 which is common in HTTP contexts
+            if let latin1 = String(data: result.data, encoding: .isoLatin1) {
+                return latin1
+            }
+            // As a last resort, indicate binary body with byte count
+            return "<\(result.data.count) bytes binary body>"
+        }()
+        
+        array.append((bodyString ?? ""))
+        
+        return array.joined(separator: "\n") + "\n"
+    }
+}
 #endif
 
 
-
-enum ResponseError: Error {
-    case decodingFailed
-    case serverError(Any)
-}

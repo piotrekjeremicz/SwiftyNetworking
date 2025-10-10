@@ -5,6 +5,8 @@
 //  Created by Piotrek Jeremicz on 29.09.2025.
 //
 
+import Foundation
+
 public actor Session: Sendable {
     let provider: SessionProvider
     
@@ -25,5 +27,19 @@ public extension Session {
     
     func trySend<R: Request>(_ request: R) async throws -> Response<R.ResponseBody> {
         try await provider.run(request)
+    }
+}
+
+public extension Session {
+    func cancel(_ type: RequestType) async {
+        await provider.cancel(requests: type)
+    }
+}
+
+public extension Session {
+    enum RequestType: Sendable {
+        case allTasks
+        case every(_ type: any Request.Type)
+        case only(_ id: UUID)
     }
 }

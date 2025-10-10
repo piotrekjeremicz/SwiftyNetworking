@@ -7,4 +7,6 @@
 
 protocol SessionProvider: Sendable {
     func run<R: Request>(_ request: R) async throws -> Response<R.ResponseBody>
+    
+    func cancel(requests: Session.RequestType) async
 }

@@ -21,9 +21,9 @@ public extension Request {
     }
     
     func body(@KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
-        modifier(
+        return modifier(
             BodyModifier(
-                body: (try? JSONEncoder().encode(KeyValueGroup(items))) ?? Data()
+                body: (try? resolveConfiguration().service?.requestBodyEncoder.encode(KeyValueGroup(items))) ?? Data()
             )
         )
     }
@@ -31,7 +31,7 @@ public extension Request {
     func body(_ contentType: ContentType, @KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
         modifier(
             BodyModifier(
-                body: (try? JSONEncoder().encode(KeyValueGroup(items))) ?? Data()
+                body: (try? resolveConfiguration().service?.requestBodyEncoder.encode(KeyValueGroup(items))) ?? Data()
             )
         )
         .headers {

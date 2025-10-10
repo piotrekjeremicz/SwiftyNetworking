@@ -18,7 +18,7 @@ public actor URLSessionProvider: SessionProvider {
         await registry.register(request)
         defer { Task { await registry.remove(request) } }
         
-        let urlRequest = try createURLRequest(from: request)
+        let configuration = request.resolveConfiguration()
         
         let (data, urlResponse) = try await session.data(for: urlRequest)
         await registry.remove(request)

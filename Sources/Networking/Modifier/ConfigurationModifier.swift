@@ -10,7 +10,7 @@ public extension Request {
         _ keyPath: WritableKeyPath<ConfigurationValues, Value>,
         value: Value
     ) -> some Request {
-        var configuration = makeRequest()
+        var configuration = resolveConfiguration()
         configuration[keyPath: keyPath] = value
         
         return OverrideRequest<Self, Self.ResponseBody, Self.ResponseError>(content: self, configuration: configuration)

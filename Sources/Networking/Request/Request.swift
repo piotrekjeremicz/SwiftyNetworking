@@ -20,12 +20,12 @@ public protocol Request: Sendable {
     var body: Body { get }
     var configuration: ConfigurationValues? { get set }
     
-    func makeRequest() -> ConfigurationValues
+    func resolveConfiguration() -> ConfigurationValues
 }
 
 public extension Request {
     var id: UUID {
-        configuration?.id ?? makeRequest().id
+        configuration?.id ?? resolveConfiguration().id
     }
     
     var configuration: ConfigurationValues? {
@@ -39,13 +39,13 @@ public extension Request {
 }
 
 public extension Request {
-    func makeRequest() -> ConfigurationValues {
+    func resolveConfiguration() -> ConfigurationValues {
         if Self.self is EmptyRequest.Type {
             return .init()
         } else if let configuration {
             return configuration
         } else {
-            return body.makeRequest()
+            return body.resolveConfiguration()
         }
     }
 }

@@ -6,5 +6,5 @@
 //
 
 protocol SessionProvider: Sendable {
-    func run<R: Request>(_ request: R) async throws -> R.ResponseBody where R.ResponseBody: Decodable
+    func run<R: Request>(_ request: R) async throws -> Response<R.ResponseBody>
 }

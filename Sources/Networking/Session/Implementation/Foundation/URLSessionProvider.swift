@@ -14,25 +14,20 @@ public actor URLSessionProvider: SessionProvider {
     
     public func run<R: Request>(
         _ request: R
-    ) async throws -> R.ResponseBody where R.ResponseBody: Decodable & Sendable {
-        await registry.register(request)
-        defer { Task { await registry.remove(request) } }
+    ) async throws -> Response<R.ResponseBody> {
+        let sessionId = UUID()
+
+        await registry.register(request, with: sessionId)
+        defer { Task { await registry.remove(sessionId) } }
         
         let configuration = request.resolveConfiguration()
+        let urlRequest = try createURLRequest(from: configuration, for: sessionId)
+        configuration.service?.logger?.info("\(self.describe(request, by: urlRequest, for: sessionId))")
+
+        let result = try await session.data(for: urlRequest)
+        configuration.service?.logger?.info("\(self.describe(result, from: request, for: sessionId))")
         
-        let (data, urlResponse) = try await session.data(for: urlRequest)
-        await registry.remove(request)
-        
-        let decoder = JSONDecoder()
-        if let body = try? decoder.decode(R.ResponseBody.self, from: data) {
-            return body
-        }
-        
-        if let errorBody = try? decoder.decode(R.ResponseError.self, from: data) {
-            throw ResponseError.serverError(errorBody)
-        }
-        
-        throw ResponseError.decodingFailed
+        return try ResponseBuilder.build(result, from: configuration, request: request)
     }
     
     func createURLRequest(from configuration: ConfigurationValues, for id: UUID) throws -> URLRequest {

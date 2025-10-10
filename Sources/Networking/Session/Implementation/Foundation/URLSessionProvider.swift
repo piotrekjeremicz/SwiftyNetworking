@@ -35,27 +35,25 @@ public actor URLSessionProvider: SessionProvider {
         throw ResponseError.decodingFailed
     }
     
-    func createURLRequest<R>(from request: R) throws -> URLRequest where R: Request {
-        let configuration = request.makeRequest()
-        
-        guard let service = configuration[keyPath: \.service]
+    func createURLRequest(from configuration: ConfigurationValues, for id: UUID) throws -> URLRequest {
+        guard let service = configuration.service
         else { throw RequestError.missingService }
         
         guard var urlComponents = URLComponents(string: service.baseURL)
         else { throw RequestError.resolvingUrlComponentsFailed }
         
-        urlComponents.path = configuration[keyPath: \.path]
-        urlComponents.queryItems = configuration[keyPath: \.queryItems]
+        urlComponents.path = "/" + configuration.path
+        urlComponents.queryItems = configuration.queryItems
         
         guard let url = urlComponents.url
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = configuration[keyPath: \.method].rawValue
         urlRequest.addValue(configuration.id.uuidString, forHTTPHeaderField: "X-Request-ID")
-        configuration[keyPath: \.headers].forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
+        urlRequest.httpMethod = configuration.method.rawValue
+        configuration.headers.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
         
-        if let body = configuration[keyPath: \.body] {
+        if let body = configuration.body {
             urlRequest.httpBody = body
         }
         

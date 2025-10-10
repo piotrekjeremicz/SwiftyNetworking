@@ -6,10 +6,9 @@
 //
 
 import Foundation
+import OSLog
 
-public class ConfigurationValues: CustomDebugStringConvertible, @unchecked Sendable {
-    public let id: UUID = .init()
-    
+public class ConfigurationValues: @unchecked Sendable {    
     private var storage: [ObjectIdentifier: Any] = [:]
     private var keyNames: [ObjectIdentifier: String] = [:]
     
@@ -24,14 +23,13 @@ public class ConfigurationValues: CustomDebugStringConvertible, @unchecked Senda
     }
 }
 
-extension ConfigurationValues {
+extension ConfigurationValues: CustomDebugStringConvertible {
     public var debugDescription: String {
         let count = storage.count
         guard count > 0 else { return "ConfigurationValues(storage: empty)" }
 
         var lines: [String] = []
         lines.append("ConfigurationValues(storage: \(count) entr\(count == 1 ? "y" : "ies"))")
-
         let items: [(String, Any)] = storage.map { (id, value) in
             let name = keyNames[id] ?? "Key(\(String(describing: id)))"
             return (name, value)

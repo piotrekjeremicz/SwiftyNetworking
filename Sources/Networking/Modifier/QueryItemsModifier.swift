@@ -12,7 +12,7 @@ public struct QueryItemsModifier<Content>: RequestModifier where Content: Reques
     let queryItems: [URLQueryItem]
     
     public func body(content: Content) -> some Request {
-        var items = content.configuration[keyPath: \.?.queryItems] ?? []
+        var items = content.configuration?.queryItems ?? []
         
         if override {
             items = queryItems

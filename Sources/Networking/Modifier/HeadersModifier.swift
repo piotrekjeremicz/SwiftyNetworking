@@ -10,7 +10,7 @@ public struct HeaderModifier<Content>: RequestModifier where Content: Request {
     let headers: [String: String]
     
     public func body(content: Content) -> some Request {
-        var items = content.configuration[keyPath: \.?.headers] ?? [:]
+        var items = content.configuration?.headers ?? [:]
         
         if override {
             items = headers

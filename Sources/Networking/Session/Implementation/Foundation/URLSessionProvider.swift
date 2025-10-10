@@ -44,8 +44,8 @@ public actor URLSessionProvider: SessionProvider {
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.addValue(configuration.id.uuidString, forHTTPHeaderField: "X-Request-ID")
         urlRequest.httpMethod = configuration.method.rawValue
+        urlRequest.addValue(id.uuidString, forHTTPHeaderField: "X-Request-ID")
         configuration.headers.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
         
         if let body = configuration.body {

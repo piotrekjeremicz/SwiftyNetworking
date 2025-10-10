@@ -21,3 +21,8 @@ public extension Service {
     var logger: Logger? { nil }
 }
 
+public extension Service {
+    var requestBodyEncoder: any TopLevelEncoder { JSONEncoder() }    
+    var responseBodyDecoder: any TopLevelDecoder { JSONDecoder() }
+
+}

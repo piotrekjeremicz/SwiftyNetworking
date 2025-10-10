@@ -16,7 +16,6 @@ public protocol Request: Sendable {
     associatedtype ResponseBody: Codable & Sendable = Body.ResponseBody
     associatedtype ResponseError: Codable & Sendable = Body.ResponseError
     
-    var id: UUID { get }
     var body: Body { get }
     var configuration: ConfigurationValues? { get set }
     
@@ -24,10 +23,6 @@ public protocol Request: Sendable {
 }
 
 public extension Request {
-    var id: UUID {
-        configuration?.id ?? resolveConfiguration().id
-    }
-    
     var configuration: ConfigurationValues? {
         get { nil }
         set {     }

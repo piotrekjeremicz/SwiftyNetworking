@@ -16,6 +16,7 @@ public class ConfigurationValues: @unchecked Sendable {
         get {
             storage[ObjectIdentifier(key)] as? K.Value ?? K.defaultValue
         }
+        
         set {
             keyNames[ObjectIdentifier(key)] = String(reflecting: key)
             storage[ObjectIdentifier(key)] = newValue

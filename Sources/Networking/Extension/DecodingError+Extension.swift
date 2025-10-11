@@ -8,7 +8,7 @@
 import Foundation
 
 extension DecodingError {
-    public var failureReason: String? {
+    public var failureReason: String {
         switch self {
         case .typeMismatch(_, let context):
             return "Key \(key(from: context.codingPath)) has a wrong type. \(context.debugDescription)"

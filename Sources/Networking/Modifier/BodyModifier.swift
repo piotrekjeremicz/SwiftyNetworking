@@ -20,15 +20,7 @@ public extension Request {
         modifier(BodyModifier(body: data ?? Data()))
     }
     
-    func body(@KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
-        return modifier(
-            BodyModifier(
-                body: (try? resolveConfiguration().service?.requestBodyEncoder.encode(KeyValueGroup(items))) ?? Data()
-            )
-        )
-    }
-    
-    func body(_ contentType: ContentType, @KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
+    func body(_ contentType: ContentType = .json, @KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
         modifier(
             BodyModifier(
                 body: (try? resolveConfiguration().service?.requestBodyEncoder.encode(KeyValueGroup(items))) ?? Data()
@@ -39,14 +31,25 @@ public extension Request {
         }
     }
     
-    func body(encoding: String.Encoding = .utf8, _ string: String) -> some Request {
+    func body(_ contentType: ContentType = .plainText, encoding: String.Encoding = .utf8, _ string: String) -> some Request {
         modifier(
             BodyModifier(
                 body: string.data(using: encoding) ?? Data()
             )
         )
         .headers {
-            ContentType.plainText
+            contentType
+        }
+    }
+    
+    func body(_ contentType: ContentType, encodable: any Encodable) -> some Request {
+        modifier(
+            BodyModifier(
+                body: (try? resolveConfiguration().service?.requestBodyEncoder.encode(encodable)) ?? Data()
+            )
+        )
+        .headers {
+            contentType
         }
     }
 }

@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct BodyModifier<Content>: RequestModifier where Content: Request {
+struct BodyModifier<Content>: RequestModifier where Content: Request {
     let body: Data
     
-    public func body(content: Content) -> some Request {
+    func body(content: Content) -> some Request {
         content.configuration(\.body, value: body)
     }
 }

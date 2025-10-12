@@ -7,11 +7,11 @@
 
 import Foundation
 
-public struct QueryItemsModifier<Content>: RequestModifier where Content: Request {
+struct QueryItemsModifier<Content>: RequestModifier where Content: Request {
     let override: Bool
     let queryItems: [URLQueryItem]
     
-    public func body(content: Content) -> some Request {
+    func body(content: Content) -> some Request {
         var items = content.configuration?.queryItems ?? []
         
         if override {

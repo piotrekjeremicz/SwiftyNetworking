@@ -1,5 +1,5 @@
 //
-//  Models.swift
+//  ToDo.swift
 //  SwiftyNetworking
 //
 //  Created by Piotrek Jeremicz on 11.10.2025.
@@ -24,16 +24,4 @@ nonisolated extension ToDo {
         let completed: Bool
         let userId: Int
     }
-}
-
-nonisolated struct AuthorizedUser: Codable {
-    let id: Int
-    let username: String
-    let email: String
-    let firstName: String
-    let lastName: String
-    let gender: String
-    let image: String
-    let accessToken: String
-    let refreshToken: String
 }

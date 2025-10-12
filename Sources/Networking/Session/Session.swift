@@ -16,6 +16,7 @@ public actor Session: Sendable {
 }
 
 public extension Session {
+    @discardableResult
     func send<R: Request>(_ request: R) async -> Result<Response<R.ResponseBody>, Error> {
         do {
             let response = try await provider.run(request)
@@ -25,6 +26,7 @@ public extension Session {
         }
     }
     
+    @discardableResult
     func trySend<R: Request>(_ request: R) async throws -> Response<R.ResponseBody> {
         try await provider.run(request)
     }

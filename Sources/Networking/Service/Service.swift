@@ -8,7 +8,6 @@
 import Foundation
 import OSLog
 
-// TODO: BeforeEach, AfterEach, AutorizationProvider
 public protocol Service: Sendable {
     var baseURL: String { get }
     var logger: Logger? { get }

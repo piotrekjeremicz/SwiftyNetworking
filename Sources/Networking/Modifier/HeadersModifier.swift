@@ -5,11 +5,11 @@
 //  Created by Piotrek Jeremicz on 21.09.2025.
 //
 
-public struct HeaderModifier<Content>: RequestModifier where Content: Request {
+struct HeaderModifier<Content>: RequestModifier where Content: Request {
     let override: Bool
     let headers: [String: String]
     
-    public func body(content: Content) -> some Request {
+    func body(content: Content) -> some Request {
         var items = content.configuration?.headers ?? [:]
         
         if override {

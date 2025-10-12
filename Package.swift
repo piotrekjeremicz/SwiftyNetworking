@@ -44,6 +44,7 @@ let package = Package(
         .executableTarget(
             name: "NetworkingExample",
             dependencies: ["Networking"],
+            path: "Examples/NetworkingExample",
             swiftSettings: [
                 .swiftLanguageMode(.v6),
                 .defaultIsolation(MainActor.self)

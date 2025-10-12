@@ -16,11 +16,12 @@ public actor URLSessionProvider: SessionProvider {
         _ request: R
     ) async throws -> Response<R.ResponseBody> {
         let sessionId = UUID()
+        let resolvedRequest = await resolve(request)
 
         await registry.register(request, with: sessionId)
         defer { Task { await registry.remove(sessionId) } }
         
-        let configuration = request.resolveConfiguration()
+        let configuration = resolvedRequest.resolveConfiguration()
         let urlRequest = try createURLRequest(from: configuration, for: sessionId)
         configuration.service?.logger?.info("\(self.describe(request, by: urlRequest, for: sessionId))")
 
@@ -85,6 +86,19 @@ extension URLSessionProvider {
                 }
             }
         }
+    }
+}
+
+extension URLSessionProvider {
+    func resolve<R>(_ request: R) async -> any Request where R: Request {
+        var anyRequest: any Request = request
+        let interceptors = request.resolveConfiguration().requestInterceptors
+        
+        for interceptor in interceptors {
+            anyRequest = await interceptor(anyRequest)
+        }
+        
+        return anyRequest
     }
 }
 

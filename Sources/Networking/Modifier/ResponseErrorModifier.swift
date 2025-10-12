@@ -6,7 +6,7 @@
 //
 
 public extension Request {
-    func responseError<E: Codable>(_ type: E.Type) -> some Request {
+    func responseError<E: Codable>(_ type: E.Type) -> OverrideRequest<Self, Self.ResponseBody, E> {
         let configuration = resolveConfiguration()
         configuration[keyPath: \.responseErrorType] = type
         

@@ -18,6 +18,8 @@ public protocol Service: Sendable {
     
     var requestInterceptors: [any RequestInterceptor] { get }
     var responseInterceptors: [any ResponseInterceptor] { get }
+    
+    var authorizationProvider: AuthorizationProvider? { get }
 }
 
 public extension Service {
@@ -29,5 +31,7 @@ public extension Service {
     var responseBodyDecoder: any TopLevelDecoder { JSONDecoder() }
     
     var requestInterceptors: [any RequestInterceptor] { [] }
-        var responseInterceptors: [any ResponseInterceptor] { [] }
+    var responseInterceptors: [any ResponseInterceptor] { [] }
+    
+    var authorizationProvider: AuthorizationProvider? { nil }
 }

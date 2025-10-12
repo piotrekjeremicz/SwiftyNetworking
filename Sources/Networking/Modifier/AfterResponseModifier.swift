@@ -5,7 +5,7 @@
 //  Created by Piotrek Jeremicz on 11.10.2025.
 //
 
-public typealias ResponseInterceptorClosure = @Sendable (Response<AnyCodable>, any Request) -> Response<AnyCodable>
+public typealias ResponseInterceptorClosure = @Sendable (Response<AnyCodable>, any Request) async throws -> Response<AnyCodable>
 
 struct AfterResponseModifier<Content>: RequestModifier where Content: Request {
     let interceptor: ResponseInterceptorClosure

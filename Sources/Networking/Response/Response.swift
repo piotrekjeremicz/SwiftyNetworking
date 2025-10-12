@@ -26,4 +26,33 @@ public struct Response<Body>: Sendable where Body: Codable & Sendable {
             partialResult[item.key.description] = "\(item.value)"
         }
     }
+    
+    private init(body: Body, statusCode: Int, headers: [String: String]) {
+        self.body = body
+        self.statusCode = statusCode
+        self.headers = headers
+    }
+}
+
+extension Response {
+    var eraseToAnyCodable: Response<AnyCodable> {
+        Response<AnyCodable>.init(
+            body: .init(body),
+            statusCode: statusCode,
+            headers: headers
+        )
+    }
+}
+
+extension Response where Body == AnyCodable {
+    func `as`<B>(_ type: B.Type) -> Response<B>? where B: Codable {
+        guard let typedBody = body.value as? B
+        else { return nil }
+        
+        return Response<B>.init(
+            body: typedBody,
+            statusCode: statusCode,
+            headers: headers
+        )
+    }
 }

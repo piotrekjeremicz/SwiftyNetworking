@@ -28,7 +28,7 @@ public actor URLSessionProvider: SessionProvider {
         let result = try await session.data(for: urlRequest)
         configuration.service?.logger?.info("\(self.describe(result, from: request, for: sessionId))")
         
-        return try ResponseBuilder.build(result, from: configuration, request: request)
+        return try await ResponseBuilder.build(result, from: configuration, request: request)
     }
     
     func createURLRequest(from configuration: ConfigurationValues, for id: UUID) throws -> URLRequest {

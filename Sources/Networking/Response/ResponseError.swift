@@ -9,5 +9,6 @@ enum ResponseError<ResponseError>: Error where ResponseError: Codable & Sendable
     case decodingFailed
     case missingService
     case unsupportedResponseType
+    case interceptedResponseBodyTypeMismatch
     case serverError(Response<ResponseError>)
 }

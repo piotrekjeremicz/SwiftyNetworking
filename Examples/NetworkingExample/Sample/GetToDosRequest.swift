@@ -19,7 +19,7 @@ struct GetToDosRequest {
     
     nonisolated struct Model: Codable {
         let todos: [ToDo]
-        let tota: Int
+        let total: Int
         let skip: Int
         let limit: Int
     }

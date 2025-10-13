@@ -6,7 +6,6 @@
 //
 
 public struct Accept: KeyValuePair {
-    
     public let key: String
     public let value: String
 

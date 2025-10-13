@@ -39,7 +39,7 @@ public actor URLSessionProvider: SessionProvider {
         else { throw RequestError.resolvingUrlComponentsFailed }
         
         urlComponents.path = "/" + configuration.path
-        urlComponents.queryItems = configuration.queryItems
+        urlComponents.queryItems = configuration.queryItems.map { URLQueryItem(name: $0.key, value: $0.value) }
         
         guard let url = urlComponents.url
         else { throw RequestError.resolvingUrlComponentsFailed }
@@ -92,7 +92,12 @@ extension URLSessionProvider {
 extension URLSessionProvider {
     func resolve<R>(_ request: R) async -> any Request where R: Request {
         var anyRequest: any Request = request
-        let interceptors = request.resolveConfiguration().requestInterceptors
+        let configuration = request.resolveConfiguration()
+        
+        var interceptors = configuration.requestInterceptors
+        if let serviceInterceptor = configuration.service?.beforeEachRequest {
+            interceptors.append(serviceInterceptor)
+        }
         
         for interceptor in interceptors {
             anyRequest = await interceptor(anyRequest)
@@ -134,5 +139,3 @@ private extension URLSessionProvider {
     }
 }
 #endif
-
-

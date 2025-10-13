@@ -9,15 +9,15 @@ import Foundation
 
 struct QueryItemsModifier<Content>: RequestModifier where Content: Request {
     let override: Bool
-    let queryItems: [URLQueryItem]
+    let queryItems: [String: String]
     
     func body(content: Content) -> some Request {
-        var items = content.configuration?.queryItems ?? []
-        
+        var items = content.configuration?.queryItems ?? [:]
+
         if override {
             items = queryItems
         } else {
-            items.append(contentsOf: queryItems)
+            queryItems.forEach { items[$0.key] = $0.value }
         }
         
         return content.configuration(\.queryItems, value: items)
@@ -25,34 +25,19 @@ struct QueryItemsModifier<Content>: RequestModifier where Content: Request {
 }
 
 public extension Request {
-    func queryItems(override: Bool = false, _ items: [URLQueryItem]) -> some Request {
+    func queryItems(override: Bool = false, _ items: [String: String]) -> some Request {
         modifier(QueryItemsModifier(override: override, queryItems: items))
     }
 
-    func queryItems(override: Bool = false, _ items: [String: String]) -> some Request {
-        modifier(
-            QueryItemsModifier(
-                override: override,
-                queryItems: items.map {
-                    URLQueryItem(
-                        name: $0.key,
-                        value: $0.value
-                    )
-                }
-            )
-        )
-    }
-    
     func queryItems(override: Bool = false, @KeyValueBuilder _ items: () -> [any KeyValuePair]) -> some Request {
         modifier(
             QueryItemsModifier(
                 override: override,
-                queryItems: items().map {
-                    URLQueryItem(
-                        name: $0.key,
-                        value: $0.value.description
-                    )
-                }
+                queryItems: Dictionary(
+                    uniqueKeysWithValues: items().map {
+                        ($0.key, $0.value.description)
+                    }
+                )
             )
         )
     }

@@ -13,4 +13,14 @@ struct DummyJsonService: Service {
     let logger: Logger? = Logger()
     
     var authorizationProvider: (any AuthorizationProvider)? = DummyAuthorizationProvider()
+    
+    var beforeEachRequest: RequestInterceptorClosure? = { request in
+        print("before each request: \(request.debugDescription)")
+        return request
+    }
+    
+    var afterEachResponse: ResponseInterceptorClosure? = { response, request in
+        print("after each response from request: \(request.debugDescription)")
+        return response
+    }
 }

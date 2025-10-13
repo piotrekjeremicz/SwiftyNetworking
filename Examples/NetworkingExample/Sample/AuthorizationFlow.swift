@@ -30,6 +30,7 @@ struct LoginRequest {
 struct AuthRequest {
     var body: some Request {
         Get("auth", "me", from: DummyJsonService())
+            .responseBody(User.self)
             .authorize()
     }
 }

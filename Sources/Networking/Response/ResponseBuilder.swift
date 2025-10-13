@@ -27,7 +27,11 @@ struct ResponseBuilder {
 private extension ResponseBuilder {
     static func resolve<C, R>(_ response: Response<C>, from configuration: ConfigurationValues, request: R) async throws -> Response<C> where C: Codable, R: Request {
         var anyResponse = response.eraseToAnyCodable
-        let interceptors = configuration.responseInterceptors
+        
+        var interceptors = configuration.responseInterceptors
+        if let serviceInterceptor = configuration.service?.afterEachResponse {
+            interceptors.append(serviceInterceptor)
+        }
         
         for interceptor in interceptors {
             anyResponse = try await interceptor(anyResponse, request)

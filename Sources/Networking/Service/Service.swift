@@ -15,8 +15,8 @@ public protocol Service: Sendable {
     var requestBodyEncoder: any TopLevelEncoder { get }
     var responseBodyDecoder: any TopLevelDecoder { get }
     
-    var requestInterceptors: [any RequestInterceptor] { get }
-    var responseInterceptors: [any ResponseInterceptor] { get }
+    var beforeEachRequest: RequestInterceptorClosure? { get }
+    var afterEachResponse: ResponseInterceptorClosure? { get }
     
     var authorizationProvider: AuthorizationProvider? { get }
 }
@@ -29,8 +29,8 @@ public extension Service {
     var requestBodyEncoder: any TopLevelEncoder { JSONEncoder() }    
     var responseBodyDecoder: any TopLevelDecoder { JSONDecoder() }
     
-    var requestInterceptors: [any RequestInterceptor] { [] }
-    var responseInterceptors: [any ResponseInterceptor] { [] }
+    var beforeEachRequest: RequestInterceptorClosure? { nil }
+    var afterEachResponse: ResponseInterceptorClosure? { nil }
     
     var authorizationProvider: AuthorizationProvider? { nil }
 }

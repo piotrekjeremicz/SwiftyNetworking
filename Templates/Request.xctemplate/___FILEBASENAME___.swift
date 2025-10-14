@@ -1,11 +1,9 @@
 //___FILEHEADER___
 
-import Foundation
 import Networking
 
 @Request
 struct ___FILEBASENAMEASIDENTIFIER___ {
-
     let service: Service
     
     var body: some Request {

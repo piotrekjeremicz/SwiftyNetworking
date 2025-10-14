@@ -1,22 +1,15 @@
 //
 //  EmptyRequest.swift
-//  
+//  SwiftyNetworking
 //
-//  Created by Piotrek Jeremicz on 02/04/2023.
+//  Created by Piotrek Jeremicz on 20.09.2025.
 //
-
-import Foundation
 
 public struct EmptyRequest: Request {
-    public var id: UUID = .init()
+    public var configuration: ConfigurationValues? = .init()
     
-    public typealias ResponseBody = Empty
-    public typealias ResponseError = Empty
-    
-    public var configuration: Configuration?
-    public var builder: ResponseBuilder<Empty> = ResponseBuilder()
-
-    public init() {
-        configuration = nil
+    @_spi(Private)
+    public var body: Never {
+        fatalError("EmptyRequest does not support the `body` property.")
     }
 }

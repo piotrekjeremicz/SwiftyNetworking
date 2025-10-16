@@ -7,12 +7,12 @@ import CompilerPluginSupport
 let package = Package(
     name: "SwiftyNetworking",
     platforms: [
-        .iOS(.v26),
-        .tvOS(.v26),
-        .macOS(.v26),
-        .watchOS(.v26),
-        .visionOS(.v26),
-        .macCatalyst(.v26),
+        .iOS(.v17),
+        .tvOS(.v17),
+        .macOS(.v15),
+        .watchOS(.v11),
+        .visionOS(.v2),
+        .macCatalyst(.v15),
     ],
     products: [
         .library(

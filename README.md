@@ -204,7 +204,7 @@ By providing any custom-configured Logger, network-related events will be automa
 
 ```swift
 struct ExampleService: Service {
-    let baseURL: String = "https://dummyjson.com"
+    let baseURL: String = "https://www.example.com"
     let logger: Logger? = Logger(subsystem: "com.example.app", category: "networking")
 }
 ```
@@ -218,6 +218,3 @@ Looking ahead, I plan to rethink and extend the development roadmap, considering
 - Enhanced request configuration options to provide more flexibility for developers.
 
 These improvements aim to make SwiftyNetworking even more powerful and developer-friendly in future versions.
-
-⸻
-

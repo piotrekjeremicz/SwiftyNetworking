@@ -37,6 +37,9 @@ let package = Package(
         .target(
             name: "Networking",
             dependencies: ["NetworkingMacros"],
+            resources: [
+                .process("Resources")
+            ],
             swiftSettings: [
                 .swiftLanguageMode(.v6)
             ]

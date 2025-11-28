@@ -91,7 +91,7 @@ extension URLSessionProvider {
 
 extension URLSessionProvider {
     func resolve<R>(_ request: R) async -> any Request where R: Request {
-        var anyRequest: any Request = request
+        var anyRequest: any Request = request.body
         let configuration = request.resolveConfiguration()
         
         var interceptors = configuration.requestInterceptors

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol TopLevelEncoder {
+public protocol TopLevelEncoder: Sendable {
     func encode<T>(_ value: T) throws -> Data where T : Encodable
 }
 

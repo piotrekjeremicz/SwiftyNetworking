@@ -85,10 +85,17 @@ struct ExampleRequest {
 ```swift
 let session = Session()
 let exampleRequest = ExampleRequest(bar: "buzz")
-let (result, error) = await session.send(request: exampleRequest)
+let result = await session.send(exampleRequest)
+
+switch result {
+case let .success(response):
+    print(response.body)
+case let .failure(error):
+    print(error)
+}
 
 if somethingIsWrong {
-    session.cancel(requests: .every(ExampleRequest.self))
+    await session.cancel(.every(ExampleRequest.self))
 }
 ```
 

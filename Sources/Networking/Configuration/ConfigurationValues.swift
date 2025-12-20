@@ -8,18 +8,20 @@
 import Foundation
 import OSLog
 
-public class ConfigurationValues: @unchecked Sendable {    
-    private var storage: [ObjectIdentifier: Any] = [:]
+public struct ConfigurationValues: Sendable {
+    private var storage: [ObjectIdentifier: AnySendable] = [:]
     private var keyNames: [ObjectIdentifier: String] = [:]
-    
+
+    public init() {}
+
     public subscript<K>(key: K.Type) -> K.Value where K: ConfigurationKey {
         get {
-            storage[ObjectIdentifier(key)] as? K.Value ?? K.defaultValue
+            storage[ObjectIdentifier(key)]?.value as? K.Value ?? K.defaultValue
         }
-        
+
         set {
             keyNames[ObjectIdentifier(key)] = String(reflecting: key)
-            storage[ObjectIdentifier(key)] = newValue
+            storage[ObjectIdentifier(key)] = AnySendable(newValue)
         }
     }
 }
@@ -33,7 +35,7 @@ extension ConfigurationValues: CustomDebugStringConvertible {
         lines.append("ConfigurationValues(storage: \(count) entr\(count == 1 ? "y" : "ies"))")
         let items: [(String, Any)] = storage.map { (id, value) in
             let name = keyNames[id] ?? "Key(\(String(describing: id)))"
-            return (name, value)
+            return (name, value.value)
         }.sorted { $0.0 < $1.0 }
 
         for (name, value) in items {
@@ -43,5 +45,13 @@ extension ConfigurationValues: CustomDebugStringConvertible {
         }
 
         return lines.joined(separator: "\n")
+    }
+}
+
+private struct AnySendable: @unchecked Sendable {
+    let value: Any
+
+    init(_ value: Any) {
+        self.value = value
     }
 }

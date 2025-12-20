@@ -61,8 +61,10 @@ extension URLSessionProvider {
     func cancel(requests: Session.RequestType) async {
         switch requests {
         case .allTasks:
-            session.invalidateAndCancel()
-            
+            for task in await session.allTasks {
+                task.cancel()
+            }
+
         case let .every(type):
             let requests = await registry.get(by: type)
             for task in await session.allTasks {

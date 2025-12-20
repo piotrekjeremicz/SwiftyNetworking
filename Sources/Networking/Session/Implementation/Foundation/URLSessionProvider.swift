@@ -11,23 +11,24 @@ import Foundation
 public actor URLSessionProvider: SessionProvider {
     private let session: URLSession = URLSession(configuration: .default)
     private let registry: Registry = .init()
-    
+
     public func run<R: Request>(
         _ request: R
     ) async throws -> Response<R.ResponseBody> {
         let sessionId = UUID()
-        let resolvedRequest = await resolve(request)
+        var configuration = request.resolveConfiguration()
 
         await registry.register(request, with: sessionId)
         defer { Task { await registry.remove(sessionId) } }
-        
-        let configuration = resolvedRequest.resolveConfiguration()
+
+        await applyRequestInterceptors(to: &configuration)
+
         let urlRequest = try createURLRequest(from: configuration, for: sessionId)
         configuration.service?.logger?.info("\(self.describe(request, by: urlRequest, for: sessionId))")
 
         let result = try await session.data(for: urlRequest)
         configuration.service?.logger?.info("\(self.describe(result, from: request, for: sessionId))")
-        
+
         return try await ResponseBuilder.build(result, from: configuration, request: request)
     }
     
@@ -92,20 +93,15 @@ extension URLSessionProvider {
 }
 
 extension URLSessionProvider {
-    func resolve<R>(_ request: R) async -> any Request where R: Request {
-        var anyRequest: any Request = request.body
-        let configuration = request.resolveConfiguration()
-        
+    func applyRequestInterceptors(to configuration: inout ConfigurationValues) async {
         var interceptors = configuration.requestInterceptors
         if let serviceInterceptor = configuration.service?.beforeEachRequest {
             interceptors.append(serviceInterceptor)
         }
-        
+
         for interceptor in interceptors {
-            anyRequest = await interceptor(anyRequest)
+            await interceptor(&configuration)
         }
-        
-        return anyRequest
     }
 }
 

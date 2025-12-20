@@ -7,12 +7,8 @@
 
 public extension Request {
     func authorize() -> some Request {
-        beforeRequest { request in
-            if let authorizationProvider = resolveConfiguration().service?.authorizationProvider {
-                authorizationProvider.authorize(request)
-            } else {
-                request
-            }
+        beforeRequest { configuration in
+            configuration.service?.authorizationProvider?.authorize(&configuration)
         }
     }
 }

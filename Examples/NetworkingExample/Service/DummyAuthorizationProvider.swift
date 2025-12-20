@@ -9,14 +9,10 @@ import Networking
 
 struct DummyAuthorizationProvider: AuthorizationProvider {
     let store: any AuthorizationStore = KeychainAuthorizationStore()
-    
-    func authorize(_ request: any Request) -> any Request {
+
+    func authorize(_ configuration: inout ConfigurationValues) {
         if let accessToken = store.get(.accessToken) {
-            request.headers {
-                Authorization(bearer: accessToken)
-            }
-        } else {
-            request
+            configuration.headers["Authorization"] = "Bearer \(accessToken)"
         }
     }
 }

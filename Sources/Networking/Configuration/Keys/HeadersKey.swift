@@ -10,7 +10,7 @@ enum HeadersKey: ConfigurationKey {
     typealias Value = [String: String]
 }
 
-extension ConfigurationValues {
+public extension ConfigurationValues {
     var headers: [String: String] {
         get { self[HeadersKey.self] }
         set { self[HeadersKey.self] = newValue }

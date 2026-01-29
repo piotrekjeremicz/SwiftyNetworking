@@ -8,20 +8,18 @@
 import Foundation
 
 internal actor Registry {
-    private var requestTypes: [(id: UUID, type: String)] = []
-    
+    private var requestTypes: [(id: UUID, type: ObjectIdentifier)] = []
+
     func register(_ request: some Request, with id: UUID) {
-        requestTypes.append((id, String(describing: request.self)))
+        requestTypes.append((id, ObjectIdentifier(type(of: request))))
     }
-    
-    func get(by type: any Request.Type) -> [(id: UUID, type: String)] {
-        requestTypes.filter({ $0.type == String(describing: type) })
+
+    func get(by type: any Request.Type) -> [UUID] {
+        requestTypes
+            .filter { $0.type == ObjectIdentifier(type) }
+            .map(\.id)
     }
-    
-    func remove(_ id: String) {
-        requestTypes.removeAll(where: { $0.id.uuidString == id })
-    }
-    
+
     func remove(_ id: UUID) {
         requestTypes.removeAll(where: { $0.id == id })
     }

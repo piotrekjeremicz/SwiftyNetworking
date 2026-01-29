@@ -61,17 +61,21 @@ extension URLSessionProvider {
     func cancel(requests: Session.RequestType) async {
         switch requests {
         case .allTasks:
-            session.invalidateAndCancel()
-            
+            for task in await session.allTasks {
+                task.cancel()
+            }
+
         case let .every(type):
             let requests = await registry.get(by: type)
             for task in await session.allTasks {
                 if let request = task.originalRequest,
                    let id = request.value(forHTTPHeaderField: "X-Request-ID"),
-                   requests.contains(where: { $0.id.uuidString == id })
+                   requests.contains(where: { $0.uuidString == id })
                 {
                     task.cancel()
-                    await registry.remove(id)
+                    if let uuid = UUID(uuidString: id) {
+                        await registry.remove(uuid)
+                    }
                 }
             }
             
@@ -82,7 +86,7 @@ extension URLSessionProvider {
                     id.uuidString == requestId
                 {
                     task.cancel()
-                    await registry.remove(id.uuidString)
+                    await registry.remove(id)
                 }
             }
         }
@@ -91,7 +95,7 @@ extension URLSessionProvider {
 
 extension URLSessionProvider {
     func resolve<R>(_ request: R) async -> any Request where R: Request {
-        var anyRequest: any Request = request
+        var anyRequest: any Request = request.body
         let configuration = request.resolveConfiguration()
         
         var interceptors = configuration.requestInterceptors

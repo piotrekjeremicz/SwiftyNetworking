@@ -9,9 +9,13 @@
 import Foundation
 
 public actor URLSessionProvider: SessionProvider {
-    private let session: URLSession = URLSession(configuration: .default)
+    private let session: URLSession
     private let registry: Registry = .init()
-    
+
+    public init(session: URLSession = URLSession(configuration: .default)) {
+        self.session = session
+    }
+
     public func run<R: Request>(
         _ request: R
     ) async throws -> Response<R.ResponseBody> {
@@ -57,7 +61,7 @@ public actor URLSessionProvider: SessionProvider {
     }
 }
 
-extension URLSessionProvider {
+public extension URLSessionProvider {
     func cancel(requests: Session.RequestType) async {
         switch requests {
         case .allTasks:

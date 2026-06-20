@@ -5,7 +5,7 @@
 //  Created by Piotrek Jeremicz on 29.09.2025.
 //
 
-protocol SessionProvider: Sendable {
+public protocol SessionProvider: Sendable {
     func run<R: Request>(_ request: R) async throws -> Response<R.ResponseBody>
     
     func cancel(requests: Session.RequestType) async

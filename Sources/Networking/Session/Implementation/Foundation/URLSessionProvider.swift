@@ -12,7 +12,7 @@ public actor URLSessionProvider: SessionProvider {
     private let session: URLSession
     private let registry: Registry = .init()
 
-    init(session: URLSession = URLSession(configuration: .default)) {
+    public init(session: URLSession = URLSession(configuration: .default)) {
         self.session = session
     }
 

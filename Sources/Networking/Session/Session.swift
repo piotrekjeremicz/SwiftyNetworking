@@ -10,7 +10,7 @@ import Foundation
 public actor Session: Sendable {
     let provider: SessionProvider
     
-    init(provider: SessionProvider) {
+    public init(provider: SessionProvider) {
         self.provider = provider
     }
 }

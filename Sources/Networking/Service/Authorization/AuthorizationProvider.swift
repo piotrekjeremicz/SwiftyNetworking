@@ -8,5 +8,5 @@
 public protocol AuthorizationProvider: Sendable {
     var store: AuthorizationStore { get }
     
-    func authorize(_ request: any Request) -> any Request
+    func authorize(_ request: any Request) async -> any Request
 }

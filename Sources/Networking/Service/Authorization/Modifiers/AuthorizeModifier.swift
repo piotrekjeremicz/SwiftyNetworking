@@ -9,7 +9,7 @@ public extension Request {
     func authorize() -> some Request {
         beforeRequest { request in
             if let authorizationProvider = resolveConfiguration().service?.authorizationProvider {
-                authorizationProvider.authorize(request)
+                await authorizationProvider.authorize(request)
             } else {
                 request
             }

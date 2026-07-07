@@ -10,7 +10,7 @@ import Networking
 struct DummyAuthorizationProvider: AuthorizationProvider {
     let store: any AuthorizationStore = KeychainAuthorizationStore()
     
-    func authorize(_ request: any Request) -> any Request {
+    func authorize(_ request: any Request) async -> any Request {
         if let accessToken = store.get(.accessToken) {
             request.headers {
                 Authorization(bearer: accessToken)

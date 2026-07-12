@@ -6,8 +6,8 @@
 //
 
 extension Never: Request {
-    public typealias ResponseBody = Never
-    public typealias ResponseError = Never
+    public typealias ResponseBody = Empty
+    public typealias ResponseError = Empty
     
     @_spi(Private)
     public var body: Never {

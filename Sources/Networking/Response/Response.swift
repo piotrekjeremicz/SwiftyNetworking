@@ -17,14 +17,19 @@ public struct Response<Body>: Sendable where Body: Codable & Sendable {
         else { throw ResponseError<Never>.unsupportedResponseType }
         
         statusCode = httpResponse.statusCode
-        
-        guard let decoder = configuration.service?.responseBodyDecoder
-        else { throw ResponseError<Never>.missingService }
-        
-        body = try decoder.decode(Body.self, from: result.data)
         headers = httpResponse.allHeaderFields.reduce(into: [:]) { partialResult, item in
             partialResult[item.key.description] = "\(item.value)"
         }
+
+        if result.data.isEmpty, let empty = Empty() as? Body {
+            body = empty
+            return
+        }
+
+        guard let decoder = configuration.service?.responseBodyDecoder
+        else { throw ResponseError<Never>.missingService }
+
+        body = try decoder.decode(Body.self, from: result.data)
     }
     
     private init(body: Body, statusCode: Int, headers: [String: String]) {

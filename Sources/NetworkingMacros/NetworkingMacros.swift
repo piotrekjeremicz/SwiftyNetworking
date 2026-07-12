@@ -57,13 +57,13 @@ public struct RequestMacro: MemberMacro {
         let types = RequestMacro.analyze(syntax: functionCallExpression)
         let responseBodyTypeAliasDeclSyntax = try TypeAliasDeclSyntax(
             SyntaxNodeString(
-                stringLiteral: "typealias ResponseBody = \(types.literalResponseBodyTypeName ?? "Never")"
+                stringLiteral: "typealias ResponseBody = \(types.literalResponseBodyTypeName ?? "Empty")"
             )
         )
         
         let responseErrorTypeAliasDeclSyntax = try TypeAliasDeclSyntax(
             SyntaxNodeString(
-                stringLiteral: "typealias ResponseError = \(types.literalResponseErrorTypeName ?? "Never")"
+                stringLiteral: "typealias ResponseError = \(types.literalResponseErrorTypeName ?? "Empty")"
             )
         )
         

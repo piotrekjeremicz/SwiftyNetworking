@@ -6,9 +6,9 @@
 //
 
 public enum Method: String, Sendable {
-    case get
-    case put
-    case post
-    case patch
-    case delete
+    case get = "GET"
+    case put = "PUT"
+    case post = "POST"
+    case patch = "PATCH"
+    case delete = "DELETE"
 }

@@ -26,6 +26,11 @@ public struct Response<Body>: Sendable where Body: Codable & Sendable {
             return
         }
 
+        if let raw = result.data as? Body {
+            body = raw
+            return
+        }
+
         guard let decoder = configuration.service?.responseBodyDecoder
         else { throw ResponseError<Never>.missingService }
 
